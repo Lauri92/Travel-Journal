@@ -2,7 +2,9 @@ package fi.lauriari.traveljournal.data
 
 import android.content.Context
 import androidx.core.content.ContentProviderCompat.requireContext
+import com.apollographql.apollo3.ApolloCall
 import com.apollographql.apollo3.api.ApolloResponse
+import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.RegisterUserMutation
 import fi.lauriari.traveljournal.apolloClient
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +23,26 @@ class Repository {
             val response = try {
                 apolloClient(context).mutation(
                     RegisterUserMutation(
+                        username = username,
+                        password = password
+                    )
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun loginUser(
+        context: Context,
+        username: String,
+        password: String
+    ): Flow<ApolloResponse<LoginQuery.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).query(
+                    LoginQuery(
                         username = username,
                         password = password
                     )

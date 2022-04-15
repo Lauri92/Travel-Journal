@@ -7,9 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
+import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.RegisterUserMutation
 import fi.lauriari.traveljournal.data.Repository
 import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +34,10 @@ class LoginViewModel : ViewModel() {
     val registerUserData: StateFlow<APIRequestState<ApolloResponse<RegisterUserMutation.Data>?>> =
         _registerUserData
 
+    fun setRegisterDataIdle() {
+        _registerUserData.value = APIRequestState.Idle
+    }
+
     fun registerUser(context: Context) {
         _registerUserData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
@@ -49,7 +55,35 @@ class LoginViewModel : ViewModel() {
             }
         }
     }
-    fun setRegisterDataIdle() {
-        _registerUserData.value = APIRequestState.Idle
+
+
+    private var _loginUserData =
+        MutableStateFlow<APIRequestState<ApolloResponse<LoginQuery.Data>?>>(
+            APIRequestState.Idle
+        )
+    val loginUserData: StateFlow<APIRequestState<ApolloResponse<LoginQuery.Data>?>> =
+        _loginUserData
+
+    fun setloginUserDataIdle() {
+        _loginUserData.value = APIRequestState.Idle
     }
+
+    fun loginUser(context: Context) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.loginUser(
+                context = context,
+                username = usernameTextState.value,
+                password = passwordTextState.value
+            ).collect { loginResponse ->
+                Log.d("Logintry", loginResponse?.data.toString())
+                if (loginResponse?.data?.login?.token != null) {
+                    _loginUserData.value = APIRequestState.Success(loginResponse)
+                    User.setToken(context, loginResponse.data!!.login!!.token!!)
+                } else {
+                    _loginUserData.value = APIRequestState.BadResponse
+                }
+            }
+        }
+    }
+
 }
