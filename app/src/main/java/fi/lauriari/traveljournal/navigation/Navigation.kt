@@ -6,10 +6,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import fi.lauriari.traveljournal.navigation.destinations.loginComposable
 import fi.lauriari.traveljournal.util.Constants.LOGIN_SCREEN
+import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 
 @Composable
 fun InitNavigation(
     navController: NavHostController,
+    loginViewModel: LoginViewModel,
 ) {
     val screen = remember(navController) {
         Screens(navController = navController)
@@ -19,6 +21,8 @@ fun InitNavigation(
         navController = navController,
         startDestination = LOGIN_SCREEN
     ) {
-        loginComposable()
+        loginComposable(
+            loginViewModel = loginViewModel
+        )
     }
 }
