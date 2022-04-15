@@ -2,21 +2,9 @@ package fi.lauriari.traveljournal.screens.login
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.apollographql.apollo3.api.ApolloResponse
 import fi.lauriari.traveljournal.RegisterUserMutation
 import fi.lauriari.traveljournal.util.APIRequestState
@@ -34,12 +22,15 @@ fun LoginScreen(
 
     val registerUserData by loginViewModel.registerUserData.collectAsState()
 
+    var isInputAllowed by remember {mutableStateOf(true)}
+
 
     Scaffold(
         content = {
             when (registerUserData) {
                 is APIRequestState.Loading -> {
                     Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show()
+                    isInputAllowed = false
                 }
                 is APIRequestState.Success -> {
                     Toast.makeText(
@@ -57,6 +48,9 @@ fun LoginScreen(
                         Toast.LENGTH_LONG
                     ).show()
                     loginViewModel.setRegisterDataIdle()
+                }
+                is APIRequestState.Idle -> {
+                    isInputAllowed = true
                 }
             }
 
@@ -86,7 +80,8 @@ fun LoginScreen(
                 },
                 onRegisterPressed = {
                     loginViewModel.registerUser(context)
-                }
+                },
+                isInputAllowed = isInputAllowed
             )
         }
     )

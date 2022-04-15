@@ -8,9 +8,11 @@ import androidx.compose.runtime.Composable
 fun LoginTextField(
     placeholderText: String,
     textState: String,
-    onTextChanged: (String) -> Unit
+    onTextChanged: (String) -> Unit,
+    isInputAllowed: Boolean
 ) {
     OutlinedTextField(
+        enabled = isInputAllowed,
         singleLine = true,
         label = {
             Text(

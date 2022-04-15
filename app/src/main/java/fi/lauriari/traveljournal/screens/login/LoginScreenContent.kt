@@ -27,6 +27,7 @@ fun LoginScreenContent(
     onRegisterPasswordTextChanged: (String) -> Unit,
     onLoginPressed: () -> Unit,
     onRegisterPressed: () -> Unit,
+    isInputAllowed: Boolean,
 ) {
 
     var isLoginInputSelected by rememberSaveable { mutableStateOf(true) }
@@ -46,7 +47,8 @@ fun LoginScreenContent(
                 passwordTextState = passwordTextState,
                 onPasswordTextChanged = onPasswordTextChanged,
                 selectRegisterInputs = { isLoginInputSelected = false },
-                onLoginPressed = onLoginPressed
+                onLoginPressed = onLoginPressed,
+                isInputAllowed = isInputAllowed
             )
 
         } else {
@@ -56,7 +58,8 @@ fun LoginScreenContent(
                 registerPasswordTextState = registerPasswordTextState,
                 onRegisterPasswordTextChanged = onRegisterPasswordTextChanged,
                 selectLoginInputs = { isLoginInputSelected = true },
-                onRegisterPressed = onRegisterPressed
+                onRegisterPressed = onRegisterPressed,
+                isInputAllowed = isInputAllowed
             )
         }
     }
@@ -70,8 +73,10 @@ fun LoginInputs(
     onPasswordTextChanged: (String) -> Unit,
     selectRegisterInputs: () -> Unit,
     onLoginPressed: () -> Unit,
+    isInputAllowed: Boolean,
 ) {
     LoginTextField(
+        isInputAllowed = isInputAllowed,
         placeholderText = "Username",
         textState = usernameTextState,
         onTextChanged = onUsernameTextChanged
@@ -80,7 +85,8 @@ fun LoginInputs(
     LoginTextField(
         placeholderText = "Password",
         textState = passwordTextState,
-        onTextChanged = onPasswordTextChanged
+        onTextChanged = onPasswordTextChanged,
+        isInputAllowed = isInputAllowed
     )
     Spacer(modifier = Modifier.height(20.dp))
     Text(
@@ -92,6 +98,7 @@ fun LoginInputs(
             },
     )
     OutlinedButton(
+        enabled = isInputAllowed,
         modifier = Modifier
             .padding(16.dp),
         onClick = { onLoginPressed() }
@@ -107,18 +114,21 @@ fun RegisterInputs(
     registerPasswordTextState: String,
     onRegisterPasswordTextChanged: (String) -> Unit,
     selectLoginInputs: () -> Unit,
-    onRegisterPressed: () -> Unit
+    onRegisterPressed: () -> Unit,
+    isInputAllowed: Boolean
 ) {
     LoginTextField(
         placeholderText = "Username",
         textState = registerUsernameTextState,
-        onTextChanged = onRegisterUsernameTextChanged
+        onTextChanged = onRegisterUsernameTextChanged,
+        isInputAllowed = isInputAllowed
     )
 
     LoginTextField(
         placeholderText = "Password",
         textState = registerPasswordTextState,
-        onTextChanged = onRegisterPasswordTextChanged
+        onTextChanged = onRegisterPasswordTextChanged,
+        isInputAllowed = isInputAllowed
     )
     Spacer(modifier = Modifier.height(20.dp))
     Text(
@@ -130,6 +140,7 @@ fun RegisterInputs(
             },
     )
     OutlinedButton(
+        enabled = isInputAllowed,
         modifier = Modifier
             .padding(16.dp),
         onClick = { onRegisterPressed() }
