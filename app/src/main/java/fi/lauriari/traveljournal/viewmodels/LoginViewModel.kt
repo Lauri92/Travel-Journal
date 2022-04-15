@@ -6,21 +6,34 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.ApolloResponse
+import fi.lauriari.traveljournal.RegisterUserMutation
 import fi.lauriari.traveljournal.data.Repository
+import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
     private val repository = Repository()
 
-    val usernameTextState: MutableState<String> = mutableStateOf("abc")
+    val usernameTextState: MutableState<String> = mutableStateOf("")
     val passwordTextState: MutableState<String> = mutableStateOf("")
     val registerUsernameTextState: MutableState<String> = mutableStateOf("")
     val registerPasswordTextState: MutableState<String> = mutableStateOf("")
-    val passwordRetypeTextState: MutableState<String> = mutableStateOf("")
+
+
+    private var _registerUserData =
+        MutableStateFlow<APIRequestState<ApolloResponse<RegisterUserMutation.Data>?>>(
+            APIRequestState.Idle
+        )
+    val registerUserData: StateFlow<APIRequestState<ApolloResponse<RegisterUserMutation.Data>?>> =
+        _registerUserData
 
     fun registerUser(context: Context) {
+        _registerUserData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.registerUser(
                 context = context,
@@ -28,8 +41,15 @@ class LoginViewModel : ViewModel() {
                 password = registerPasswordTextState.value
             ).collect { registerResponse ->
                 Log.d("Registertry", registerResponse?.data.toString())
+                if (registerResponse?.data?.registerUser != null) {
+                    _registerUserData.value = APIRequestState.Success(registerResponse)
+                } else {
+                    _registerUserData.value = APIRequestState.BadResponse
+                }
             }
         }
     }
-
+    fun setRegisterDataIdle() {
+        _registerUserData.value = APIRequestState.Idle
+    }
 }

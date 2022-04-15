@@ -25,8 +25,6 @@ fun LoginScreenContent(
     onRegisterUsernameTextChanged: (String) -> Unit,
     registerPasswordTextState: String,
     onRegisterPasswordTextChanged: (String) -> Unit,
-    passwordRetypeTextState: String,
-    onPasswordRetypeTextChanged: (String) -> Unit,
     onLoginPressed: () -> Unit,
     onRegisterPressed: () -> Unit,
 ) {
@@ -57,8 +55,6 @@ fun LoginScreenContent(
                 onRegisterUsernameTextChanged = onRegisterUsernameTextChanged,
                 registerPasswordTextState = registerPasswordTextState,
                 onRegisterPasswordTextChanged = onRegisterPasswordTextChanged,
-                passwordRetypeTextState = passwordRetypeTextState,
-                onPasswordRetypeTextChanged = onPasswordRetypeTextChanged,
                 selectLoginInputs = { isLoginInputSelected = true },
                 onRegisterPressed = onRegisterPressed
             )
@@ -110,8 +106,6 @@ fun RegisterInputs(
     onRegisterUsernameTextChanged: (String) -> Unit,
     registerPasswordTextState: String,
     onRegisterPasswordTextChanged: (String) -> Unit,
-    passwordRetypeTextState: String,
-    onPasswordRetypeTextChanged: (String) -> Unit,
     selectLoginInputs: () -> Unit,
     onRegisterPressed: () -> Unit
 ) {
@@ -125,11 +119,6 @@ fun RegisterInputs(
         placeholderText = "Password",
         textState = registerPasswordTextState,
         onTextChanged = onRegisterPasswordTextChanged
-    )
-    LoginTextField(
-        placeholderText = "Retype password",
-        textState = passwordRetypeTextState,
-        onTextChanged = onPasswordRetypeTextChanged
     )
     Spacer(modifier = Modifier.height(20.dp))
     Text(
