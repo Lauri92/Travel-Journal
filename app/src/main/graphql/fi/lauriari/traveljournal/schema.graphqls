@@ -1,0 +1,76 @@
+type Query {
+  _: Boolean
+
+  login(username: String!, password: String!): User
+
+  getGroup(id: ID!): Group
+
+  getGroupsByUserId: [Group]
+}
+
+type Mutation {
+  _: Boolean
+
+  registerUser(username: String!, password: String!, nickname: String): User
+
+  addInfoLink(url: String!, group: ID!): Link
+
+  addGroup(members: [UserInput], links: [LinkInput], name: String!, description: String!): Group
+
+  addUserToGroup(groupId: ID!, userId: ID!): Group
+}
+
+type User {
+  id: ID
+
+  username: String
+
+  nickname: String
+
+  token: String
+}
+
+input UserInput {
+  id: ID
+
+  username: String
+
+  nickname: String
+}
+
+type Link {
+  id: ID
+
+  user: User
+
+  url: String
+
+  group: ID
+}
+
+input LinkInput {
+  id: ID
+
+  user: ID
+
+  url: String
+}
+
+type Group {
+  id: ID
+
+  admin: User
+
+  members: [User]
+
+  links: [Link]
+
+  name: String
+
+  description: String
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
