@@ -28,6 +28,7 @@ fun LoginScreenContent(
     passwordRetypeTextState: String,
     onPasswordRetypeTextChanged: (String) -> Unit,
     onLoginPressed: () -> Unit,
+    onRegisterPressed: () -> Unit,
 ) {
 
     var isLoginInputSelected by rememberSaveable { mutableStateOf(true) }
@@ -58,7 +59,8 @@ fun LoginScreenContent(
                 onRegisterPasswordTextChanged = onRegisterPasswordTextChanged,
                 passwordRetypeTextState = passwordRetypeTextState,
                 onPasswordRetypeTextChanged = onPasswordRetypeTextChanged,
-                selectLoginInputs = { isLoginInputSelected = true }
+                selectLoginInputs = { isLoginInputSelected = true },
+                onRegisterPressed = onRegisterPressed
             )
         }
     }
@@ -111,6 +113,7 @@ fun RegisterInputs(
     passwordRetypeTextState: String,
     onPasswordRetypeTextChanged: (String) -> Unit,
     selectLoginInputs: () -> Unit,
+    onRegisterPressed: () -> Unit
 ) {
     LoginTextField(
         placeholderText = "Username",
@@ -140,7 +143,7 @@ fun RegisterInputs(
     OutlinedButton(
         modifier = Modifier
             .padding(16.dp),
-        onClick = {/*TODO Handle register*/ }
+        onClick = { onRegisterPressed() }
     ) {
         Text("Register")
     }

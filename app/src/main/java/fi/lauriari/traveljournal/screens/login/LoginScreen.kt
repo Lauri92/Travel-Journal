@@ -2,9 +2,9 @@ package fi.lauriari.traveljournal.screens.login
 
 import android.util.Log
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 
 @Composable
@@ -18,6 +18,7 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
 
     Scaffold(
         content = {
+            val context = LocalContext.current
             LoginScreenContent(
                 usernameTextState = usernameTextState,
                 onUsernameTextChanged = { newUsernameText ->
@@ -40,10 +41,16 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
                     loginViewModel.passwordRetypeTextState.value = newPasswordRetypeText
                 },
                 onLoginPressed = {
-                    Log.d("logintest", "Handle login")
+                    Log.d(
+                        "logintest",
+                        "Username: ${loginViewModel.usernameTextState.value}" +
+                                " Password: ${loginViewModel.passwordTextState.value}"
+                    )
+                },
+                onRegisterPressed = {
+                    loginViewModel.registerUser(context)
                 }
             )
         }
     )
-
 }
