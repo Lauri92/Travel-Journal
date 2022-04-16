@@ -9,7 +9,7 @@ fun LoginTextField(
     placeholderText: String,
     textState: String,
     onTextChanged: (String) -> Unit,
-    isInputAllowed: Boolean
+    isInputAllowed: Boolean,
 ) {
     OutlinedTextField(
         enabled = isInputAllowed,

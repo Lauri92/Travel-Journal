@@ -1,14 +1,8 @@
 package fi.lauriari.traveljournal.screens.login
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import com.apollographql.apollo3.api.ApolloResponse
-import fi.lauriari.traveljournal.LoginQuery
-import fi.lauriari.traveljournal.RegisterUserMutation
-import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 
 @Composable
@@ -21,14 +15,15 @@ fun LoginScreen(
     val registerUsernameTextState: String by loginViewModel.registerUsernameTextState
     val registerPasswordTextState: String by loginViewModel.registerPasswordTextState
 
-    val registerUserData by loginViewModel.registerUserData.collectAsState()
-    val loginUserData by loginViewModel.loginUserData.collectAsState()
+    //val registerUserData by loginViewModel.registerUserData.collectAsState()
+    //val loginUserData by loginViewModel.loginUserData.collectAsState()
 
-    var isInputAllowed by remember { mutableStateOf(true) }
+
 
 
     Scaffold(
         content = {
+            /*
             when (registerUserData) {
                 is APIRequestState.Loading -> {
                     Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show()
@@ -80,9 +75,10 @@ fun LoginScreen(
                     isInputAllowed = true
                 }
             }
-
+            */
 
             LoginScreenContent(
+                loginViewModel = loginViewModel,
                 usernameTextState = usernameTextState,
                 onUsernameTextChanged = { newUsernameText ->
                     loginViewModel.usernameTextState.value = newUsernameText
@@ -105,7 +101,6 @@ fun LoginScreen(
                 onRegisterPressed = {
                     loginViewModel.registerUser(context)
                 },
-                isInputAllowed = isInputAllowed
             )
         }
     )

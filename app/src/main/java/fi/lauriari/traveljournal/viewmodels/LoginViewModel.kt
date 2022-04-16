@@ -69,6 +69,7 @@ class LoginViewModel : ViewModel() {
     }
 
     fun loginUser(context: Context) {
+        _loginUserData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.loginUser(
                 context = context,
