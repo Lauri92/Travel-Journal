@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.apollographql.apollo3.api.ApolloResponse
 import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.RegisterUserMutation
@@ -114,18 +115,26 @@ fun LoginInputs(
         }
     }
 
+    Text(
+        text = "Login",
+        color = Color.Black,
+        fontSize = 30.sp
+    )
+    Spacer(modifier = Modifier.height(20.dp))
     LoginTextField(
-        placeholderText = "Username",
+        placeholderText = "Login Username",
         textState = usernameTextState,
         onTextChanged = onUsernameTextChanged,
-        isInputAllowed = isInputAllowed
+        isInputAllowed = isInputAllowed,
+        textVisibility = true
     )
 
     LoginTextField(
-        placeholderText = "Password",
+        placeholderText = "Login Password",
         textState = passwordTextState,
         onTextChanged = onPasswordTextChanged,
         isInputAllowed = isInputAllowed,
+        textVisibility = false
     )
     Spacer(modifier = Modifier.height(20.dp))
     Text(
@@ -138,14 +147,22 @@ fun LoginInputs(
     )
     OutlinedButton(
         modifier = Modifier
-            .padding(16.dp),
+            .padding(16.dp)
+            .size(width = 200.dp, height = 60.dp),
         onClick = {
-            isInputAllowed = false
-            onLoginPressed()
-            focusManager.clearFocus()
+            if (passwordTextState != "" && usernameTextState != "") {
+                isInputAllowed = false
+                onLoginPressed()
+                focusManager.clearFocus()
+            } else {
+                Toast.makeText(context, "Fill both fields!", Toast.LENGTH_SHORT).show()
+            }
         }
     ) {
-        Text("Login")
+        Text(
+            text = "Login",
+            fontSize = 20.sp
+        )
     }
 }
 
@@ -177,6 +194,7 @@ fun RegisterInputs(
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setRegisterDataIdle()
+            selectLoginInputs()
         }
         is APIRequestState.BadResponse -> {
             Toast.makeText(
@@ -192,18 +210,26 @@ fun RegisterInputs(
         }
     }
 
+    Text(
+        text = "Register",
+        color = Color.Black,
+        fontSize = 30.sp
+    )
+    Spacer(modifier = Modifier.height(20.dp))
     LoginTextField(
-        placeholderText = "Username",
+        placeholderText = "Register Username",
         textState = registerUsernameTextState,
         onTextChanged = onRegisterUsernameTextChanged,
-        isInputAllowed = isInputAllowed
+        isInputAllowed = isInputAllowed,
+        textVisibility = true
     )
 
     LoginTextField(
-        placeholderText = "Password",
+        placeholderText = "Register Password",
         textState = registerPasswordTextState,
         onTextChanged = onRegisterPasswordTextChanged,
         isInputAllowed = isInputAllowed,
+        textVisibility = false
     )
     Spacer(modifier = Modifier.height(20.dp))
     Text(
@@ -217,13 +243,21 @@ fun RegisterInputs(
     OutlinedButton(
         enabled = isInputAllowed,
         modifier = Modifier
-            .padding(16.dp),
+            .padding(16.dp)
+            .size(width = 200.dp, height = 60.dp),
         onClick = {
-            isInputAllowed = false
-            onRegisterPressed()
-            focusManager.clearFocus()
+            if (registerPasswordTextState != "" && registerUsernameTextState != "") {
+                isInputAllowed = false
+                onRegisterPressed()
+                focusManager.clearFocus()
+            } else {
+                Toast.makeText(context, "Fill both fields!", Toast.LENGTH_SHORT).show()
+            }
         }
     ) {
-        Text("Register")
+        Text(
+            text = "Register",
+            fontSize = 20.sp
+        )
     }
 }
