@@ -9,11 +9,13 @@ import androidx.navigation.compose.rememberNavController
 import fi.lauriari.traveljournal.navigation.InitNavigation
 import fi.lauriari.traveljournal.ui.theme.TravelJournalTheme
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
+import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var navController: NavHostController
     private val loginViewModel: LoginViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +24,8 @@ class MainActivity : ComponentActivity() {
                 navController = rememberNavController()
                 InitNavigation(
                     navController = navController,
-                    loginViewModel = loginViewModel
+                    loginViewModel = loginViewModel,
+                    profileViewModel = profileViewModel
                 )
             }
         }
