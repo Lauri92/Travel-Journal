@@ -137,7 +137,10 @@ fun LoginInputs(
     OutlinedButton(
         modifier = Modifier
             .padding(16.dp),
-        onClick = { onLoginPressed() }
+        onClick = {
+            isInputAllowed = false
+            onLoginPressed()
+        }
     ) {
         Text("Login")
     }
@@ -212,7 +215,10 @@ fun RegisterInputs(
         enabled = isInputAllowed,
         modifier = Modifier
             .padding(16.dp),
-        onClick = { onRegisterPressed() }
+        onClick = {
+            isInputAllowed = false
+            onRegisterPressed()
+        }
     ) {
         Text("Register")
     }
