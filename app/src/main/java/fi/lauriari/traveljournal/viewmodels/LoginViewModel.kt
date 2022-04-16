@@ -85,13 +85,13 @@ class LoginViewModel : ViewModel() {
                 password = password
             ).collect { loginResponse ->
                 if (loginResponse?.data?.login?.token != null) {
+                    User.setToken(context, loginResponse.data!!.login!!.token!!)
+                    User.setUsername(context, loginResponse.data!!.login!!.username!!)
                     _loginUserData.value = APIRequestState.Success(loginResponse)
                     usernameTextState.value = ""
                     passwordTextState.value = ""
                     registerUsernameTextState.value = ""
                     registerPasswordTextState.value = ""
-                    User.setToken(context, loginResponse.data!!.login!!.token!!)
-                    User.setUsername(context, loginResponse.data!!.login!!.username!!)
                 } else {
                     _loginUserData.value = APIRequestState.BadResponse
                 }
