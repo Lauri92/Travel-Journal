@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import fi.lauriari.traveljournal.util.Constants.KEY_TOKEN
+import fi.lauriari.traveljournal.util.Constants.KEY_USERNAME
 
 object User {
-    private const val KEY_TOKEN = "TOKEN"
     private fun preferences(context: Context): SharedPreferences {
         val masterKeyAlias: String = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
@@ -34,6 +35,24 @@ object User {
     fun removeToken(context: Context) {
         preferences(context).edit().apply {
             remove(KEY_TOKEN)
+            apply()
+        }
+    }
+
+    fun getUsername(context: Context): String? {
+        return preferences(context).getString(KEY_USERNAME, null)
+    }
+
+    fun setUsername(context: Context, username: String) {
+        preferences(context).edit().apply {
+            putString(KEY_USERNAME, username)
+            apply()
+        }
+    }
+
+    fun removeUsername(context: Context) {
+        preferences(context).edit().apply {
+            remove(KEY_USERNAME)
             apply()
         }
     }

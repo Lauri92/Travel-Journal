@@ -21,8 +21,8 @@ class LoginViewModel : ViewModel() {
 
     private val repository = Repository()
 
-    val usernameTextState: MutableState<String> = mutableStateOf("")
-    val passwordTextState: MutableState<String> = mutableStateOf("")
+    val usernameTextState: MutableState<String> = mutableStateOf("test")
+    val passwordTextState: MutableState<String> = mutableStateOf("test")
     val registerUsernameTextState: MutableState<String> = mutableStateOf("")
     val registerPasswordTextState: MutableState<String> = mutableStateOf("")
 
@@ -79,11 +79,11 @@ class LoginViewModel : ViewModel() {
                 if (loginResponse?.data?.login?.token != null) {
                     _loginUserData.value = APIRequestState.Success(loginResponse)
                     User.setToken(context, loginResponse.data!!.login!!.token!!)
+                    User.setUsername(context, loginResponse.data!!.login!!.username!!)
                 } else {
                     _loginUserData.value = APIRequestState.BadResponse
                 }
             }
         }
     }
-
 }

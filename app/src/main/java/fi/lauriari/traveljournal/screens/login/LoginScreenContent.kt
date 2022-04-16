@@ -1,11 +1,9 @@
 package fi.lauriari.traveljournal.screens.login
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -15,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apollographql.apollo3.api.ApolloResponse
@@ -22,11 +22,13 @@ import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.RegisterUserMutation
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.User
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreenContent(
     loginViewModel: LoginViewModel,
+    navigateToUserScreen: () -> Unit,
     usernameTextState: String,
     onUsernameTextChanged: (String) -> Unit,
     passwordTextState: String,
@@ -52,6 +54,7 @@ fun LoginScreenContent(
         if (isLoginInputSelected) {
             LoginInputs(
                 loginViewModel = loginViewModel,
+                navigateToUserScreen = navigateToUserScreen,
                 usernameTextState = usernameTextState,
                 onUsernameTextChanged = onUsernameTextChanged,
                 passwordTextState = passwordTextState,
@@ -83,6 +86,7 @@ fun LoginInputs(
     selectRegisterInputs: () -> Unit,
     onLoginPressed: () -> Unit,
     loginViewModel: LoginViewModel,
+    navigateToUserScreen: () -> Unit,
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -101,6 +105,7 @@ fun LoginInputs(
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setloginUserDataIdle()
+            navigateToUserScreen()
         }
         is APIRequestState.BadResponse -> {
             Toast.makeText(
@@ -139,13 +144,15 @@ fun LoginInputs(
     Spacer(modifier = Modifier.height(20.dp))
     Text(
         text = "No account? Register here.",
-        color = Color.DarkGray,
+        style = TextStyle(textDecoration = TextDecoration.Underline),
+        color = Color.Black,
         modifier = Modifier
             .clickable {
                 selectRegisterInputs()
             },
     )
     OutlinedButton(
+        enabled = isInputAllowed,
         modifier = Modifier
             .padding(16.dp)
             .size(width = 200.dp, height = 60.dp),
@@ -234,7 +241,8 @@ fun RegisterInputs(
     Spacer(modifier = Modifier.height(20.dp))
     Text(
         text = "Already have an account?",
-        color = Color.DarkGray,
+        style = TextStyle(textDecoration = TextDecoration.Underline),
+        color = Color.Black,
         modifier = Modifier
             .clickable {
                 selectLoginInputs()

@@ -7,13 +7,15 @@ import fi.lauriari.traveljournal.util.Constants.LOGIN_SCREEN
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 
 fun NavGraphBuilder.loginComposable(
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    navigateToUserScreen: () -> Unit
 ) {
     composable(
         route = LOGIN_SCREEN
     ) { navBackStackEntry ->
         LoginScreen(
-            loginViewModel = loginViewModel
+            loginViewModel = loginViewModel,
+            navigateToUserScreen = navigateToUserScreen,
         )
     }
 }

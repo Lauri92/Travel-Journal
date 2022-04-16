@@ -3,14 +3,12 @@ package fi.lauriari.traveljournal.screens.login
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import com.apollographql.apollo3.api.ApolloResponse
-import fi.lauriari.traveljournal.LoginQuery
-import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    navigateToUserScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val usernameTextState: String by loginViewModel.usernameTextState
@@ -22,6 +20,7 @@ fun LoginScreen(
         content = {
             LoginScreenContent(
                 loginViewModel = loginViewModel,
+                navigateToUserScreen = navigateToUserScreen,
                 usernameTextState = usernameTextState,
                 onUsernameTextChanged = { newUsernameText ->
                     loginViewModel.usernameTextState.value = newUsernameText
