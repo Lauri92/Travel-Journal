@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.util.User
@@ -24,7 +25,8 @@ fun ProfileName(
     ) {
         Text(
             text = User.getUsername(context) ?: "Some name",
-            fontSize = 25.sp
+            fontSize = 25.sp,
+            fontStyle = FontStyle.Italic
         )
     }
 }

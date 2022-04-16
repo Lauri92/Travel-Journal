@@ -20,7 +20,7 @@ fun ProfileIndicator(
 ) {
     Column(
         modifier = Modifier
-            .padding(top = 125.dp)
+            .padding(top = 25.dp)
             .fillMaxWidth()
             .wrapContentSize(Alignment.Center)
     ) {

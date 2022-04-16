@@ -1,0 +1,103 @@
+package fi.lauriari.traveljournal.screens.profile
+
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+
+@Composable
+fun AddGroupDialog(
+    context: Context,
+    openDialog: MutableState<Boolean>,
+) {
+    var nameText by remember { mutableStateOf("") }
+    var descriptionText by remember { mutableStateOf("") }
+    Dialog(
+        onDismissRequest = {
+            openDialog.value = false
+        },
+        content = {
+            Box(
+                modifier = Modifier
+                    .size(300.dp, 250.dp)
+                    .background(Color.White)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 10.dp),
+                        style = MaterialTheme.typography.h6,
+                        text = "Add a group",
+                        fontSize = 20.sp
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                        label = {
+                            Text("Group name")
+                        },
+                        value = nameText,
+                        onValueChange = { newText ->
+                            if (newText.length <= 15) nameText =
+                                newText else Toast.makeText(
+                                context,
+                                "Limit is 15 characters",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        })
+                    OutlinedTextField(
+                        modifier = Modifier.padding(
+                            start = 10.dp,
+                            end = 10.dp,
+                            top = 10.dp
+                        ),
+                        maxLines = 3,
+                        label = {
+                            Text("Description")
+                        },
+                        value = descriptionText,
+                        onValueChange = { newText ->
+                            if (newText.length <= 50) descriptionText =
+                                newText else Toast.makeText(
+                                context,
+                                "Limit is 50 characters",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        })
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 15.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        OutlinedButton(
+                            shape = CircleShape,
+                            onClick = { openDialog.value = false }) {
+                            Text(text = "Dismiss")
+                        }
+                        OutlinedButton(
+                            shape = CircleShape,
+                            onClick = { openDialog.value = false }) {
+                            Text(text = "Create")
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
