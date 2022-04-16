@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -153,6 +154,7 @@ fun LoginInputs(
     )
     OutlinedButton(
         enabled = isInputAllowed,
+        shape = CircleShape,
         modifier = Modifier
             .padding(16.dp)
             .size(width = 200.dp, height = 60.dp),
@@ -250,6 +252,7 @@ fun RegisterInputs(
     )
     OutlinedButton(
         enabled = isInputAllowed,
+        shape = CircleShape,
         modifier = Modifier
             .padding(16.dp)
             .size(width = 200.dp, height = 60.dp),

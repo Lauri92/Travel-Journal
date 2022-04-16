@@ -48,6 +48,11 @@ class LoginViewModel : ViewModel() {
             ).collect { registerResponse ->
                 if (registerResponse?.data?.registerUser != null) {
                     _registerUserData.value = APIRequestState.Success(registerResponse)
+                    loginUser(
+                        context,
+                        username = registerUsernameTextState.value,
+                        password = registerPasswordTextState.value
+                    )
                 } else {
                     _registerUserData.value = APIRequestState.BadResponse
                 }
@@ -67,17 +72,24 @@ class LoginViewModel : ViewModel() {
         _loginUserData.value = APIRequestState.Idle
     }
 
-    fun loginUser(context: Context) {
+    fun loginUser(
+        context: Context,
+        username: String = usernameTextState.value,
+        password: String = passwordTextState.value
+    ) {
         _loginUserData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.loginUser(
                 context = context,
-                username = usernameTextState.value,
-                password = passwordTextState.value
+                username = username,
+                password = password
             ).collect { loginResponse ->
-                Log.d("Logintry", loginResponse?.data.toString())
                 if (loginResponse?.data?.login?.token != null) {
                     _loginUserData.value = APIRequestState.Success(loginResponse)
+                    usernameTextState.value = ""
+                    passwordTextState.value = ""
+                    registerUsernameTextState.value = ""
+                    registerPasswordTextState.value = ""
                     User.setToken(context, loginResponse.data!!.login!!.token!!)
                     User.setUsername(context, loginResponse.data!!.login!!.username!!)
                 } else {
