@@ -46,7 +46,6 @@ class LoginViewModel : ViewModel() {
                 username = registerUsernameTextState.value,
                 password = registerPasswordTextState.value
             ).collect { registerResponse ->
-                Log.d("Registertry", registerResponse?.data.toString())
                 if (registerResponse?.data?.registerUser != null) {
                     _registerUserData.value = APIRequestState.Success(registerResponse)
                 } else {

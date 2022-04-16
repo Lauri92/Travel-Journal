@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -13,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.apollographql.apollo3.api.ApolloResponse
 import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.RegisterUserMutation
+import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 
@@ -39,7 +42,7 @@ fun LoginScreenContent(
 
     Column(
         modifier = Modifier
-            .background(color = Color.LightGray)
+            .background(color = backGroundBlue)
             .padding(top = 100.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -81,17 +84,16 @@ fun LoginInputs(
     loginViewModel: LoginViewModel,
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     val loginUserData by loginViewModel.loginUserData.collectAsState()
     var isInputAllowed by remember { mutableStateOf(true) }
 
     when (loginUserData) {
         is APIRequestState.Loading -> {
-            Log.d("loggingtest", "logging in..")
             Toast.makeText(context, "Attempting to log in...", Toast.LENGTH_SHORT).show()
             isInputAllowed = false
         }
         is APIRequestState.Success -> {
-            Log.d("loggingtest", "was success")
             Toast.makeText(
                 context,
                 "Welcome ${(loginUserData as APIRequestState.Success<ApolloResponse<LoginQuery.Data>?>).response?.data?.login?.username}",
@@ -140,6 +142,7 @@ fun LoginInputs(
         onClick = {
             isInputAllowed = false
             onLoginPressed()
+            focusManager.clearFocus()
         }
     ) {
         Text("Login")
@@ -157,12 +160,12 @@ fun RegisterInputs(
     loginViewModel: LoginViewModel
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     val registerUserData by loginViewModel.registerUserData.collectAsState()
     var isInputAllowed by remember { mutableStateOf(true) }
 
     when (registerUserData) {
         is APIRequestState.Loading -> {
-            Log.d("loadingtest", "isloading..")
             Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show()
             isInputAllowed = false
         }
@@ -218,6 +221,7 @@ fun RegisterInputs(
         onClick = {
             isInputAllowed = false
             onRegisterPressed()
+            focusManager.clearFocus()
         }
     ) {
         Text("Register")
