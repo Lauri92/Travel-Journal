@@ -1,0 +1,24 @@
+mutation AddGroup($name: String!, $description: String!) {
+  addGroup(name: $name, description: $description) {
+    id
+    admin{
+      id
+      username
+    }
+    name
+    description
+    links {
+      id
+      url
+      user {
+        nickname
+        username
+      }
+    }
+    members {
+      id
+      username
+      nickname
+    }
+  }
+}

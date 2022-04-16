@@ -21,9 +21,13 @@ import androidx.compose.ui.window.Dialog
 fun AddGroupDialog(
     context: Context,
     openDialog: MutableState<Boolean>,
+    groupNameTextState: String,
+    onGroupNameTextChanged: (String) -> Unit,
+    descriptionNameTextState: String,
+    onDescriptionTextChanged: (String) -> Unit,
 ) {
-    var nameText by remember { mutableStateOf("") }
-    var descriptionText by remember { mutableStateOf("") }
+    //var nameText by remember { mutableStateOf("") }
+    //var descriptionText by remember { mutableStateOf("") }
     Dialog(
         onDismissRequest = {
             openDialog.value = false
@@ -51,12 +55,11 @@ fun AddGroupDialog(
                         label = {
                             Text("Group name")
                         },
-                        value = nameText,
-                        onValueChange = { newText ->
-                            if (newText.length <= 15) nameText =
-                                newText else Toast.makeText(
+                        value = groupNameTextState,
+                        onValueChange = { newGroupName ->
+                            if (newGroupName.length <= 15) onGroupNameTextChanged(newGroupName) else Toast.makeText(
                                 context,
-                                "Limit is 15 characters",
+                                "Maximum length for name is 15 characters",
                                 Toast.LENGTH_SHORT
                             ).show()
                         })
@@ -70,10 +73,9 @@ fun AddGroupDialog(
                         label = {
                             Text("Description")
                         },
-                        value = descriptionText,
-                        onValueChange = { newText ->
-                            if (newText.length <= 50) descriptionText =
-                                newText else Toast.makeText(
+                        value = descriptionNameTextState,
+                        onValueChange = { newDescription ->
+                            if (newDescription.length <= 50) onDescriptionTextChanged(newDescription) else Toast.makeText(
                                 context,
                                 "Limit is 50 characters",
                                 Toast.LENGTH_SHORT
