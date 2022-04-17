@@ -96,7 +96,6 @@ fun LoginInputs(
 
     when (loginUserData) {
         is APIRequestState.Loading -> {
-            Toast.makeText(context, "Attempting to log in...", Toast.LENGTH_SHORT).show()
             isInputAllowed = false
         }
         is APIRequestState.Success -> {
@@ -192,7 +191,6 @@ fun RegisterInputs(
 
     when (registerUserData) {
         is APIRequestState.Loading -> {
-            Toast.makeText(context, "Processing...", Toast.LENGTH_SHORT).show()
             isInputAllowed = false
         }
         is APIRequestState.Success -> {
