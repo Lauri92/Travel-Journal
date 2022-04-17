@@ -4,7 +4,7 @@ sealed class APIRequestState<out T> {
     object Idle : APIRequestState<Nothing>()
     object Loading : APIRequestState<Nothing>()
     object EmptyList : APIRequestState<Nothing>()
-    object BadResponse : APIRequestState<Nothing>()
+    class BadResponse<T>(val error: String) : APIRequestState<T>()
     data class Success<T>(val response: T) : APIRequestState<T>()
     data class Error(val error: Throwable) : APIRequestState<Nothing>()
 }

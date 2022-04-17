@@ -6,8 +6,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.ApolloResponse
+import fi.lauriari.traveljournal.AddGroupMutation
+import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.data.Repository
+import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel() {
@@ -18,16 +24,33 @@ class ProfileViewModel : ViewModel() {
     val descriptionTextState: MutableState<String> = mutableStateOf("")
 
 
+    private var _addGroupData =
+        MutableStateFlow<APIRequestState<AddGroupMutation.Data?>>(
+            APIRequestState.Idle
+        )
+    val addGroupData: StateFlow<APIRequestState<AddGroupMutation.Data?>> =
+        _addGroupData
+
+    fun setAddGroupDataIdle() {
+        _addGroupData.value = APIRequestState.Idle
+    }
+
     fun addGroup(context: Context) {
+        _addGroupData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.addGroup(
                 context = context,
                 groupName = groupNameTextState.value,
                 description = descriptionTextState.value
             ).collect { addGroupResponse ->
-                groupNameTextState.value = ""
-                descriptionTextState.value = ""
-                Log.d("addgrouptry", addGroupResponse?.data.toString())
+                if (addGroupResponse?.data?.addGroup != null && !addGroupResponse.hasErrors()) {
+                    groupNameTextState.value = ""
+                    descriptionTextState.value = ""
+                    _addGroupData.value = APIRequestState.Success(addGroupResponse.data)
+                } else {
+                    val errorMessage = addGroupResponse!!.errors!![0].message
+                    _addGroupData.value = APIRequestState.BadResponse(errorMessage)
+                }
             }
         }
     }

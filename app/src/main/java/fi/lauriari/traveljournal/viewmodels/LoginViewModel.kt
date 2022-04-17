@@ -54,7 +54,9 @@ class LoginViewModel : ViewModel() {
                         password = registerPasswordTextState.value
                     )
                 } else {
-                    _registerUserData.value = APIRequestState.BadResponse
+                    val errorMessage = registerResponse?.errors!![0].message
+                    Log.d("reglog", errorMessage)
+                    _registerUserData.value = APIRequestState.BadResponse(errorMessage)
                 }
             }
         }
@@ -93,7 +95,9 @@ class LoginViewModel : ViewModel() {
                     registerUsernameTextState.value = ""
                     registerPasswordTextState.value = ""
                 } else {
-                    _loginUserData.value = APIRequestState.BadResponse
+                    val errorMessage = loginResponse?.errors!![0].message
+                    Log.d("reglog", errorMessage)
+                    _loginUserData.value = APIRequestState.BadResponse(errorMessage)
                 }
             }
         }

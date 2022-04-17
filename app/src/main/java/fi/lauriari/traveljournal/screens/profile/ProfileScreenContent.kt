@@ -10,37 +10,20 @@ import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 @Composable
 fun ProfileScreenContent(
     navigateToLoginScreen: () -> Unit,
-    groupNameTextState: String,
-    onGroupNameTextChanged: (String) -> Unit,
-    descriptionNameTextState: String,
-    onDescriptionTextChanged: (String) -> Unit,
-    onAddGroupPressed: () -> Unit
-) {
+    openDialog: () -> Unit,
+
+    ) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
             .background(color = backGroundBlue)
             .fillMaxSize(),
     ) {
-        val openDialog = remember { mutableStateOf(true) }
 
-        if (openDialog.value) {
-            AddGroupDialog(
-                context = context,
-                openDialog = openDialog,
-                groupNameTextState = groupNameTextState,
-                onGroupNameTextChanged = onGroupNameTextChanged,
-                descriptionNameTextState = descriptionNameTextState,
-                onDescriptionTextChanged = onDescriptionTextChanged,
-                onAddGroupPressed = onAddGroupPressed
-            )
-        }
 
         ProfileTopRow(
             navigateToLoginScreen = navigateToLoginScreen,
-            openDialog = {
-                openDialog.value = true
-            }
+            openDialog = { openDialog() }
         )
         ProfileIndicator(context = context)
         ProfileName(context = context)
