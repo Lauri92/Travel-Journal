@@ -28,11 +28,9 @@ class LoginViewModel : ViewModel() {
 
 
     private var _registerUserData =
-        MutableStateFlow<APIRequestState<ApolloResponse<RegisterUserMutation.Data>?>>(
-            APIRequestState.Idle
-        )
-    val registerUserData: StateFlow<APIRequestState<ApolloResponse<RegisterUserMutation.Data>?>> =
-        _registerUserData
+        MutableStateFlow<APIRequestState<RegisterUserMutation.Data?>>(APIRequestState.Idle)
+
+    val registerUserData: StateFlow<APIRequestState<RegisterUserMutation.Data?>> = _registerUserData
 
     fun setRegisterDataIdle() {
         _registerUserData.value = APIRequestState.Idle
@@ -47,7 +45,7 @@ class LoginViewModel : ViewModel() {
                 password = registerPasswordTextState.value
             ).collect { registerResponse ->
                 if (registerResponse?.data?.registerUser != null) {
-                    _registerUserData.value = APIRequestState.Success(registerResponse)
+                    _registerUserData.value = APIRequestState.Success(registerResponse.data)
                     loginUser(
                         context,
                         username = registerUsernameTextState.value,
@@ -55,7 +53,6 @@ class LoginViewModel : ViewModel() {
                     )
                 } else {
                     val errorMessage = registerResponse?.errors!![0].message
-                    Log.d("reglog", errorMessage)
                     _registerUserData.value = APIRequestState.BadResponse(errorMessage)
                 }
             }
@@ -64,11 +61,9 @@ class LoginViewModel : ViewModel() {
 
 
     private var _loginUserData =
-        MutableStateFlow<APIRequestState<ApolloResponse<LoginQuery.Data>?>>(
-            APIRequestState.Idle
-        )
-    val loginUserData: StateFlow<APIRequestState<ApolloResponse<LoginQuery.Data>?>> =
-        _loginUserData
+        MutableStateFlow<APIRequestState<LoginQuery.Data?>>(APIRequestState.Idle)
+
+    val loginUserData: StateFlow<APIRequestState<LoginQuery.Data?>> = _loginUserData
 
     fun setloginUserDataIdle() {
         _loginUserData.value = APIRequestState.Idle
@@ -89,14 +84,13 @@ class LoginViewModel : ViewModel() {
                 if (loginResponse?.data?.login?.token != null) {
                     User.setToken(context, loginResponse.data!!.login!!.token!!)
                     User.setUsername(context, loginResponse.data!!.login!!.username!!)
-                    _loginUserData.value = APIRequestState.Success(loginResponse)
+                    _loginUserData.value = APIRequestState.Success(loginResponse.data)
                     usernameTextState.value = ""
                     passwordTextState.value = ""
                     registerUsernameTextState.value = ""
                     registerPasswordTextState.value = ""
                 } else {
                     val errorMessage = loginResponse?.errors!![0].message
-                    Log.d("reglog", errorMessage)
                     _loginUserData.value = APIRequestState.BadResponse(errorMessage)
                 }
             }

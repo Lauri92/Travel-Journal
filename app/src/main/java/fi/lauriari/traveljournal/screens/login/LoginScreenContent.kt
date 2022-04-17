@@ -102,7 +102,7 @@ fun LoginInputs(
         is APIRequestState.Success -> {
             Toast.makeText(
                 context,
-                "Welcome ${(loginUserData as APIRequestState.Success<ApolloResponse<LoginQuery.Data>?>).response?.data?.login?.username}",
+                "Welcome ${((loginUserData as APIRequestState.Success<LoginQuery.Data?>).response?.login?.username)}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setloginUserDataIdle()
@@ -111,7 +111,7 @@ fun LoginInputs(
         is APIRequestState.BadResponse -> {
             Toast.makeText(
                 context,
-                "Failed to login",
+                "Failed to login: ${(loginUserData as APIRequestState.BadResponse<LoginQuery.Data?>).error}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setloginUserDataIdle()
@@ -199,7 +199,7 @@ fun RegisterInputs(
             Toast.makeText(
                 context,
                 "Registered user with username " +
-                        "${(registerUserData as APIRequestState.Success<ApolloResponse<RegisterUserMutation.Data>?>).response?.data?.registerUser?.username}",
+                        "${((registerUserData as APIRequestState.Success<RegisterUserMutation.Data?>).response?.registerUser?.username)}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setRegisterDataIdle()
@@ -208,7 +208,7 @@ fun RegisterInputs(
         is APIRequestState.BadResponse -> {
             Toast.makeText(
                 context,
-                "Failed to register user with username $registerUsernameTextState",
+                "Error: ${(registerUserData as APIRequestState.BadResponse<RegisterUserMutation.Data?>).error}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setRegisterDataIdle()
