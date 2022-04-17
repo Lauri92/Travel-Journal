@@ -6,6 +6,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import fi.lauriari.traveljournal.util.Constants.KEY_TOKEN
 import fi.lauriari.traveljournal.util.Constants.KEY_USERNAME
+import fi.lauriari.traveljournal.util.Constants.KEY_USER_ID
 
 object User {
     private fun preferences(context: Context): SharedPreferences {
@@ -53,6 +54,24 @@ object User {
     fun removeUsername(context: Context) {
         preferences(context).edit().apply {
             remove(KEY_USERNAME)
+            apply()
+        }
+    }
+
+    fun getUserId(context: Context): String? {
+        return preferences(context).getString(KEY_USER_ID, null)
+    }
+
+    fun setUserId(context: Context, userId: String) {
+        preferences(context).edit().apply {
+            putString(KEY_USER_ID, userId)
+            apply()
+        }
+    }
+
+    fun removeUserId(context: Context) {
+        preferences(context).edit().apply {
+            remove(KEY_USER_ID)
             apply()
         }
     }

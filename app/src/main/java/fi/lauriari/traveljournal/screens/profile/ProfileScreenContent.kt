@@ -12,11 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.User
 
 @Composable
 fun ProfileScreenContent(
@@ -62,28 +64,38 @@ fun ProfileScreenContent(
             }
             is APIRequestState.Success -> {
 
-
+                Text(
+                    modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
+                    text = "Your groups",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
+                )
                 LazyColumn {
                     items(getGroupsByUserIdData.response?.getGroupsByUserId!!) { group ->
                         Column(
                             Modifier
-                                .padding(20.dp)
+                                .padding(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
                                 .fillMaxWidth()
                                 .background(Color.White, RoundedCornerShape(10.dp))
                         ) {
+                            val members = group!!.members!!.size + 1
+
                             Text(
                                 modifier = Modifier.padding(5.dp),
-                                text = group?.name!!
+                                text = group.name!!
+                            )
+                            Text(
+                                modifier = Modifier.padding(5.dp),
+                                text = "Members ($members)",
+                                fontWeight = FontWeight.Light,
+                                color = Color.Gray
                             )
                             Text(
                                 modifier = Modifier.padding(5.dp),
                                 text = group.description!!
                             )
-
                         }
                     }
-
-
                 }
             }
 

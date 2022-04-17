@@ -8,6 +8,7 @@ object Constants {
     // Shared prefs keys
     const val KEY_TOKEN = "TOKEN"
     const val KEY_USERNAME = "USERNAME"
+    const val KEY_USER_ID = "USER_ID"
 
     // Destinations
     const val LOGIN_SCREEN = "login"
