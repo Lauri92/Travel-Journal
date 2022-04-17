@@ -3,6 +3,8 @@ package fi.lauriari.traveljournal.screens.profile
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.User
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
@@ -16,16 +18,19 @@ fun ProfileScreen(
     val descriptionNameTextState: String by profileViewModel.descriptionTextState
 
     val getGroupsByUserIdData by profileViewModel.getGroupsByUserIdData.collectAsState()
+    val getAddGroupData by profileViewModel.addGroupData.collectAsState()
 
-    val openDialog = remember { mutableStateOf(false) }
+    val openAddGroupDialog = remember { mutableStateOf(false) }
 
-    profileViewModel.getGroupsByUserId(context)
+    LaunchedEffect(key1 = User.getToken(context)) {
+        profileViewModel.getGroupsByUserId(context)
+    }
 
 
-    if (openDialog.value) {
+    if (openAddGroupDialog.value) {
         AddGroupDialog(
             context = context,
-            openDialog = openDialog,
+            openDialog = openAddGroupDialog,
             groupNameTextState = groupNameTextState,
             onGroupNameTextChanged = { newGroupNameText ->
                 profileViewModel.groupNameTextState.value = newGroupNameText
@@ -40,13 +45,22 @@ fun ProfileScreen(
         )
     }
 
+    when (getAddGroupData) {
+        is APIRequestState.Loading -> {}
+        is APIRequestState.Success -> {}
+        is APIRequestState.BadResponse -> {}
+        is APIRequestState.Idle -> {}
+        is APIRequestState.EmptyList -> {}
+        is APIRequestState.Error -> {}
+    }
+
 
 
     Scaffold(
         content = {
             ProfileScreenContent(
                 navigateToLoginScreen = navigateToLoginScreen,
-                openDialog = { openDialog.value = true },
+                openDialog = { openAddGroupDialog.value = true },
                 getGroupsByUserIdData = getGroupsByUserIdData
             )
         }

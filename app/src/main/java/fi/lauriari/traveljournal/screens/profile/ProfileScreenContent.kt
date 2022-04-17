@@ -1,6 +1,5 @@
 package fi.lauriari.traveljournal.screens.profile
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
@@ -14,7 +13,6 @@ import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
-import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
 fun ProfileScreenContent(
@@ -29,8 +27,6 @@ fun ProfileScreenContent(
             .background(color = backGroundBlue)
             .fillMaxSize(),
     ) {
-
-
         ProfileTopRow(
             navigateToLoginScreen = navigateToLoginScreen,
             openDialog = { openDialog() }
@@ -40,7 +36,6 @@ fun ProfileScreenContent(
 
         when (getGroupsByUserIdData) {
             is APIRequestState.Loading -> {
-                Log.d("Loadingtest", "In loading")
                 Column(
                     modifier = Modifier
                         .padding(top = 50.dp)
@@ -64,11 +59,13 @@ fun ProfileScreenContent(
             is APIRequestState.Success -> {
                 Text(getGroupsByUserIdData.response?.getGroupsByUserId.toString())
             }
-            is APIRequestState.BadResponse -> {}
-            APIRequestState.Idle -> {
+            is APIRequestState.BadResponse -> {
+                Text("Something went wrong loading groups!")
+            }
+            is APIRequestState.Idle -> {
 
             }
-            APIRequestState.EmptyList -> {}
+            is APIRequestState.EmptyList -> {}
         }
     }
 }
