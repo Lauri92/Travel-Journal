@@ -1,12 +1,15 @@
 package fi.lauriari.traveljournal.screens.profile
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,9 +22,11 @@ import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
 fun ProfileScreenContent(
+    profileViewModel: ProfileViewModel,
     navigateToLoginScreen: () -> Unit,
     openDialog: () -> Unit,
     getGroupsByUserIdData: APIRequestState<GetGroupsByUserIdQuery.Data?>,
@@ -80,10 +85,25 @@ fun ProfileScreenContent(
                         ) {
                             val members = group!!.members!!.size + 1
 
-                            Text(
-                                modifier = Modifier.padding(5.dp),
-                                text = group.name!!
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(5.dp),
+                                    text = group.name!!,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                if (profileViewModel.userId == group.admin?.id) {
+                                    Icon(
+                                        modifier = Modifier.padding(5.dp),
+                                        imageVector = Icons.Filled.Star,
+                                        contentDescription = "Admin indicator",
+                                        tint = Color.Red
+                                    )
+                                }
+                            }
                             Text(
                                 modifier = Modifier.padding(5.dp),
                                 text = "Members ($members)",

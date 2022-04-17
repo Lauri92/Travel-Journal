@@ -23,6 +23,8 @@ class ProfileViewModel : ViewModel() {
 
     val groupNameTextState: MutableState<String> = mutableStateOf("")
     val descriptionTextState: MutableState<String> = mutableStateOf("")
+    var username: String = ""
+    var userId: String = ""
 
 
     private var _addGroupData =
@@ -78,7 +80,8 @@ class ProfileViewModel : ViewModel() {
                         _getGroupsByUserIdData.value =
                             APIRequestState.Success(getGroupsByUserIdResponse.data)
                     } else {
-                        _getGroupsByUserIdData.value = APIRequestState.BadResponse("Failed to load groups")
+                        _getGroupsByUserIdData.value =
+                            APIRequestState.BadResponse("Failed to load groups")
                     }
                 }
         }

@@ -24,6 +24,8 @@ fun ProfileScreen(
 
     LaunchedEffect(key1 = User.getToken(context)) {
         profileViewModel.getGroupsByUserId(context)
+        profileViewModel.username = User.getUsername(context).toString()
+        profileViewModel.userId = User.getUserId(context).toString()
     }
 
 
@@ -59,6 +61,7 @@ fun ProfileScreen(
     Scaffold(
         content = {
             ProfileScreenContent(
+                profileViewModel = profileViewModel,
                 navigateToLoginScreen = navigateToLoginScreen,
                 openDialog = { openAddGroupDialog.value = true },
                 getGroupsByUserIdData = getGroupsByUserIdData
