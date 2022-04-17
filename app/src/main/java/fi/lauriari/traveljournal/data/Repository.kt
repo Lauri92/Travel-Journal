@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.apollographql.apollo3.ApolloCall
 import com.apollographql.apollo3.api.ApolloResponse
-import fi.lauriari.traveljournal.AddGroupMutation
-import fi.lauriari.traveljournal.LoginQuery
-import fi.lauriari.traveljournal.RegisterUserMutation
-import fi.lauriari.traveljournal.apolloClient
+import fi.lauriari.traveljournal.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -75,4 +72,21 @@ class Repository {
             emit(response)
         }.flowOn(Dispatchers.IO)
     }
+
+    suspend fun getGroupsByUserId(
+        context: Context
+    ): Flow<ApolloResponse<GetGroupsByUserIdQuery.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).query(
+                    GetGroupsByUserIdQuery()
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
+
 }

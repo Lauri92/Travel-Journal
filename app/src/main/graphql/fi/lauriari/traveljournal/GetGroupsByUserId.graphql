@@ -1,0 +1,22 @@
+query GetGroupsByUserId {
+  getGroupsByUserId {
+    id
+    admin {
+      username
+      nickname
+    }
+    members {
+      username
+      nickname
+    }
+    links {
+      user {
+        username
+        nickname
+      }
+      url
+    }
+    name
+    description
+  }
+}

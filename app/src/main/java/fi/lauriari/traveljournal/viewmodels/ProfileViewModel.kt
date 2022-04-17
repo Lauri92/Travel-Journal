@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
 import fi.lauriari.traveljournal.AddGroupMutation
+import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.data.Repository
 import fi.lauriari.traveljournal.util.APIRequestState
@@ -52,6 +53,39 @@ class ProfileViewModel : ViewModel() {
                     _addGroupData.value = APIRequestState.BadResponse(errorMessage)
                 }
             }
+        }
+    }
+
+    private var _getGroupsByUserIdData =
+        MutableStateFlow<APIRequestState<GetGroupsByUserIdQuery.Data?>>(
+            APIRequestState.Idle
+        )
+    val getGroupsByUserIdData: StateFlow<APIRequestState<GetGroupsByUserIdQuery.Data?>> =
+        _getGroupsByUserIdData
+
+    fun setGetGroupsByUserIdDataIdle() {
+        _getGroupsByUserIdData.value = APIRequestState.Idle
+    }
+
+    fun getGroupsByUserId(context: Context) {
+        _getGroupsByUserIdData.value = APIRequestState.Loading
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.getGroupsByUserId(context = context)
+                .collect { getGroupsByUserIdResponse ->
+                    if (getGroupsByUserIdResponse?.data?.getGroupsByUserId != null &&
+                        !getGroupsByUserIdResponse.hasErrors()
+                    ) {
+                        Log.d(
+                            "groupsdata",
+                            getGroupsByUserIdResponse.data!!.getGroupsByUserId.toString()
+                        )
+                        _getGroupsByUserIdData.value =
+                            APIRequestState.Success(getGroupsByUserIdResponse.data)
+                    } else {
+                        val errorMessage = getGroupsByUserIdResponse!!.errors!![0].message
+                        _getGroupsByUserIdData.value = APIRequestState.BadResponse(errorMessage)
+                    }
+                }
         }
     }
 }

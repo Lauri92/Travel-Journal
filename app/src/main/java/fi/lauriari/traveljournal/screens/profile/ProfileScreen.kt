@@ -1,10 +1,7 @@
 package fi.lauriari.traveljournal.screens.profile
 
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
@@ -14,10 +11,16 @@ fun ProfileScreen(
     navigateToLoginScreen: () -> Unit,
 ) {
     val context = LocalContext.current
+
     val groupNameTextState: String by profileViewModel.groupNameTextState
     val descriptionNameTextState: String by profileViewModel.descriptionTextState
 
-    val openDialog = remember { mutableStateOf(true) }
+    val getGroupsByUserIdData by profileViewModel.getGroupsByUserIdData.collectAsState()
+
+    val openDialog = remember { mutableStateOf(false) }
+
+    profileViewModel.getGroupsByUserId(context)
+
 
     if (openDialog.value) {
         AddGroupDialog(
@@ -43,7 +46,8 @@ fun ProfileScreen(
         content = {
             ProfileScreenContent(
                 navigateToLoginScreen = navigateToLoginScreen,
-                openDialog = { openDialog.value = true }
+                openDialog = { openDialog.value = true },
+                getGroupsByUserIdData = getGroupsByUserIdData
             )
         }
     )
