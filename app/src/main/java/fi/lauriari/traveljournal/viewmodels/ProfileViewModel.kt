@@ -75,15 +75,10 @@ class ProfileViewModel : ViewModel() {
                     if (getGroupsByUserIdResponse?.data?.getGroupsByUserId != null &&
                         !getGroupsByUserIdResponse.hasErrors()
                     ) {
-                        Log.d(
-                            "groupsdata",
-                            getGroupsByUserIdResponse.data!!.getGroupsByUserId.toString()
-                        )
                         _getGroupsByUserIdData.value =
                             APIRequestState.Success(getGroupsByUserIdResponse.data)
                     } else {
-                        val errorMessage = getGroupsByUserIdResponse!!.errors!![0].message
-                        _getGroupsByUserIdData.value = APIRequestState.BadResponse(errorMessage)
+                        _getGroupsByUserIdData.value = APIRequestState.BadResponse("Failed to load groups")
                     }
                 }
         }

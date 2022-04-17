@@ -2,6 +2,7 @@ query GetGroupsByUserId {
   getGroupsByUserId {
     id
     admin {
+      id
       username
       nickname
     }

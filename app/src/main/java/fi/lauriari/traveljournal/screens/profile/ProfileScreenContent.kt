@@ -2,11 +2,15 @@ package fi.lauriari.traveljournal.screens.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,10 +61,42 @@ fun ProfileScreenContent(
                 }
             }
             is APIRequestState.Success -> {
-                Text(getGroupsByUserIdData.response?.getGroupsByUserId.toString())
+
+
+                LazyColumn {
+                    items(getGroupsByUserIdData.response?.getGroupsByUserId!!) { group ->
+                        Column(
+                            Modifier
+                                .padding(20.dp)
+                                .fillMaxWidth()
+                                .background(Color.White, RoundedCornerShape(10.dp))
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(5.dp),
+                                text = group?.name!!
+                            )
+                            Text(
+                                modifier = Modifier.padding(5.dp),
+                                text = group.description!!
+                            )
+
+                        }
+                    }
+
+
+                }
             }
+
+
             is APIRequestState.BadResponse -> {
-                Text("Something went wrong loading groups!")
+                Column(
+                    modifier = Modifier
+                        .padding(top = 50.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Something went wrong loading groups!")
+                }
             }
             is APIRequestState.Idle -> {
 
