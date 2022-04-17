@@ -13,7 +13,8 @@ fun ProfileScreenContent(
     groupNameTextState: String,
     onGroupNameTextChanged: (String) -> Unit,
     descriptionNameTextState: String,
-    onDescriptionTextChanged: (String) -> Unit
+    onDescriptionTextChanged: (String) -> Unit,
+    onAddGroupPressed: () -> Unit
 ) {
     val context = LocalContext.current
     Column(
@@ -30,7 +31,8 @@ fun ProfileScreenContent(
                 groupNameTextState = groupNameTextState,
                 onGroupNameTextChanged = onGroupNameTextChanged,
                 descriptionNameTextState = descriptionNameTextState,
-                onDescriptionTextChanged = onDescriptionTextChanged
+                onDescriptionTextChanged = onDescriptionTextChanged,
+                onAddGroupPressed = onAddGroupPressed
             )
         }
 

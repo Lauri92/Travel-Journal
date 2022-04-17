@@ -25,9 +25,8 @@ fun AddGroupDialog(
     onGroupNameTextChanged: (String) -> Unit,
     descriptionNameTextState: String,
     onDescriptionTextChanged: (String) -> Unit,
+    onAddGroupPressed: () -> Unit,
 ) {
-    //var nameText by remember { mutableStateOf("") }
-    //var descriptionText by remember { mutableStateOf("") }
     Dialog(
         onDismissRequest = {
             openDialog.value = false
@@ -94,7 +93,11 @@ fun AddGroupDialog(
                         }
                         OutlinedButton(
                             shape = CircleShape,
-                            onClick = { openDialog.value = false }) {
+                            onClick = {
+                                openDialog.value = false
+                                onAddGroupPressed()
+                            })
+                        {
                             Text(text = "Create")
                         }
                     }

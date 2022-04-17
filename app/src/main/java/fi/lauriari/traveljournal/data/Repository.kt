@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.apollographql.apollo3.ApolloCall
 import com.apollographql.apollo3.api.ApolloResponse
+import fi.lauriari.traveljournal.AddGroupMutation
 import fi.lauriari.traveljournal.LoginQuery
 import fi.lauriari.traveljournal.RegisterUserMutation
 import fi.lauriari.traveljournal.apolloClient
@@ -54,4 +55,24 @@ class Repository {
         }.flowOn(Dispatchers.IO)
     }
 
+
+    suspend fun addGroup(
+        context: Context,
+        groupName: String,
+        description: String
+    ): Flow<ApolloResponse<AddGroupMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    AddGroupMutation(
+                        name = groupName,
+                        description = description
+                    )
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
 }
