@@ -17,11 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 
 @Composable
 fun GroupScreenContent(
-    navigateToProfileScreen: () -> Unit
+    navigateToProfileScreen: () -> Unit,
+    groupViewModel: GroupViewModel
 ) {
     Column(
         modifier = Modifier

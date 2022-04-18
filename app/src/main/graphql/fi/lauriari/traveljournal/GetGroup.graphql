@@ -1,0 +1,25 @@
+query GetGroup($getGroupId: ID!) {
+  getGroup(id: $getGroupId) {
+    id
+    name
+    description
+    admin {
+      id
+      username
+      nickname
+    }
+    members {
+      id
+      username
+      nickname
+    }
+    links {
+      id
+      user {
+        nickname
+        username
+      }
+      url
+    }
+  }
+}

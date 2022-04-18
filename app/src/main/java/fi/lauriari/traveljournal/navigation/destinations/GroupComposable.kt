@@ -1,6 +1,8 @@
 package fi.lauriari.traveljournal.navigation.destinations
 
 import androidx.compose.material.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -21,11 +23,17 @@ fun NavGraphBuilder.groupComposable(
         })
     ) { navBackStackEntry ->
 
+        val context = LocalContext.current
         val groupId = navBackStackEntry.arguments!!.getString(GROUP_ARGUMENT_KEY)
+
+        LaunchedEffect(key1 = groupId) {
+            groupViewModel.getGroupById(context, groupId!!)
+        }
 
         Text(groupId.toString())
 
         GroupScreen(
+            groupViewModel = groupViewModel,
             navigateToProfileScreen = navigateToProfileScreen
         )
 
