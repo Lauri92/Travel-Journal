@@ -1,6 +1,9 @@
 package fi.lauriari.traveljournal.screens.profile
 
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.util.APIRequestState
@@ -21,6 +24,7 @@ fun ProfileScreen(
     val getAddGroupData by profileViewModel.addGroupData.collectAsState()
 
     val openAddGroupDialog = remember { mutableStateOf(false) }
+    val openGroupAddedSuccesfullyDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = User.getToken(context)) {
         profileViewModel.getGroupsByUserId(context)
@@ -46,10 +50,33 @@ fun ProfileScreen(
             }
         )
     }
+    if (openGroupAddedSuccesfullyDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                openGroupAddedSuccesfullyDialog.value = false
+                profileViewModel.setAddGroupDataIdle()
+            },
+            title = {
+                Text(text = "Group added.")
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        openGroupAddedSuccesfullyDialog.value = false
+                        profileViewModel.setAddGroupDataIdle()
+                    }) {
+                    Text("OK")
+                }
+            },
+        )
+    }
 
     when (getAddGroupData) {
         is APIRequestState.Loading -> {}
-        is APIRequestState.Success -> {}
+        is APIRequestState.Success -> {
+            openGroupAddedSuccesfullyDialog.value = true
+            profileViewModel.getGroupsByUserId(context)
+        }
         is APIRequestState.BadResponse -> {}
         is APIRequestState.Idle -> {}
         is APIRequestState.EmptyList -> {}
