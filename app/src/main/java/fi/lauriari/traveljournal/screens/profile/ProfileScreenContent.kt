@@ -1,27 +1,27 @@
 package fi.lauriari.traveljournal.screens.profile
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
-import fi.lauriari.traveljournal.util.User
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
@@ -110,6 +110,18 @@ fun ProfileScreenContent(
                                 fontWeight = FontWeight.Light,
                                 color = Color.Gray
                             )
+                            Row {
+                                MemberlistCircle(
+                                    username = group.admin!!.username,
+                                    startPadding = 5.dp
+                                )
+                                group.members?.forEach { member ->
+                                    MemberlistCircle(
+                                        username = member?.username,
+                                        startPadding = 2.dp
+                                    )
+                                }
+                            }
                             Text(
                                 modifier = Modifier.padding(5.dp),
                                 text = group.description!!
@@ -136,4 +148,33 @@ fun ProfileScreenContent(
             is APIRequestState.EmptyList -> {}
         }
     }
+}
+
+@Composable
+fun MemberlistCircle(
+    username: String?,
+    startPadding: Dp
+) {
+    Box(
+        modifier = Modifier
+            .padding(start = startPadding)
+            .size(20.dp)
+            .clip(CircleShape)
+            .background(Color.Gray)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val usernameStartingLetter =
+                username?.get(0).toString().uppercase()
+
+            Text(
+                text = usernameStartingLetter,
+                fontSize = 10.sp
+            )
+        }
+    }
+
 }

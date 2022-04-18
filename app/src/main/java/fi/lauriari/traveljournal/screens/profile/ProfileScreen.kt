@@ -84,8 +84,6 @@ fun ProfileScreen(
         is APIRequestState.Error -> {}
     }
 
-
-
     Scaffold(
         content = {
             ProfileScreenContent(
