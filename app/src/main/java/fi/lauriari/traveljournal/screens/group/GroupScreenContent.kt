@@ -1,74 +1,136 @@
 package fi.lauriari.traveljournal.screens.group
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
-import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 
 @Composable
 fun GroupScreenContent(
     navigateToProfileScreen: () -> Unit,
-    groupViewModel: GroupViewModel
+    groupViewModel: GroupViewModel,
+    getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>
 ) {
-    Column(
-        modifier = Modifier
-            .background(color = backGroundBlue)
-            .fillMaxSize(),
-    ) {
-        Row(
-        ) {
-            IconButton(onClick = { navigateToProfileScreen() }) {
-                Icon(
-                    modifier = Modifier.padding(10.dp),
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Admin indicator",
-                    tint = Color.Black
+
+    when (getGroupByIdData) {
+        is APIRequestState.Loading -> {
+            Column(
+                modifier = Modifier
+                    .padding(top = 50.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 100.dp),
+                    text = "Loading group...",
+                    fontSize = 25.sp,
                 )
             }
         }
-        Row() {
-            Box(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .size(125.dp)
-                    .clip(CircleShape)
-                    .background(Color.Red)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    val usernameStartingLetter =
-                        "Hello".get(0).toString().uppercase()
-                    Text(
-                        text = usernameStartingLetter,
-                        fontSize = 75.sp
-                    )
-                }
-            }
+        is APIRequestState.Success -> {
             Column(
                 modifier = Modifier
-                    .padding(start = 15.dp, top = 30.dp)
+                    .background(color = backGroundBlue)
+                    .fillMaxSize(),
             ) {
-                Text(text = "Group name")
-                Text(text = "Group description")
+                GroupScreenContentHeader(
+                    navigateToProfileScreen = navigateToProfileScreen,
+                    getGroupByIdData = getGroupByIdData
+                )
+                Row(
+                    modifier = Modifier
+                        .border(width = 2.dp, color = Color.Gray)
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    OutlinedButton(
+                        modifier = Modifier
+                            .size(width = 200.dp, height = 60.dp),
+                        shape = CircleShape,
+                        onClick = { /* TODO: Open add members dialog */ }) {
+                        Text(text = "Add a member", fontSize = 20.sp)
+                    }
+                }
             }
+
+
+        }
+        is APIRequestState.BadResponse -> {}
+        is APIRequestState.EmptyList -> {}
+        is APIRequestState.Idle -> {}
+    }
+}
+
+@Composable
+fun GroupScreenContentHeader(
+    navigateToProfileScreen: () -> Unit,
+    getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
+) {
+    Row(
+    ) {
+        IconButton(onClick = { navigateToProfileScreen() }) {
+            Icon(
+                modifier = Modifier.padding(10.dp),
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = "Admin indicator",
+                tint = Color.Black
+            )
+        }
+    }
+    Row() {
+        Box(
+            modifier = Modifier
+                .padding(20.dp)
+                .size(125.dp)
+                .clip(CircleShape)
+                .background(Color.DarkGray)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val groupnameStartingLetter =
+                    getGroupByIdData.response?.name?.get(0).toString().uppercase()
+                Text(
+                    text = groupnameStartingLetter,
+                    fontSize = 75.sp
+                )
+            }
+        }
+        Column(
+            modifier = Modifier
+                .padding(start = 15.dp, top = 10.dp, end = 10.dp)
+        ) {
+            Text(
+                text = getGroupByIdData.response?.name!!,
+                fontSize = 30.sp,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = getGroupByIdData.response.description!!,
+                fontSize = 20.sp,
+            )
         }
     }
 }

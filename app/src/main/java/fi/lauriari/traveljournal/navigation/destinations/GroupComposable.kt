@@ -2,6 +2,8 @@ package fi.lauriari.traveljournal.navigation.destinations
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -27,14 +29,18 @@ fun NavGraphBuilder.groupComposable(
         val groupId = navBackStackEntry.arguments!!.getString(GROUP_ARGUMENT_KEY)
 
         LaunchedEffect(key1 = groupId) {
-            groupViewModel.getGroupById(context, groupId!!)
+            groupViewModel.getGroupById(
+                context = context,
+                groupId = groupId!!
+            )
         }
 
-        Text(groupId.toString())
+        val getGroupByIdData by groupViewModel.getGroupByIdData.collectAsState()
 
         GroupScreen(
             groupViewModel = groupViewModel,
-            navigateToProfileScreen = navigateToProfileScreen
+            navigateToProfileScreen = navigateToProfileScreen,
+            getGroupByIdData = getGroupByIdData
         )
 
 

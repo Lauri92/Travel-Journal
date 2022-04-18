@@ -27,6 +27,7 @@ class GroupViewModel : ViewModel() {
         _getGroupByIdData
 
     fun getGroupById(context: Context, groupId: String) {
+        _getGroupByIdData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.getGroupById(
                 context = context, groupId = groupId
