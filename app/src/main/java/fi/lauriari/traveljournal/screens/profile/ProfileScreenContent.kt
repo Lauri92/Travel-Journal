@@ -1,6 +1,9 @@
 package fi.lauriari.traveljournal.screens.profile
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -68,70 +72,12 @@ fun ProfileScreenContent(
                 }
             }
             is APIRequestState.Success -> {
-
-                Text(
-                    modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
-                    text = "Your groups",
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp
+                Grouplist(
+                    context = context,
+                    getGroupsByUserIdData = getGroupsByUserIdData,
+                    profileViewModel = profileViewModel
                 )
-                LazyColumn {
-                    items(getGroupsByUserIdData.response?.getGroupsByUserId!!) { group ->
-                        Column(
-                            Modifier
-                                .padding(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
-                                .fillMaxWidth()
-                                .background(Color.White, RoundedCornerShape(10.dp))
-                        ) {
-                            val members = group!!.members!!.size + 1
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(5.dp),
-                                    text = group.name!!,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                if (profileViewModel.userId == group.admin?.id) {
-                                    Icon(
-                                        modifier = Modifier.padding(5.dp),
-                                        imageVector = Icons.Filled.Star,
-                                        contentDescription = "Admin indicator",
-                                        tint = Color.Red
-                                    )
-                                }
-                            }
-                            Text(
-                                modifier = Modifier.padding(5.dp),
-                                text = "Members ($members)",
-                                fontWeight = FontWeight.Light,
-                                color = Color.Gray
-                            )
-                            Row {
-                                MemberlistCircle(
-                                    username = group.admin!!.username,
-                                    startPadding = 5.dp
-                                )
-                                group.members?.forEach { member ->
-                                    MemberlistCircle(
-                                        username = member?.username,
-                                        startPadding = 2.dp
-                                    )
-                                }
-                            }
-                            Text(
-                                modifier = Modifier.padding(5.dp),
-                                text = group.description!!
-                            )
-                        }
-                    }
-                }
             }
-
-
             is APIRequestState.BadResponse -> {
                 Column(
                     modifier = Modifier
@@ -177,4 +123,82 @@ fun MemberlistCircle(
         }
     }
 
+}
+
+@Composable
+fun Grouplist(
+    context: Context,
+    getGroupsByUserIdData: APIRequestState.Success<GetGroupsByUserIdQuery.Data?>,
+    profileViewModel: ProfileViewModel
+) {
+    Text(
+        modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
+        text = "Your groups",
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp
+    )
+    LazyColumn {
+        items(getGroupsByUserIdData.response?.getGroupsByUserId!!) { group ->
+            Column(
+                Modifier
+                    .padding(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
+                    .fillMaxWidth()
+                    .background(Color.White, RoundedCornerShape(10.dp))
+                    .clickable {
+                        // TODO: Navigate to detailed group screen!
+                        Toast
+                            .makeText(
+                                context,
+                                group?.id.toString(),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    }
+            ) {
+                val members = group!!.members!!.size + 1
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        modifier = Modifier.padding(5.dp),
+                        text = group.name!!,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    if (profileViewModel.userId == group.admin?.id) {
+                        Icon(
+                            modifier = Modifier.padding(5.dp),
+                            imageVector = Icons.Filled.Star,
+                            contentDescription = "Admin indicator",
+                            tint = Color.Red
+                        )
+                    }
+                }
+                Text(
+                    modifier = Modifier.padding(5.dp),
+                    text = "Members ($members)",
+                    fontWeight = FontWeight.Light,
+                    color = Color.Gray
+                )
+                Row {
+                    MemberlistCircle(
+                        username = group.admin!!.username,
+                        startPadding = 5.dp
+                    )
+                    group.members?.forEach { member ->
+                        MemberlistCircle(
+                            username = member?.username,
+                            startPadding = 2.dp
+                        )
+                    }
+                }
+                Text(
+                    modifier = Modifier.padding(5.dp),
+                    text = group.description!!
+                )
+            }
+        }
+    }
 }
