@@ -43,6 +43,7 @@ fun InitNavigation(
         )
         profileComposable(
             profileViewModel = profileViewModel,
+            groupViewModel = groupViewModel,
             navigateToLoginScreen = screen.login,
             navigateToGroupScreen = screen.group
         )

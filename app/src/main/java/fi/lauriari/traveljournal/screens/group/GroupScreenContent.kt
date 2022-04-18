@@ -1,7 +1,9 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -14,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,23 +59,14 @@ fun GroupScreenContent(
                     navigateToProfileScreen = navigateToProfileScreen,
                     getGroupByIdData = getGroupByIdData
                 )
-                Row(
-                    modifier = Modifier
-                        .border(width = 2.dp, color = Color.Gray)
-                        .padding(10.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    OutlinedButton(
-                        modifier = Modifier
-                            .size(width = 200.dp, height = 60.dp),
-                        shape = CircleShape,
-                        onClick = { /* TODO: Open add members dialog */ }) {
-                        Text(text = "Add a member", fontSize = 20.sp)
-                    }
+                if (groupViewModel.userId == getGroupByIdData.response?.admin?.id ?: "Shouldn't happen") {
+                    AddMembersRow()
                 }
-            }
+                GroupItemsRow()
 
+
+
+            }
 
         }
         is APIRequestState.BadResponse -> {}
@@ -132,5 +126,53 @@ fun GroupScreenContentHeader(
                 fontSize = 20.sp,
             )
         }
+    }
+}
+
+@Composable
+fun AddMembersRow() {
+    Row(
+        modifier = Modifier
+            .padding(10.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        OutlinedButton(
+            modifier = Modifier
+                .size(width = 200.dp, height = 60.dp),
+            shape = CircleShape,
+            onClick = { /* TODO: Open add members dialog */ }) {
+            Text(text = "Add a member", fontSize = 20.sp)
+        }
+    }
+}
+
+@Composable
+fun GroupItemsRow() {
+    Row(
+        modifier = Modifier
+            .border(width = 1.dp, color = Color.Gray)
+            .padding(15.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Text(
+            modifier = Modifier.clickable {},
+            text = "Members",
+            fontSize = 20.sp,
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            modifier = Modifier.clickable {},
+            text = "Links",
+            fontSize = 20.sp,
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            modifier = Modifier.clickable {},
+            text = "Files",
+            fontSize = 20.sp,
+            fontStyle = FontStyle.Italic
+        )
     }
 }

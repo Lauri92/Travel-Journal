@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 class GroupViewModel : ViewModel() {
 
 
+    var userId: String = ""
+
     private val repository = GroupRepository()
 
     private var _getGroupByIdData =

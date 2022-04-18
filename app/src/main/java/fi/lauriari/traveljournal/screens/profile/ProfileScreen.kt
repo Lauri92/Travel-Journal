@@ -8,11 +8,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
 fun ProfileScreen(
     profileViewModel: ProfileViewModel,
+    groupViewModel: GroupViewModel,
     navigateToLoginScreen: () -> Unit,
     navigateToGroupScreen: (String) -> Unit,
 ) {
@@ -27,6 +29,7 @@ fun ProfileScreen(
         profileViewModel.getGroupsByUserId(context)
         profileViewModel.username = User.getUsername(context).toString()
         profileViewModel.userId = User.getUserId(context).toString()
+        groupViewModel.userId = User.getUserId(context).toString()
     }
 
 
