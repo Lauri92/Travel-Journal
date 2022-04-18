@@ -91,7 +91,11 @@ class LoginViewModel : ViewModel() {
                     registerUsernameTextState.value = ""
                     registerPasswordTextState.value = ""
                 } else {
-                    val errorMessage = loginResponse?.errors!![0].message
+                    val errorMessage: String = if (loginResponse == null) {
+                        "Something went wrong"
+                    } else {
+                        loginResponse.errors!![0].message
+                    }
                     _loginUserData.value = APIRequestState.BadResponse(errorMessage)
                 }
             }
