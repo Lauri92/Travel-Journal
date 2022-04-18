@@ -14,6 +14,7 @@ import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 fun ProfileScreen(
     profileViewModel: ProfileViewModel,
     navigateToLoginScreen: () -> Unit,
+    navigateToGroupScreen: (String) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -88,8 +89,9 @@ fun ProfileScreen(
             ProfileScreenContent(
                 profileViewModel = profileViewModel,
                 navigateToLoginScreen = navigateToLoginScreen,
+                navigateToGroupScreen = navigateToGroupScreen,
                 openDialog = { openAddGroupDialog.value = true },
-                getGroupsByUserIdData = getGroupsByUserIdData
+                getGroupsByUserIdData = getGroupsByUserIdData,
             )
         }
     )

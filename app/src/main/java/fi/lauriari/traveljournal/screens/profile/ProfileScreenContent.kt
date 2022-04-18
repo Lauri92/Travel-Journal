@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -32,10 +31,10 @@ import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 fun ProfileScreenContent(
     profileViewModel: ProfileViewModel,
     navigateToLoginScreen: () -> Unit,
+    navigateToGroupScreen: (String) -> Unit,
     openDialog: () -> Unit,
     getGroupsByUserIdData: APIRequestState<GetGroupsByUserIdQuery.Data?>,
-
-    ) {
+) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -74,8 +73,9 @@ fun ProfileScreenContent(
             is APIRequestState.Success -> {
                 Grouplist(
                     context = context,
+                    profileViewModel = profileViewModel,
                     getGroupsByUserIdData = getGroupsByUserIdData,
-                    profileViewModel = profileViewModel
+                    navigateToGroupScreen = navigateToGroupScreen
                 )
             }
             is APIRequestState.BadResponse -> {
@@ -135,9 +135,10 @@ fun MemberlistCircle(
 
 @Composable
 fun Grouplist(
+    profileViewModel: ProfileViewModel,
     context: Context,
     getGroupsByUserIdData: APIRequestState.Success<GetGroupsByUserIdQuery.Data?>,
-    profileViewModel: ProfileViewModel
+    navigateToGroupScreen: (String) -> Unit,
 ) {
     Text(
         modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp),
@@ -161,6 +162,7 @@ fun Grouplist(
                                 Toast.LENGTH_SHORT
                             )
                             .show()
+                        navigateToGroupScreen(group?.id.toString())
                     }
             ) {
                 val members = group!!.members!!.size + 1

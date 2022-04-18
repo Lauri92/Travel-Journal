@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import fi.lauriari.traveljournal.navigation.destinations.groupComposable
 import fi.lauriari.traveljournal.navigation.destinations.loginComposable
 import fi.lauriari.traveljournal.navigation.destinations.profileComposable
 import fi.lauriari.traveljournal.util.Constants.LOGIN_SCREEN
@@ -40,7 +41,9 @@ fun InitNavigation(
         )
         profileComposable(
             profileViewModel = profileViewModel,
-            navigateToLoginScreen = screen.login
+            navigateToLoginScreen = screen.login,
+            navigateToGroupScreen = screen.group
         )
+        groupComposable()
     }
 }

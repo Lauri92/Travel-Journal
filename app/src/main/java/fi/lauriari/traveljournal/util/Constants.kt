@@ -13,5 +13,9 @@ object Constants {
     // Destinations
     const val LOGIN_SCREEN = "login"
     const val PROFILE_SCREEN = "profile"
+    const val GROUP_SCREEN = "group/{groupId}"
+
+    // Argument keys
+    const val GROUP_ARGUMENT_KEY = "groupId"
 
 }

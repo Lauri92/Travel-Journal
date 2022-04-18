@@ -8,11 +8,15 @@ class Screens(
     navController: NavHostController
 ) {
     val login: () -> Unit = {
-        navController.navigate(route = Constants.LOGIN_SCREEN)
+        navController.navigate(route = "login")
     }
 
     val profile: () -> Unit = {
-        navController.navigate(route = Constants.PROFILE_SCREEN)
+        navController.navigate(route = "profile")
+    }
+
+    val group: (String) -> Unit = { groupId ->
+        navController.navigate(route = "group/$groupId")
     }
 
 }

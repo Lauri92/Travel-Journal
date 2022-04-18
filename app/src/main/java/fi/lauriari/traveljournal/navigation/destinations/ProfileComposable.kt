@@ -8,14 +8,16 @@ import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 fun NavGraphBuilder.profileComposable(
     profileViewModel: ProfileViewModel,
-    navigateToLoginScreen: () -> Unit
+    navigateToLoginScreen: () -> Unit,
+    navigateToGroupScreen: (String) -> Unit
 ) {
     composable(
         route = Constants.PROFILE_SCREEN
     ) { navBackStackEntry ->
         ProfileScreen(
             profileViewModel = profileViewModel,
-            navigateToLoginScreen = navigateToLoginScreen
+            navigateToLoginScreen = navigateToLoginScreen,
+            navigateToGroupScreen = navigateToGroupScreen
         )
 
     }
