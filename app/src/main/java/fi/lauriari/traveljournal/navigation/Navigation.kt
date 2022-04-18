@@ -11,6 +11,7 @@ import fi.lauriari.traveljournal.navigation.destinations.profileComposable
 import fi.lauriari.traveljournal.util.Constants.LOGIN_SCREEN
 import fi.lauriari.traveljournal.util.Constants.PROFILE_SCREEN
 import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import fi.lauriari.traveljournal.viewmodels.LoginViewModel
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
@@ -19,6 +20,7 @@ fun InitNavigation(
     navController: NavHostController,
     loginViewModel: LoginViewModel,
     profileViewModel: ProfileViewModel,
+    groupViewModel: GroupViewModel,
 ) {
     val screen = remember(navController) {
         Screens(navController = navController)
@@ -44,6 +46,9 @@ fun InitNavigation(
             navigateToLoginScreen = screen.login,
             navigateToGroupScreen = screen.group
         )
-        groupComposable()
+        groupComposable(
+            groupViewModel = groupViewModel,
+            navigateToProfileScreen = screen.profile
+        )
     }
 }

@@ -21,7 +21,7 @@ class LoginViewModel : ViewModel() {
 
     private val repository = Repository()
 
-    val usernameTextState: MutableState<String> = mutableStateOf("test")
+    val usernameTextState: MutableState<String> = mutableStateOf("test2")
     val passwordTextState: MutableState<String> = mutableStateOf("test")
     val registerUsernameTextState: MutableState<String> = mutableStateOf("")
     val registerPasswordTextState: MutableState<String> = mutableStateOf("")
