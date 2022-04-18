@@ -6,7 +6,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import fi.lauriari.traveljournal.AddGroupMutation
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.util.User
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
@@ -17,9 +16,6 @@ fun ProfileScreen(
     navigateToLoginScreen: () -> Unit,
 ) {
     val context = LocalContext.current
-
-    val groupNameTextState: String by profileViewModel.groupNameTextState
-    val descriptionNameTextState: String by profileViewModel.descriptionTextState
 
     val getGroupsByUserIdData by profileViewModel.getGroupsByUserIdData.collectAsState()
     val getAddGroupData by profileViewModel.addGroupData.collectAsState()
@@ -36,15 +32,8 @@ fun ProfileScreen(
     if (openAddGroupDialog.value) {
         AddGroupDialog(
             context = context,
+            profileViewModel = profileViewModel,
             openDialog = openAddGroupDialog,
-            groupNameTextState = groupNameTextState,
-            onGroupNameTextChanged = { newGroupNameText ->
-                profileViewModel.groupNameTextState.value = newGroupNameText
-            },
-            descriptionNameTextState = descriptionNameTextState,
-            onDescriptionTextChanged = { newDescriptionText ->
-                profileViewModel.descriptionTextState.value = newDescriptionText
-            },
             onAddGroupPressed = {
                 profileViewModel.addGroup(context)
             }

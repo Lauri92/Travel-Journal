@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.screens.profile
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,16 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
 fun AddGroupDialog(
     context: Context,
     openDialog: MutableState<Boolean>,
-    groupNameTextState: String,
-    onGroupNameTextChanged: (String) -> Unit,
-    descriptionNameTextState: String,
-    onDescriptionTextChanged: (String) -> Unit,
     onAddGroupPressed: () -> Unit,
+    profileViewModel: ProfileViewModel,
 ) {
     Dialog(
         onDismissRequest = {
@@ -51,13 +50,17 @@ fun AddGroupDialog(
                         label = {
                             Text("Group name")
                         },
-                        value = groupNameTextState,
+                        value = profileViewModel.groupNameTextState.value,
                         onValueChange = { newGroupName ->
-                            if (newGroupName.length <= 15) onGroupNameTextChanged(newGroupName) else Toast.makeText(
-                                context,
-                                "Maximum length for name is 15 characters",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (newGroupName.length <= 15) {
+                                profileViewModel.groupNameTextState.value = newGroupName
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Maximum length for name is 15 characters",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         })
                     OutlinedTextField(
                         modifier = Modifier.padding(
@@ -69,13 +72,17 @@ fun AddGroupDialog(
                         label = {
                             Text("Description")
                         },
-                        value = descriptionNameTextState,
+                        value = profileViewModel.descriptionTextState.value,
                         onValueChange = { newDescription ->
-                            if (newDescription.length <= 50) onDescriptionTextChanged(newDescription) else Toast.makeText(
-                                context,
-                                "Limit is 50 characters",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            if (newDescription.length <= 50) {
+                                profileViewModel.descriptionTextState.value = newDescription
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Limit is 50 characters",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         })
                     Row(
                         modifier = Modifier
