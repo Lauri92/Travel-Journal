@@ -77,8 +77,12 @@ class ProfileViewModel : ViewModel() {
                     if (getGroupsByUserIdResponse?.data?.getGroupsByUserId != null &&
                         !getGroupsByUserIdResponse.hasErrors()
                     ) {
-                        _getGroupsByUserIdData.value =
-                            APIRequestState.Success(getGroupsByUserIdResponse.data)
+                        if (getGroupsByUserIdResponse.data!!.getGroupsByUserId!!.isEmpty()) {
+                            _getGroupsByUserIdData.value = APIRequestState.EmptyList
+                        } else {
+                            _getGroupsByUserIdData.value =
+                                APIRequestState.Success(getGroupsByUserIdResponse.data)
+                        }
                     } else {
                         _getGroupsByUserIdData.value =
                             APIRequestState.BadResponse("Failed to load groups")

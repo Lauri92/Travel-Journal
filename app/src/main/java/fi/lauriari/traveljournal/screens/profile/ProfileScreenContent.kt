@@ -88,10 +88,18 @@ fun ProfileScreenContent(
                     Text("Something went wrong loading groups!")
                 }
             }
-            is APIRequestState.Idle -> {
-
+            is APIRequestState.EmptyList -> {
+                Column(
+                    modifier = Modifier
+                        .padding(top = 50.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("You are not part of any group yet!")
+                }
             }
-            is APIRequestState.EmptyList -> {}
+            is APIRequestState.Idle -> {
+            }
         }
     }
 }

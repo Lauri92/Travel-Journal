@@ -81,7 +81,6 @@ fun ProfileScreen(
         }
         is APIRequestState.Idle -> {}
         is APIRequestState.EmptyList -> {}
-        is APIRequestState.Error -> {}
     }
 
     Scaffold(
