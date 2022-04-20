@@ -33,7 +33,7 @@ fun ProfileScreenContent(
     navigateToLoginScreen: () -> Unit,
     navigateToGroupScreen: (String) -> Unit,
     openDialog: () -> Unit,
-    getGroupsByUserIdData: APIRequestState<GetGroupsByUserIdQuery.Data?>,
+    getGroupsByUserIdData: APIRequestState<List<GetGroupsByUserIdQuery.GetGroupsByUserId?>?>,
 ) {
     val context = LocalContext.current
     Column(
@@ -74,7 +74,7 @@ fun ProfileScreenContent(
                 Grouplist(
                     context = context,
                     profileViewModel = profileViewModel,
-                    getGroupsByUserIdData = getGroupsByUserIdData,
+                    groupList = getGroupsByUserIdData.response,
                     navigateToGroupScreen = navigateToGroupScreen
                 )
             }
@@ -137,7 +137,7 @@ fun MemberlistCircle(
 fun Grouplist(
     profileViewModel: ProfileViewModel,
     context: Context,
-    getGroupsByUserIdData: APIRequestState.Success<GetGroupsByUserIdQuery.Data?>,
+    groupList: List<GetGroupsByUserIdQuery.GetGroupsByUserId?>?,
     navigateToGroupScreen: (String) -> Unit,
 ) {
     Text(
@@ -146,8 +146,8 @@ fun Grouplist(
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp
     )
-    LazyColumn {
-        items(getGroupsByUserIdData.response?.getGroupsByUserId!!) { group ->
+    LazyColumn() {
+        items(groupList!!) { group ->
             Column(
                 Modifier
                     .padding(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)

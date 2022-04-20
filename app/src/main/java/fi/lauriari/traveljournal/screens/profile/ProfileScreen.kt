@@ -6,6 +6,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import fi.lauriari.traveljournal.AddGroupMutation
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.util.User
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
@@ -44,7 +45,7 @@ fun ProfileScreen(
         )
     }
 
-    when (getAddGroupData) {
+    when (val data: APIRequestState<AddGroupMutation.AddGroup?> = getAddGroupData) {
         is APIRequestState.Loading -> {}
         is APIRequestState.Success -> {
             AlertDialog(
@@ -52,7 +53,7 @@ fun ProfileScreen(
                     profileViewModel.setAddGroupDataIdle()
                 },
                 title = {
-                    Text(text = "Group added.")
+                    Text(text = "Group added. Added: ${data.response?.name}")
                 },
                 confirmButton = {
                     Button(

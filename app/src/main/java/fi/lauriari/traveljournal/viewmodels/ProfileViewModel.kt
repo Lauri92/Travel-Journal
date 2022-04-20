@@ -28,10 +28,10 @@ class ProfileViewModel : ViewModel() {
 
 
     private var _addGroupData =
-        MutableStateFlow<APIRequestState<AddGroupMutation.Data?>>(
+        MutableStateFlow<APIRequestState<AddGroupMutation.AddGroup?>>(
             APIRequestState.Idle
         )
-    val addGroupData: StateFlow<APIRequestState<AddGroupMutation.Data?>> =
+    val addGroupData: StateFlow<APIRequestState<AddGroupMutation.AddGroup?>> =
         _addGroupData
 
     fun setAddGroupDataIdle() {
@@ -49,7 +49,7 @@ class ProfileViewModel : ViewModel() {
                 if (addGroupResponse?.data?.addGroup != null && !addGroupResponse.hasErrors()) {
                     groupNameTextState.value = ""
                     descriptionTextState.value = ""
-                    _addGroupData.value = APIRequestState.Success(addGroupResponse.data)
+                    _addGroupData.value = APIRequestState.Success(addGroupResponse.data!!.addGroup)
                 } else {
                     val errorMessage = addGroupResponse!!.errors!![0].message
                     _addGroupData.value = APIRequestState.BadResponse(errorMessage)
@@ -59,10 +59,10 @@ class ProfileViewModel : ViewModel() {
     }
 
     private var _getGroupsByUserIdData =
-        MutableStateFlow<APIRequestState<GetGroupsByUserIdQuery.Data?>>(
+        MutableStateFlow<APIRequestState<List<GetGroupsByUserIdQuery.GetGroupsByUserId?>?>>(
             APIRequestState.Idle
         )
-    val getGroupsByUserIdData: StateFlow<APIRequestState<GetGroupsByUserIdQuery.Data?>> =
+    val getGroupsByUserIdData: StateFlow<APIRequestState<List<GetGroupsByUserIdQuery.GetGroupsByUserId?>?>> =
         _getGroupsByUserIdData
 
     fun setGetGroupsByUserIdDataIdle() {
@@ -81,7 +81,7 @@ class ProfileViewModel : ViewModel() {
                             _getGroupsByUserIdData.value = APIRequestState.EmptyList
                         } else {
                             _getGroupsByUserIdData.value =
-                                APIRequestState.Success(getGroupsByUserIdResponse.data)
+                                APIRequestState.Success(getGroupsByUserIdResponse.data!!.getGroupsByUserId)
                         }
                     } else {
                         _getGroupsByUserIdData.value =
