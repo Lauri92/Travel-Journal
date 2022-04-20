@@ -20,6 +20,7 @@ fun GroupScreen(
 
     if (openLinkDialog.value) {
         AddLinkDialog(
+            context = context,
             groupViewModel = groupViewModel,
             openLinkDialog = openLinkDialog,
             onAddLinkPressed = {

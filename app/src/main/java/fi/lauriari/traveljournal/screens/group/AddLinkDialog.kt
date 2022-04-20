@@ -1,6 +1,8 @@
 package fi.lauriari.traveljournal.screens.group
 
 import android.content.Context
+import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +18,7 @@ import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 @Composable
 fun AddLinkDialog(
+    context: Context,
     groupViewModel: GroupViewModel,
     openLinkDialog: MutableState<Boolean>,
     onAddLinkPressed: () -> Unit,
@@ -66,8 +69,20 @@ fun AddLinkDialog(
                         Button(
                             shape = CircleShape,
                             onClick = {
-                                openLinkDialog.value = false
-                                onAddLinkPressed()
+                                val isValidUrl =
+                                    Patterns.WEB_URL.matcher(groupViewModel.urlTextState.value)
+                                        .matches()
+                                if (isValidUrl) {
+                                    openLinkDialog.value = false
+                                    onAddLinkPressed()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Provide a valid Url",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
                             })
                         {
                             Text(text = "Add")

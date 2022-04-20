@@ -1,5 +1,8 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,6 +26,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
@@ -37,7 +41,7 @@ fun GroupScreenContent(
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
     openLinkDialog: MutableState<Boolean>
 ) {
-
+    val context = LocalContext.current
     val membersSelected = remember { mutableStateOf(false) }
     val linksSelected = remember { mutableStateOf(true) }
     val filesSelected = remember { mutableStateOf(false) }
@@ -86,7 +90,10 @@ fun GroupScreenContent(
                     MembersContent(getGroupByIdData = getGroupByIdData)
                 }
                 if (linksSelected.value) {
-                    LinksContent(getGroupByIdData = getGroupByIdData)
+                    LinksContent(
+                        context = context,
+                        getGroupByIdData = getGroupByIdData
+                    )
                 }
             }
         }
@@ -313,6 +320,7 @@ fun MembersContent(
 
 @Composable
 fun LinksContent(
+    context: Context,
     getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
 ) {
     LazyColumn {
@@ -323,7 +331,12 @@ fun LinksContent(
             ) {
                 Text(
                     modifier = Modifier.clickable {
-                        uriHandler.openUri(link!!.url!!)
+                        try {
+                            uriHandler.openUri(link!!.url!!)
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "This is not a valid Url!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     },
                     text = link!!.url!!,
                     fontSize = 17.sp,
