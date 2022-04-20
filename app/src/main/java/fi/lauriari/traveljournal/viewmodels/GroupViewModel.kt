@@ -2,8 +2,11 @@ package fi.lauriari.traveljournal.viewmodels
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.data.GroupRepository
@@ -18,6 +21,8 @@ class GroupViewModel : ViewModel() {
 
 
     var userId: String = ""
+    var groupId: String = ""
+    var urlTextState: MutableState<String> = mutableStateOf("")
 
     private val repository = GroupRepository()
 
@@ -28,7 +33,7 @@ class GroupViewModel : ViewModel() {
     val getGroupByIdData: StateFlow<APIRequestState<GetGroupQuery.GetGroup?>> =
         _getGroupByIdData
 
-    fun getGroupById(context: Context, groupId: String) {
+    fun getGroupById(context: Context) {
         _getGroupByIdData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.getGroupById(
@@ -43,6 +48,32 @@ class GroupViewModel : ViewModel() {
                 } else {
                     _getGroupByIdData.value =
                         APIRequestState.BadResponse("Failed to load groups")
+                }
+            }
+        }
+    }
+
+    private var _addGroupData = MutableStateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>>(
+        APIRequestState.Idle
+    )
+    val addGroupData: StateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>> =
+        _addGroupData
+
+    fun addLink(context: Context) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.addGroup(
+                context = context,
+                url = urlTextState.value,
+                groupId = groupId
+            ).collect { addLinkResponse ->
+                if (addLinkResponse?.data?.addInfoLink != null &&
+                    !addLinkResponse.hasErrors()
+                ) {
+                    _addGroupData.value =
+                        APIRequestState.Success(addLinkResponse.data?.addInfoLink)
+                } else {
+                    _addGroupData.value =
+                        APIRequestState.BadResponse("Failed to add link")
                 }
             }
         }

@@ -2,6 +2,7 @@ package fi.lauriari.traveljournal.screens.group
 
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
@@ -13,11 +14,17 @@ fun GroupScreen(
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>
 ) {
 
+    val context = LocalContext.current
     val openLinkDialog = remember { mutableStateOf(false) }
+    val addLinkData by groupViewModel.addGroupData.collectAsState()
 
     if (openLinkDialog.value) {
         AddLinkDialog(
-            openLinkDialog = openLinkDialog
+            groupViewModel = groupViewModel,
+            openLinkDialog = openLinkDialog,
+            onAddLinkPressed = {
+                groupViewModel.addLink(context)
+            }
         )
     }
 

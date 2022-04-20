@@ -27,11 +27,11 @@ fun NavGraphBuilder.groupComposable(
 
         val context = LocalContext.current
         val groupId = navBackStackEntry.arguments!!.getString(GROUP_ARGUMENT_KEY)
+        groupViewModel.groupId = groupId!!
 
         LaunchedEffect(key1 = groupId) {
             groupViewModel.getGroupById(
-                context = context,
-                groupId = groupId!!
+                context = context
             )
         }
 

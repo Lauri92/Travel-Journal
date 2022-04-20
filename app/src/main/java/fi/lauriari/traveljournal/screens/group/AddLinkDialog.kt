@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,11 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 @Composable
-fun AddLinkDialog(openLinkDialog: MutableState<Boolean>) {
-    var text by remember { mutableStateOf("") }
-
+fun AddLinkDialog(
+    groupViewModel: GroupViewModel,
+    openLinkDialog: MutableState<Boolean>,
+    onAddLinkPressed: () -> Unit,
+) {
     Dialog(
         onDismissRequest = {
             openLinkDialog.value = false
@@ -43,9 +47,9 @@ fun AddLinkDialog(openLinkDialog: MutableState<Boolean>) {
                         label = {
                             Text("Link url")
                         },
-                        value = text,
+                        value = groupViewModel.urlTextState.value,
                         onValueChange = { newtext ->
-                            text = newtext
+                            groupViewModel.urlTextState.value = newtext
                         }
                     )
                     Row(
@@ -63,6 +67,7 @@ fun AddLinkDialog(openLinkDialog: MutableState<Boolean>) {
                             shape = CircleShape,
                             onClick = {
                                 openLinkDialog.value = false
+                                onAddLinkPressed()
                             })
                         {
                             Text(text = "Add")
