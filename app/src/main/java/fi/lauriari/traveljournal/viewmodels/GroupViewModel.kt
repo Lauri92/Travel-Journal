@@ -59,6 +59,10 @@ class GroupViewModel : ViewModel() {
     val addGroupData: StateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>> =
         _addGroupData
 
+    fun setAddLinkDataIdle() {
+        _addGroupData.value = APIRequestState.Idle
+    }
+
     fun addLink(context: Context) {
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.addGroup(
