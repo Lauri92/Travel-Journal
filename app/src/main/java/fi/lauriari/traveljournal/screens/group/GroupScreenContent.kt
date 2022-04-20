@@ -34,7 +34,8 @@ import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 fun GroupScreenContent(
     navigateToProfileScreen: () -> Unit,
     groupViewModel: GroupViewModel,
-    getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>
+    getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
+    openLinkDialog: MutableState<Boolean>
 ) {
 
     val membersSelected = remember { mutableStateOf(false) }
@@ -72,6 +73,7 @@ fun GroupScreenContent(
                     groupViewModel = groupViewModel,
                     membersSelected = membersSelected,
                     linksSelected = linksSelected,
+                    openLinkDialog = openLinkDialog
                 )
 
                 GroupItemsRow(
@@ -152,7 +154,8 @@ fun AddMembersRow(
     groupViewModel: GroupViewModel,
     membersSelected: MutableState<Boolean>,
     linksSelected: MutableState<Boolean>,
-    adminId: String?
+    adminId: String?,
+    openLinkDialog: MutableState<Boolean>
 ) {
     Row(
         modifier = Modifier
@@ -178,7 +181,7 @@ fun AddMembersRow(
                     modifier = Modifier
                         .size(width = 200.dp, height = 60.dp),
                     shape = CircleShape,
-                    onClick = { /* TODO: Open add members dialog */ }) {
+                    onClick = { openLinkDialog.value = true }) {
                     Text(text = "Add a link", fontSize = 20.sp)
                 }
             }
@@ -187,7 +190,7 @@ fun AddMembersRow(
                     modifier = Modifier
                         .size(width = 200.dp, height = 60.dp),
                     shape = CircleShape,
-                    onClick = { /* TODO: Open add members dialog */ }) {
+                    onClick = { /* TODO: Open add files dialog */ }) {
                     Text(text = "Add a file", fontSize = 20.sp)
                 }
             }
@@ -312,7 +315,7 @@ fun MembersContent(
 fun LinksContent(
     getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
 ) {
-    LazyColumn{
+    LazyColumn {
         items(getGroupByIdData.response!!.links!!.toList()) { link ->
             val uriHandler = LocalUriHandler.current
             Column(

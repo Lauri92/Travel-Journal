@@ -1,0 +1,6 @@
+mutation AddLink($url: String!, $group: ID!) {
+  addInfoLink(url: $url, group: $group) {
+    id
+    url
+  }
+}
