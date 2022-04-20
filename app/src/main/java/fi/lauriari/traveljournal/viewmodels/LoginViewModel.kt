@@ -28,9 +28,9 @@ class LoginViewModel : ViewModel() {
 
 
     private var _registerUserData =
-        MutableStateFlow<APIRequestState<RegisterUserMutation.Data?>>(APIRequestState.Idle)
+        MutableStateFlow<APIRequestState<RegisterUserMutation.RegisterUser?>>(APIRequestState.Idle)
 
-    val registerUserData: StateFlow<APIRequestState<RegisterUserMutation.Data?>> = _registerUserData
+    val registerUserData: StateFlow<APIRequestState<RegisterUserMutation.RegisterUser?>> = _registerUserData
 
     fun setRegisterDataIdle() {
         _registerUserData.value = APIRequestState.Idle
@@ -45,7 +45,7 @@ class LoginViewModel : ViewModel() {
                 password = registerPasswordTextState.value
             ).collect { registerResponse ->
                 if (registerResponse?.data?.registerUser != null && !registerResponse.hasErrors()) {
-                    _registerUserData.value = APIRequestState.Success(registerResponse.data)
+                    _registerUserData.value = APIRequestState.Success(registerResponse.data!!.registerUser)
                     loginUser(
                         context,
                         username = registerUsernameTextState.value,
@@ -61,9 +61,9 @@ class LoginViewModel : ViewModel() {
 
 
     private var _loginUserData =
-        MutableStateFlow<APIRequestState<LoginQuery.Data?>>(APIRequestState.Idle)
+        MutableStateFlow<APIRequestState<LoginQuery.Login?>>(APIRequestState.Idle)
 
-    val loginUserData: StateFlow<APIRequestState<LoginQuery.Data?>> = _loginUserData
+    val loginUserData: StateFlow<APIRequestState<LoginQuery.Login?>> = _loginUserData
 
     fun setloginUserDataIdle() {
         _loginUserData.value = APIRequestState.Idle
@@ -85,7 +85,7 @@ class LoginViewModel : ViewModel() {
                     User.setToken(context, loginResponse.data!!.login!!.token!!)
                     User.setUserId(context, loginResponse.data!!.login!!.id!!)
                     User.setUsername(context, loginResponse.data!!.login!!.username!!)
-                    _loginUserData.value = APIRequestState.Success(loginResponse.data)
+                    _loginUserData.value = APIRequestState.Success(loginResponse.data!!.login)
                     usernameTextState.value = ""
                     passwordTextState.value = ""
                     registerUsernameTextState.value = ""

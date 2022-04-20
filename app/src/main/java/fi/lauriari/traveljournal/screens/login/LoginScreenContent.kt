@@ -94,14 +94,14 @@ fun LoginInputs(
     val loginUserData by loginViewModel.loginUserData.collectAsState()
     var isInputAllowed by remember { mutableStateOf(true) }
 
-    when (loginUserData) {
+    when (val data: APIRequestState<LoginQuery.Login?> = loginUserData) {
         is APIRequestState.Loading -> {
             isInputAllowed = false
         }
         is APIRequestState.Success -> {
             Toast.makeText(
                 context,
-                "Welcome ${((loginUserData as APIRequestState.Success<LoginQuery.Data?>).response?.login?.username)}",
+                "Welcome ${data.response?.username}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setloginUserDataIdle()
@@ -110,7 +110,7 @@ fun LoginInputs(
         is APIRequestState.BadResponse -> {
             Toast.makeText(
                 context,
-                "Failed to login: ${(loginUserData as APIRequestState.BadResponse<LoginQuery.Data?>).error}",
+                "Failed to login: ${data.error}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setloginUserDataIdle()
@@ -189,7 +189,7 @@ fun RegisterInputs(
     val registerUserData by loginViewModel.registerUserData.collectAsState()
     var isInputAllowed by remember { mutableStateOf(true) }
 
-    when (registerUserData) {
+    when (val data: APIRequestState<RegisterUserMutation.RegisterUser?> = registerUserData) {
         is APIRequestState.Loading -> {
             isInputAllowed = false
         }
@@ -197,7 +197,7 @@ fun RegisterInputs(
             Toast.makeText(
                 context,
                 "Registered user with username " +
-                        "${((registerUserData as APIRequestState.Success<RegisterUserMutation.Data?>).response?.registerUser?.username)}",
+                        "${data.response?.username}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setRegisterDataIdle()
@@ -206,7 +206,7 @@ fun RegisterInputs(
         is APIRequestState.BadResponse -> {
             Toast.makeText(
                 context,
-                "Error: ${(registerUserData as APIRequestState.BadResponse<RegisterUserMutation.Data?>).error}",
+                "Error: ${data.error}",
                 Toast.LENGTH_LONG
             ).show()
             loginViewModel.setRegisterDataIdle()
