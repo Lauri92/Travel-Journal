@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.platform.LocalUriHandler
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
@@ -36,8 +37,8 @@ fun GroupScreenContent(
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>
 ) {
 
-    val membersSelected = remember { mutableStateOf(true) }
-    val linksSelected = remember { mutableStateOf(false) }
+    val membersSelected = remember { mutableStateOf(false) }
+    val linksSelected = remember { mutableStateOf(true) }
     val filesSelected = remember { mutableStateOf(false) }
 
     when (getGroupByIdData) {
@@ -82,6 +83,9 @@ fun GroupScreenContent(
                 if (membersSelected.value) {
                     MembersContent(getGroupByIdData = getGroupByIdData)
                 }
+                if (linksSelected.value) {
+                    LinksContent(getGroupByIdData = getGroupByIdData)
+                }
             }
         }
         is APIRequestState.BadResponse -> {}
@@ -95,8 +99,7 @@ fun GroupScreenContentHeader(
     navigateToProfileScreen: () -> Unit,
     getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
 ) {
-    Row(
-    ) {
+    Row {
         IconButton(onClick = { navigateToProfileScreen() }) {
             Icon(
                 modifier = Modifier.padding(10.dp),
@@ -106,7 +109,7 @@ fun GroupScreenContentHeader(
             )
         }
     }
-    Row() {
+    Row {
         Box(
             modifier = Modifier
                 .padding(20.dp)
@@ -256,7 +259,9 @@ fun GroupItemsRow(
 }
 
 @Composable
-fun MembersContent(getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>) {
+fun MembersContent(
+    getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
+) {
     data class Member(val id: String, val username: String)
 
     val list = getGroupByIdData.response?.members!!
@@ -266,7 +271,7 @@ fun MembersContent(getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGr
     list.forEach { member ->
         adminAndMembersList.add(Member(member?.id!!, member.username!!))
     }
-    LazyColumn() {
+    LazyColumn {
         items(adminAndMembersList) { member ->
             Row {
                 Box(
@@ -282,7 +287,7 @@ fun MembersContent(getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGr
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         val usernameStartingLetter =
-                            member.username.get(0).toString().uppercase()
+                            member.username[0].toString().uppercase()
 
                         Text(
                             text = usernameStartingLetter,
@@ -298,6 +303,34 @@ fun MembersContent(getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGr
                 ) {
                     Text(member.username)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun LinksContent(
+    getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
+) {
+    LazyColumn{
+        items(getGroupByIdData.response!!.links!!.toList()) { link ->
+            val uriHandler = LocalUriHandler.current
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    modifier = Modifier.clickable {
+                        uriHandler.openUri(link!!.url!!)
+                    },
+                    text = link!!.url!!,
+                    fontSize = 17.sp,
+                    color = Color.Blue
+                )
+                Text(
+                    text = "Submitted by: ${link.user!!.username}",
+                    fontSize = 15.sp,
+                    fontStyle = FontStyle.Italic
+                )
             }
         }
     }
