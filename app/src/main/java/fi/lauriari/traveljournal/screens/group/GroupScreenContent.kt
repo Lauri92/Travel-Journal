@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.lazy.items
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
@@ -77,9 +79,10 @@ fun GroupScreenContent(
                     filesSelected = filesSelected
                 )
 
-
+                if (membersSelected.value) {
+                    MembersContent(getGroupByIdData = getGroupByIdData)
+                }
             }
-
         }
         is APIRequestState.BadResponse -> {}
         is APIRequestState.EmptyList -> {}
@@ -249,5 +252,53 @@ fun GroupItemsRow(
             fontStyle = FontStyle.Italic,
             style = TextStyle(textDecoration = filesTextDecoration)
         )
+    }
+}
+
+@Composable
+fun MembersContent(getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>) {
+    data class Member(val id: String, val username: String)
+
+    val list = getGroupByIdData.response?.members!!
+    val admin = getGroupByIdData.response.admin
+    val adminAndMembersList = mutableListOf<Member>()
+    adminAndMembersList.add(Member(admin?.id!!, admin.username!!))
+    list.forEach { member ->
+        adminAndMembersList.add(Member(member?.id!!, member.username!!))
+    }
+    LazyColumn() {
+        items(adminAndMembersList) { member ->
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val usernameStartingLetter =
+                            member.username.get(0).toString().uppercase()
+
+                        Text(
+                            text = usernameStartingLetter,
+                            fontSize = 25.sp
+                        )
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(50.dp),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(member.username)
+                }
+            }
+        }
     }
 }
