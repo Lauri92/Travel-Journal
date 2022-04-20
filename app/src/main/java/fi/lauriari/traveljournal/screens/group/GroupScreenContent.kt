@@ -1,6 +1,5 @@
 package fi.lauriari.traveljournal.screens.group
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,17 +7,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.GetGroupQuery
@@ -33,6 +33,10 @@ fun GroupScreenContent(
     groupViewModel: GroupViewModel,
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>
 ) {
+
+    val membersSelected = remember { mutableStateOf(true) }
+    val linksSelected = remember { mutableStateOf(false) }
+    val filesSelected = remember { mutableStateOf(false) }
 
     when (getGroupByIdData) {
         is APIRequestState.Loading -> {
@@ -59,11 +63,19 @@ fun GroupScreenContent(
                     navigateToProfileScreen = navigateToProfileScreen,
                     getGroupByIdData = getGroupByIdData
                 )
-                if (groupViewModel.userId == getGroupByIdData.response?.admin?.id ?: "Shouldn't happen") {
-                    AddMembersRow()
-                }
-                GroupItemsRow()
 
+                AddMembersRow(
+                    adminId = getGroupByIdData.response?.admin?.id,
+                    groupViewModel = groupViewModel,
+                    membersSelected = membersSelected,
+                    linksSelected = linksSelected,
+                )
+
+                GroupItemsRow(
+                    membersSelected = membersSelected,
+                    linksSelected = linksSelected,
+                    filesSelected = filesSelected
+                )
 
 
             }
@@ -130,25 +142,73 @@ fun GroupScreenContentHeader(
 }
 
 @Composable
-fun AddMembersRow() {
+fun AddMembersRow(
+    groupViewModel: GroupViewModel,
+    membersSelected: MutableState<Boolean>,
+    linksSelected: MutableState<Boolean>,
+    adminId: String?
+) {
     Row(
         modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        OutlinedButton(
-            modifier = Modifier
-                .size(width = 200.dp, height = 60.dp),
-            shape = CircleShape,
-            onClick = { /* TODO: Open add members dialog */ }) {
-            Text(text = "Add a member", fontSize = 20.sp)
+        when {
+            membersSelected.value -> {
+                val enabled = groupViewModel.userId == adminId
+                OutlinedButton(
+                    modifier = Modifier
+                        .size(width = 200.dp, height = 60.dp),
+                    shape = CircleShape,
+                    onClick = { /* TODO: Open add members dialog */ },
+                    enabled = enabled,
+                ) {
+                    Text(text = "Add a member", fontSize = 20.sp)
+                }
+            }
+            linksSelected.value -> {
+                OutlinedButton(
+                    modifier = Modifier
+                        .size(width = 200.dp, height = 60.dp),
+                    shape = CircleShape,
+                    onClick = { /* TODO: Open add members dialog */ }) {
+                    Text(text = "Add a link", fontSize = 20.sp)
+                }
+            }
+            else -> {
+                OutlinedButton(
+                    modifier = Modifier
+                        .size(width = 200.dp, height = 60.dp),
+                    shape = CircleShape,
+                    onClick = { /* TODO: Open add members dialog */ }) {
+                    Text(text = "Add a file", fontSize = 20.sp)
+                }
+            }
         }
     }
 }
 
 @Composable
-fun GroupItemsRow() {
+fun GroupItemsRow(
+    membersSelected: MutableState<Boolean>,
+    linksSelected: MutableState<Boolean>,
+    filesSelected: MutableState<Boolean>
+) {
+    var membersTextDecoration: TextDecoration = TextDecoration.None
+    var linksTextDecoration: TextDecoration = TextDecoration.None
+    var filesTextDecoration: TextDecoration = TextDecoration.None
+
+    if (membersSelected.value) {
+        membersTextDecoration = TextDecoration.Underline
+    }
+    if (linksSelected.value) {
+        linksTextDecoration = TextDecoration.Underline
+    }
+    if (filesSelected.value) {
+        filesTextDecoration = TextDecoration.Underline
+    }
+
     Row(
         modifier = Modifier
             .border(width = 1.dp, color = Color.Gray)
@@ -157,22 +217,37 @@ fun GroupItemsRow() {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(
-            modifier = Modifier.clickable {},
+            modifier = Modifier.clickable {
+                membersSelected.value = true
+                linksSelected.value = false
+                filesSelected.value = false
+            },
             text = "Members",
             fontSize = 20.sp,
-            fontStyle = FontStyle.Italic
+            fontStyle = FontStyle.Italic,
+            style = TextStyle(textDecoration = membersTextDecoration)
         )
         Text(
-            modifier = Modifier.clickable {},
+            modifier = Modifier.clickable {
+                membersSelected.value = false
+                linksSelected.value = true
+                filesSelected.value = false
+            },
             text = "Links",
             fontSize = 20.sp,
-            fontStyle = FontStyle.Italic
+            fontStyle = FontStyle.Italic,
+            style = TextStyle(textDecoration = linksTextDecoration)
         )
         Text(
-            modifier = Modifier.clickable {},
+            modifier = Modifier.clickable {
+                membersSelected.value = false
+                linksSelected.value = false
+                filesSelected.value = true
+            },
             text = "Files",
             fontSize = 20.sp,
-            fontStyle = FontStyle.Italic
+            fontStyle = FontStyle.Italic,
+            style = TextStyle(textDecoration = filesTextDecoration)
         )
     }
 }

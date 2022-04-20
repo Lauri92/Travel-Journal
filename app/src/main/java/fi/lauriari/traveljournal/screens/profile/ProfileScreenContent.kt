@@ -98,8 +98,7 @@ fun ProfileScreenContent(
                     Text("You are not part of any group yet!")
                 }
             }
-            is APIRequestState.Idle -> {
-            }
+            is APIRequestState.Idle -> {}
         }
     }
 }
