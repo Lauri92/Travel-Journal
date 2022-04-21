@@ -38,11 +38,12 @@ fun GroupScreenContent(
     navigateToProfileScreen: () -> Unit,
     groupViewModel: GroupViewModel,
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
-    openAddLinkDialog: MutableState<Boolean>
+    openAddLinkDialog: MutableState<Boolean>,
+    openAddMemberDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
-    val membersSelected = remember { mutableStateOf(false) }
-    val linksSelected = remember { mutableStateOf(true) }
+    val membersSelected = remember { mutableStateOf(true) }
+    val linksSelected = remember { mutableStateOf(false) }
     val filesSelected = remember { mutableStateOf(false) }
 
     when (getGroupByIdData) {
@@ -76,7 +77,8 @@ fun GroupScreenContent(
                     groupViewModel = groupViewModel,
                     membersSelected = membersSelected,
                     linksSelected = linksSelected,
-                    openAddLinkDialog = openAddLinkDialog
+                    openAddLinkDialog = openAddLinkDialog,
+                    openAddMemberDialog = openAddMemberDialog,
                 )
 
                 GroupItemsRow(
@@ -161,7 +163,8 @@ fun AddRow(
     membersSelected: MutableState<Boolean>,
     linksSelected: MutableState<Boolean>,
     adminId: String?,
-    openAddLinkDialog: MutableState<Boolean>
+    openAddLinkDialog: MutableState<Boolean>,
+    openAddMemberDialog: MutableState<Boolean>
 ) {
     Row(
         modifier = Modifier
@@ -176,7 +179,7 @@ fun AddRow(
                     modifier = Modifier
                         .size(width = 200.dp, height = 60.dp),
                     shape = CircleShape,
-                    onClick = { /* TODO: Open add members dialog */ },
+                    onClick = { openAddMemberDialog.value = true },
                     enabled = enabled,
                 ) {
                     Text(text = "Add a member", fontSize = 20.sp)

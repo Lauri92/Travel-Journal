@@ -7,7 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,15 +18,15 @@ import androidx.compose.ui.window.Dialog
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 @Composable
-fun AddLinkDialog(
+fun AddMemberDialog(
     context: Context,
     groupViewModel: GroupViewModel,
-    openAddLinkDialog: MutableState<Boolean>,
-    onAddLinkPressed: () -> Unit,
+    openAddMemberDialog: MutableState<Boolean>,
+    onAddMemberPressed: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = {
-            openAddLinkDialog.value = false
+            openAddMemberDialog.value = false
         },
         content = {
             Box(
@@ -42,13 +43,13 @@ fun AddLinkDialog(
                         modifier = Modifier
                             .padding(top = 10.dp),
                         style = MaterialTheme.typography.h6,
-                        text = "Add a Link",
+                        text = "Add members",
                         fontSize = 20.sp
                     )
                     OutlinedTextField(
                         modifier = Modifier.padding(start = 10.dp, end = 10.dp),
                         label = {
-                            Text("Link url")
+                            Text("Search..")
                         },
                         value = groupViewModel.urlTextState.value,
                         onValueChange = { newtext ->
@@ -63,29 +64,8 @@ fun AddLinkDialog(
                     ) {
                         OutlinedButton(
                             shape = CircleShape,
-                            onClick = { openAddLinkDialog.value = false }) {
+                            onClick = { openAddMemberDialog.value = false }) {
                             Text(text = "Dismiss")
-                        }
-                        Button(
-                            shape = CircleShape,
-                            onClick = {
-                                val isValidUrl =
-                                    Patterns.WEB_URL.matcher(groupViewModel.urlTextState.value)
-                                        .matches()
-                                if (isValidUrl) {
-                                    openAddLinkDialog.value = false
-                                    onAddLinkPressed()
-                                } else {
-                                    Toast.makeText(
-                                        context,
-                                        "Provide a valid Url",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-
-                            })
-                        {
-                            Text(text = "Add")
                         }
                     }
                 }

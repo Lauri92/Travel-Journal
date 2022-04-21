@@ -17,18 +17,29 @@ fun GroupScreen(
 
     val context = LocalContext.current
     val openAddLinkDialog = remember { mutableStateOf(false) }
+    val openAddMemberDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addGroupData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
             context = context,
             groupViewModel = groupViewModel,
-            openLinkDialog = openAddLinkDialog,
+            openAddLinkDialog = openAddLinkDialog,
             onAddLinkPressed = {
                 groupViewModel.addLink(context)
             }
         )
     }
+    if (openAddMemberDialog.value) {
+        AddMemberDialog(
+            context = context,
+            groupViewModel = groupViewModel,
+            openAddMemberDialog = openAddMemberDialog,
+            onAddMemberPressed = {}
+        )
+    }
+
+
 
     when (val data: APIRequestState<AddLinkMutation.AddInfoLink?> = addLinkData) {
         is APIRequestState.Loading -> {
@@ -81,7 +92,8 @@ fun GroupScreen(
                 groupViewModel = groupViewModel,
                 navigateToProfileScreen = navigateToProfileScreen,
                 getGroupByIdData = getGroupByIdData,
-                openAddLinkDialog = openAddLinkDialog
+                openAddLinkDialog = openAddLinkDialog,
+                openAddMemberDialog = openAddMemberDialog
             )
         }
     )
