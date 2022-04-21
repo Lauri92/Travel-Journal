@@ -1,7 +1,6 @@
 package fi.lauriari.traveljournal.screens.group
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,7 +38,7 @@ fun GroupScreenContent(
     navigateToProfileScreen: () -> Unit,
     groupViewModel: GroupViewModel,
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
-    openLinkDialog: MutableState<Boolean>
+    openAddLinkDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val membersSelected = remember { mutableStateOf(false) }
@@ -72,12 +71,12 @@ fun GroupScreenContent(
                     getGroupByIdData = getGroupByIdData
                 )
 
-                AddMembersRow(
+                AddRow(
                     adminId = getGroupByIdData.response?.admin?.id,
                     groupViewModel = groupViewModel,
                     membersSelected = membersSelected,
                     linksSelected = linksSelected,
-                    openLinkDialog = openLinkDialog
+                    openAddLinkDialog = openAddLinkDialog
                 )
 
                 GroupItemsRow(
@@ -157,12 +156,12 @@ fun GroupScreenContentHeader(
 }
 
 @Composable
-fun AddMembersRow(
+fun AddRow(
     groupViewModel: GroupViewModel,
     membersSelected: MutableState<Boolean>,
     linksSelected: MutableState<Boolean>,
     adminId: String?,
-    openLinkDialog: MutableState<Boolean>
+    openAddLinkDialog: MutableState<Boolean>
 ) {
     Row(
         modifier = Modifier
@@ -188,7 +187,7 @@ fun AddMembersRow(
                     modifier = Modifier
                         .size(width = 200.dp, height = 60.dp),
                     shape = CircleShape,
-                    onClick = { openLinkDialog.value = true }) {
+                    onClick = { openAddLinkDialog.value = true }) {
                     Text(text = "Add a link", fontSize = 20.sp)
                 }
             }

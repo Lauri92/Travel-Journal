@@ -16,14 +16,14 @@ fun GroupScreen(
 ) {
 
     val context = LocalContext.current
-    val openLinkDialog = remember { mutableStateOf(false) }
+    val openAddLinkDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addGroupData.collectAsState()
 
-    if (openLinkDialog.value) {
+    if (openAddLinkDialog.value) {
         AddLinkDialog(
             context = context,
             groupViewModel = groupViewModel,
-            openLinkDialog = openLinkDialog,
+            openLinkDialog = openAddLinkDialog,
             onAddLinkPressed = {
                 groupViewModel.addLink(context)
             }
@@ -81,7 +81,7 @@ fun GroupScreen(
                 groupViewModel = groupViewModel,
                 navigateToProfileScreen = navigateToProfileScreen,
                 getGroupByIdData = getGroupByIdData,
-                openLinkDialog = openLinkDialog
+                openAddLinkDialog = openAddLinkDialog
             )
         }
     )
