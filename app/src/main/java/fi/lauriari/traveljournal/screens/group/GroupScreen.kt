@@ -19,6 +19,7 @@ fun GroupScreen(
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addGroupData.collectAsState()
+    val searchUsersData by groupViewModel.searchUsersData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -35,7 +36,11 @@ fun GroupScreen(
             context = context,
             groupViewModel = groupViewModel,
             openAddMemberDialog = openAddMemberDialog,
-            onAddMemberPressed = {}
+            onSearchMembersPressed = {
+                groupViewModel.searchUsers(context)
+            },
+            onAddMemberPressed = {},
+            searchUsersData = searchUsersData
         )
     }
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
+import fi.lauriari.traveljournal.SearchUsersQuery
 import fi.lauriari.traveljournal.data.GroupRepository
 import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,7 @@ class GroupViewModel : ViewModel() {
     var userId: String = ""
     var groupId: String = ""
     var urlTextState: MutableState<String> = mutableStateOf("")
+    val searchInputState: MutableState<String> = mutableStateOf("j")
 
     private val repository = GroupRepository()
 
@@ -83,5 +85,26 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    private var _searchUsersData =
+        MutableStateFlow<APIRequestState<List<SearchUsersQuery.SearchUser?>?>>(APIRequestState.Idle)
+    val searchUsersData: StateFlow<APIRequestState<List<SearchUsersQuery.SearchUser?>?>> =
+        _searchUsersData
 
+    fun searchUsers(context: Context) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.searchUsers(
+                context = context,
+                searchInput = searchInputState.value
+            ).collect { searchUsersResponse ->
+                if (searchUsersResponse?.data?.searchUsers != null &&
+                    !searchUsersResponse.hasErrors()
+                ) {
+                    _searchUsersData.value =
+                        APIRequestState.Success(searchUsersResponse.data!!.searchUsers)
+                } else {
+                    _searchUsersData.value = APIRequestState.BadResponse("Failed to fetch users.")
+                }
+            }
+        }
+    }
 }
