@@ -3,6 +3,8 @@ type Query {
 
   login(username: String!, password: String!): User
 
+  searchUsers(searchInput: String!): [User]
+
   getGroup(id: ID!): Group
 
   getGroupsByUserId: [Group]
