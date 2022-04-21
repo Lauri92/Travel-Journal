@@ -255,12 +255,16 @@ fun RegisterInputs(
             .padding(16.dp)
             .size(width = 200.dp, height = 60.dp),
         onClick = {
-            if (registerPasswordTextState != "" && registerUsernameTextState != "") {
+            if (registerPasswordTextState.length >= 3 && registerUsernameTextState.length >= 3) {
                 isInputAllowed = false
                 onRegisterPressed()
                 focusManager.clearFocus()
             } else {
-                Toast.makeText(context, "Fill both fields!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Fill both fields! Username must be atleast 3 characters long!",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     ) {

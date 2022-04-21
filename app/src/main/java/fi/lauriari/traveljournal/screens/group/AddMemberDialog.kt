@@ -2,6 +2,7 @@ package fi.lauriari.traveljournal.screens.group
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -78,7 +79,15 @@ fun AddMemberDialog(
                         trailingIcon = {
                             IconButton(
                                 onClick = {
-                                    onSearchMembersPressed()
+                                    if (groupViewModel.searchInputState.value.length >= 3) {
+                                        onSearchMembersPressed()
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Use atleast 3 letters to search with",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 },
                             ) {
                                 Icon(
@@ -93,7 +102,15 @@ fun AddMemberDialog(
                         ),
                         keyboardActions = KeyboardActions(
                             onSearch = {
-                                onSearchMembersPressed()
+                                if (groupViewModel.searchInputState.value.length >= 3) {
+                                    onSearchMembersPressed()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Use atleast 3 letters to search with",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             },
                         )
                     )
@@ -116,8 +133,6 @@ fun AddMemberDialog(
                                         filteredList.add(Member(user?.id!!, user.username!!))
                                     }
                                 }
-                                Log.d("filteredlist", filteredList.toString())
-
                                 UserSearchLazyColumn(filteredList)
                             }
                         }
@@ -168,7 +183,10 @@ fun UserSearchLazyColumn(
                         .size(40.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(user.username!!)
+                    Text(
+                        modifier = Modifier.padding(10.dp),
+                        text = user.username
+                    )
                     Button(
                         onClick = { /*TODO*/ },
                         shape = CircleShape
