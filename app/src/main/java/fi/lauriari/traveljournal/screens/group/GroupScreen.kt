@@ -40,7 +40,7 @@ fun GroupScreen(
                 groupViewModel.searchUsers(context)
             },
             onAddMemberPressed = {},
-            searchUsersData = searchUsersData
+            searchUsersData = searchUsersData,
         )
     }
 

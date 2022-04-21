@@ -23,6 +23,7 @@ class GroupViewModel : ViewModel() {
 
     var userId: String = ""
     var groupId: String = ""
+    var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
     val searchInputState: MutableState<String> = mutableStateOf("j")
 
@@ -47,6 +48,7 @@ class GroupViewModel : ViewModel() {
                     Log.d("singletest", getGroupById.data!!.getGroup.toString())
                     _getGroupByIdData.value =
                         APIRequestState.Success(getGroupById.data!!.getGroup)
+                    groupMembers = getGroupById.data!!.getGroup?.members
                 } else {
                     _getGroupByIdData.value =
                         APIRequestState.BadResponse("Failed to load groups")

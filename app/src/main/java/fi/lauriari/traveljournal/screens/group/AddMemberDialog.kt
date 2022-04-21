@@ -1,11 +1,11 @@
 package fi.lauriari.traveljournal.screens.group
 
 import android.content.Context
-import android.util.Patterns
-import android.widget.Toast
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,12 +21,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.SearchUsersQuery
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
-import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.draw.clip
+import fi.lauriari.traveljournal.GetGroupQuery
+import fi.lauriari.traveljournal.data.models.Member
 
 @Composable
 fun AddMemberDialog(
@@ -42,7 +42,7 @@ fun AddMemberDialog(
             openAddMemberDialog.value = false
         },
         content = {
-            Box(
+            Column(
                 modifier = Modifier
                     .width(300.dp)
                     .height(300.dp)
@@ -103,60 +103,81 @@ fun AddMemberDialog(
                             Column(
                                 modifier = Modifier.padding(5.dp)
                             ) {
-                                LazyColumn {
-                                    items(data.response!!) { user ->
-                                        Row {
-                                            Box(
-                                                modifier = Modifier
-                                                    .padding(5.dp)
-                                                    .size(40.dp)
-                                                    .clip(CircleShape)
-                                                    .background(Color.Gray)
-                                            ) {
-                                                Column(
-                                                    modifier = Modifier.fillMaxSize(),
-                                                    verticalArrangement = Arrangement.Center,
-                                                    horizontalAlignment = Alignment.CenterHorizontally
-                                                ) {
-                                                    val usernameStartingLetter =
-                                                        user!!.username?.get(0)?.toString()
-                                                            ?.uppercase()
 
-                                                    if (usernameStartingLetter != null) {
-                                                        Text(
-                                                            text = usernameStartingLetter,
-                                                            fontSize = 12.sp
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                            Row(
-                                                modifier = Modifier
-                                                    .padding(5.dp)
-                                                    .fillMaxWidth()
-                                                    .size(40.dp),
-                                                horizontalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                if (user != null) {
-                                                    Text(user.username!!)
-                                                }
-                                                Button(
-                                                    onClick = { /*TODO*/ },
-                                                    shape = CircleShape
-                                                )
-                                                {
-                                                    Text("Add")
-                                                }
-                                            }
-                                        }
+                                val dataIds = groupViewModel.groupMembers?.map { user ->
+                                    user?.id
+                                }
+                                val filteredList: MutableList<Member> = mutableListOf()
+
+                                data.response?.forEach { user ->
+                                    if (!dataIds?.contains(user?.id)!! &&
+                                        groupViewModel.userId != user?.id
+                                    ) {
+                                        filteredList.add(Member(user?.id!!, user.username!!))
                                     }
                                 }
+                                Log.d("filteredlist", filteredList.toString())
+
+                                UserSearchLazyColumn(filteredList)
                             }
                         }
-                        is APIRequestState.BadResponse -> {}
+                        is APIRequestState.BadResponse -> {
+                            Text(data.error)
+                        }
+                        else -> {}
                     }
                 }
             }
         }
     )
+}
+
+@Composable
+fun UserSearchLazyColumn(
+    data: MutableList<Member>
+) {
+    LazyColumn {
+        items(data) { user ->
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val usernameStartingLetter =
+                            user.username[0].toString()
+                                .uppercase()
+
+                        Text(
+                            text = usernameStartingLetter,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .fillMaxWidth()
+                        .size(40.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(user.username!!)
+                    Button(
+                        onClick = { /*TODO*/ },
+                        shape = CircleShape
+                    )
+                    {
+                        Text("Add")
+                    }
+                }
+            }
+        }
+    }
 }
