@@ -8,14 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.GetGroupQuery
-import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.SearchUsersQuery
 import fi.lauriari.traveljournal.data.GroupRepository
 import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class GroupViewModel : ViewModel() {
@@ -25,7 +23,7 @@ class GroupViewModel : ViewModel() {
     var groupId: String = ""
     var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
-    val searchInputState: MutableState<String> = mutableStateOf("joh")
+    val searchInputState: MutableState<String> = mutableStateOf("jane")
 
     private val repository = GroupRepository()
 
@@ -87,12 +85,30 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+
+    fun addUserToGroup(
+        context: Context,
+        userIdToBeAdded: String
+    ) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.addUserToGroup(
+                context = context,
+                groupId = groupId,
+                userIdToBeAdded = userIdToBeAdded
+            ).collect { addUserToGroupResponse ->
+                Log.d("adduser", addUserToGroupResponse?.data?.addUserToGroup.toString())
+            }
+        }
+    }
+
+
     private var _searchUsersData =
         MutableStateFlow<APIRequestState<List<SearchUsersQuery.SearchUser?>?>>(APIRequestState.Idle)
     val searchUsersData: StateFlow<APIRequestState<List<SearchUsersQuery.SearchUser?>?>> =
         _searchUsersData
 
     fun searchUsers(context: Context) {
+        _searchUsersData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.searchUsers(
                 context = context,

@@ -2,10 +2,7 @@ package fi.lauriari.traveljournal.data
 
 import android.content.Context
 import com.apollographql.apollo3.api.ApolloResponse
-import fi.lauriari.traveljournal.AddLinkMutation
-import fi.lauriari.traveljournal.GetGroupQuery
-import fi.lauriari.traveljournal.SearchUsersQuery
-import fi.lauriari.traveljournal.apolloClient
+import fi.lauriari.traveljournal.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -45,6 +42,24 @@ class GroupRepository {
             emit(response)
         }.flowOn(Dispatchers.IO)
     }
+
+    suspend fun addUserToGroup(
+        context: Context,
+        groupId: String,
+        userIdToBeAdded: String
+    ): Flow<ApolloResponse<AddUserToGroupMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    AddUserToGroupMutation(groupId, userIdToBeAdded)
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
 
     suspend fun searchUsers(
         context: Context,

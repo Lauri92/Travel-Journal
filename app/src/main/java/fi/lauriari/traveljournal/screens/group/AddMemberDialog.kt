@@ -26,6 +26,7 @@ import fi.lauriari.traveljournal.SearchUsersQuery
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.data.models.Member
 
@@ -35,12 +36,12 @@ fun AddMemberDialog(
     groupViewModel: GroupViewModel,
     openAddMemberDialog: MutableState<Boolean>,
     onSearchMembersPressed: () -> Unit,
-    onAddMemberPressed: () -> Unit,
     searchUsersData: APIRequestState<List<SearchUsersQuery.SearchUser?>?>,
 ) {
     Dialog(
         onDismissRequest = {
             openAddMemberDialog.value = false
+            groupViewModel.searchInputState.value = ""
         },
         content = {
             Column(
@@ -117,6 +118,15 @@ fun AddMemberDialog(
                     )
                     when (val data: APIRequestState<List<SearchUsersQuery.SearchUser?>?> =
                         searchUsersData) {
+                        is APIRequestState.Loading -> {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
                         is APIRequestState.Success -> {
                             Column(
                                 modifier = Modifier.padding(5.dp)
@@ -135,7 +145,10 @@ fun AddMemberDialog(
                                     }
                                 }
                                 if (filteredList.isNotEmpty()) {
-                                    UserSearchLazyColumn(filteredList)
+                                    UserSearchLazyColumn(
+                                        groupViewModel = groupViewModel,
+                                        data = filteredList
+                                    )
                                 } else {
                                     Column(
                                         modifier = Modifier.fillMaxWidth(),
@@ -159,19 +172,20 @@ fun AddMemberDialog(
 
 @Composable
 fun UserSearchLazyColumn(
+    groupViewModel: GroupViewModel,
     data: MutableList<Member>
 ) {
+    val context = LocalContext.current
     val items = remember { mutableStateListOf<Member>() }
 
     // FIXME Use data object as the key instead?
     LaunchedEffect(key1 = data) {
-        data.removeAll(items)
+        items.removeAll(items)
         data.forEach { user ->
             if (!items.contains(user)) {
                 items.add(user)
             }
         }
-
     }
 
     LazyColumn {
@@ -212,6 +226,11 @@ fun UserSearchLazyColumn(
                     )
                     Button(
                         onClick = {
+                            groupViewModel.addUserToGroup(
+                                context = context,
+                                userIdToBeAdded = user.id
+                            )
+                            groupViewModel.searchInputState.value = ""
                             items.remove(user)
                         },
                         shape = CircleShape

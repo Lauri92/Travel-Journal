@@ -151,7 +151,8 @@ fun Grouplist(
                 Modifier
                     .padding(start = 20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
                     .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color.White)
                     .clickable {
                         // TODO: Navigate to detailed group screen!
                         Toast
