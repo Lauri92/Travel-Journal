@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,6 +45,7 @@ fun AddMemberDialog(
         content = {
             Column(
                 modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
                     .width(300.dp)
                     .height(300.dp)
                     .background(Color.White),
@@ -133,7 +134,16 @@ fun AddMemberDialog(
                                         filteredList.add(Member(user?.id!!, user.username!!))
                                     }
                                 }
-                                UserSearchLazyColumn(filteredList)
+                                if (filteredList.isNotEmpty()) {
+                                    UserSearchLazyColumn(filteredList)
+                                } else {
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text("No users found!")
+                                    }
+                                }
                             }
                         }
                         is APIRequestState.BadResponse -> {
@@ -151,8 +161,21 @@ fun AddMemberDialog(
 fun UserSearchLazyColumn(
     data: MutableList<Member>
 ) {
+    val items = remember { mutableStateListOf<Member>() }
+
+    // FIXME Use data object as the key instead?
+    LaunchedEffect(key1 = data) {
+        data.removeAll(items)
+        data.forEach { user ->
+            if (!items.contains(user)) {
+                items.add(user)
+            }
+        }
+
+    }
+
     LazyColumn {
-        items(data) { user ->
+        items(items) { user ->
             Row {
                 Box(
                     modifier = Modifier
@@ -188,7 +211,9 @@ fun UserSearchLazyColumn(
                         text = user.username
                     )
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            items.remove(user)
+                        },
                         shape = CircleShape
                     )
                     {

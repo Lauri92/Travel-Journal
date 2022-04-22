@@ -25,7 +25,7 @@ class GroupViewModel : ViewModel() {
     var groupId: String = ""
     var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
-    val searchInputState: MutableState<String> = mutableStateOf("j")
+    val searchInputState: MutableState<String> = mutableStateOf("joh")
 
     private val repository = GroupRepository()
 
