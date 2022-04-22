@@ -14,13 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.GetGroupQuery
+import fi.lauriari.traveljournal.data.models.Member
 import fi.lauriari.traveljournal.util.APIRequestState
 
 @Composable
 fun MembersContent(
     getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
 ) {
-    data class Member(val id: String, val username: String)
 
     val list = getGroupByIdData.response?.members!!
     val admin = getGroupByIdData.response.admin

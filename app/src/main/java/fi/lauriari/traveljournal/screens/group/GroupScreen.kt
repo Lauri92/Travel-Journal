@@ -4,6 +4,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.AddLinkMutation
+import fi.lauriari.traveljournal.AddUserToGroupMutation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
@@ -19,6 +20,7 @@ fun GroupScreen(
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addGroupData.collectAsState()
+    val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
     val searchUsersData by groupViewModel.searchUsersData.collectAsState()
 
     if (openAddLinkDialog.value) {
@@ -86,6 +88,16 @@ fun GroupScreen(
                 },
             )
         }
+        is APIRequestState.EmptyList -> {}
+        is APIRequestState.Idle -> {}
+    }
+    when (val data: APIRequestState<AddUserToGroupMutation.AddUserToGroup?> = addUserToGroupData) {
+        is APIRequestState.Loading -> {}
+        is APIRequestState.Success -> {
+            groupViewModel.getGroupById(context = context)
+            groupViewModel.setAddUserToGroupDataIdle()
+        }
+        is APIRequestState.BadResponse -> {}
         is APIRequestState.EmptyList -> {}
         is APIRequestState.Idle -> {}
     }

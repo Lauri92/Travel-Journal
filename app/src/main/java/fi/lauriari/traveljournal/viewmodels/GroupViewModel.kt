@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fi.lauriari.traveljournal.AddLinkMutation
+import fi.lauriari.traveljournal.AddUserToGroupMutation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.SearchUsersQuery
 import fi.lauriari.traveljournal.data.GroupRepository
@@ -85,6 +86,16 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    private var _addUserToGroupData =
+        MutableStateFlow<APIRequestState<AddUserToGroupMutation.AddUserToGroup?>>(APIRequestState.Idle)
+
+    val addUserToGroupData: StateFlow<APIRequestState<AddUserToGroupMutation.AddUserToGroup?>> =
+        _addUserToGroupData
+
+    fun setAddUserToGroupDataIdle() {
+        _addUserToGroupData.value = APIRequestState.Idle
+    }
+
 
     fun addUserToGroup(
         context: Context,
@@ -97,6 +108,13 @@ class GroupViewModel : ViewModel() {
                 userIdToBeAdded = userIdToBeAdded
             ).collect { addUserToGroupResponse ->
                 Log.d("adduser", addUserToGroupResponse?.data?.addUserToGroup.toString())
+                if (addUserToGroupResponse?.data?.addUserToGroup != null && !addUserToGroupResponse.hasErrors()) {
+                    _addUserToGroupData.value =
+                        APIRequestState.Success(addUserToGroupResponse.data!!.addUserToGroup)
+                } else {
+                    _addUserToGroupData.value =
+                        APIRequestState.BadResponse("Failed to add user to group.")
+                }
             }
         }
     }

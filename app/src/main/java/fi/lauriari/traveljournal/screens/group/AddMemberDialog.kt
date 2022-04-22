@@ -75,8 +75,8 @@ fun AddMemberDialog(
                             Text("Search..")
                         },
                         value = groupViewModel.searchInputState.value,
-                        onValueChange = { newtext ->
-                            groupViewModel.searchInputState.value = newtext
+                        onValueChange = { newText ->
+                            groupViewModel.searchInputState.value = newText
                         },
                         trailingIcon = {
                             IconButton(
@@ -86,7 +86,7 @@ fun AddMemberDialog(
                                     } else {
                                         Toast.makeText(
                                             context,
-                                            "Use atleast 3 letters to search with",
+                                            "Use at least 3 letters to search with",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
@@ -109,7 +109,7 @@ fun AddMemberDialog(
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        "Use atleast 3 letters to search with",
+                                        "Use at least 3 letters to search with",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
