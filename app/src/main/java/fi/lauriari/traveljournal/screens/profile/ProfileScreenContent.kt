@@ -154,14 +154,6 @@ fun Grouplist(
                     .clip(RoundedCornerShape(10.dp))
                     .background(Color.White)
                     .clickable {
-                        // TODO: Navigate to detailed group screen!
-                        Toast
-                            .makeText(
-                                context,
-                                group?.id.toString(),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
                         navigateToGroupScreen(group?.id.toString())
                     }
             ) {

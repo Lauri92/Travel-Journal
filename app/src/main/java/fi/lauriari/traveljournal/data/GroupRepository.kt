@@ -26,7 +26,7 @@ class GroupRepository {
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun addGroup(
+    suspend fun addLink(
         context: Context,
         url: String,
         groupId: String

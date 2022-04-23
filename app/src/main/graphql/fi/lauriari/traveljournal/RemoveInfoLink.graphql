@@ -1,0 +1,3 @@
+mutation RemoveInfoLink($groupId: ID!, $linkId: ID!) {
+  removeInfoLink(groupId: $groupId, linkId: $linkId)
+}

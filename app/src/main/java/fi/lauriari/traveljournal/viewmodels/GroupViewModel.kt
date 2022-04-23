@@ -56,19 +56,19 @@ class GroupViewModel : ViewModel() {
         }
     }
 
-    private var _addGroupData = MutableStateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>>(
+    private var _addLinkData = MutableStateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>>(
         APIRequestState.Idle
     )
-    val addGroupData: StateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>> =
-        _addGroupData
+    val addLinkData: StateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>> =
+        _addLinkData
 
     fun setAddLinkDataIdle() {
-        _addGroupData.value = APIRequestState.Idle
+        _addLinkData.value = APIRequestState.Idle
     }
 
     fun addLink(context: Context) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            repository.addGroup(
+            repository.addLink(
                 context = context,
                 url = urlTextState.value,
                 groupId = groupId
@@ -76,10 +76,10 @@ class GroupViewModel : ViewModel() {
                 if (addLinkResponse?.data?.addInfoLink != null &&
                     !addLinkResponse.hasErrors()
                 ) {
-                    _addGroupData.value =
+                    _addLinkData.value =
                         APIRequestState.Success(addLinkResponse.data?.addInfoLink)
                 } else {
-                    _addGroupData.value =
+                    _addLinkData.value =
                         APIRequestState.BadResponse("Failed to add link")
                 }
             }

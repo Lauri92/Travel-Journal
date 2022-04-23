@@ -19,7 +19,7 @@ fun GroupScreen(
     val context = LocalContext.current
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }
-    val addLinkData by groupViewModel.addGroupData.collectAsState()
+    val addLinkData by groupViewModel.addLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
     val searchUsersData by groupViewModel.searchUsersData.collectAsState()
 
