@@ -2,15 +2,11 @@ package fi.lauriari.traveljournal.screens.group
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
@@ -26,7 +22,8 @@ fun GroupScreenContent(
     openAddLinkDialog: MutableState<Boolean>,
     openAddMemberDialog: MutableState<Boolean>,
     openRemoveLinkDialog: MutableState<Boolean>,
-    openModifyGroupDialog: MutableState<Boolean>
+    openModifyGroupDialog: MutableState<Boolean>,
+    openDeleteGroupDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val membersSelected = remember { mutableStateOf(false) }
@@ -43,7 +40,8 @@ fun GroupScreenContent(
                 GroupScreenContentHeader(
                     navigateToProfileScreen = navigateToProfileScreen,
                     getGroupByIdData = getGroupByIdData,
-                    openModifyGroupDialog = openModifyGroupDialog
+                    openModifyGroupDialog = openModifyGroupDialog,
+                    openDeleteGroupDialog = openDeleteGroupDialog
                 )
 
                 AddRow(

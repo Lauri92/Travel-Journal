@@ -8,6 +8,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -24,7 +25,8 @@ import fi.lauriari.traveljournal.util.APIRequestState
 fun GroupScreenContentHeader(
     navigateToProfileScreen: () -> Unit,
     getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>,
-    openModifyGroupDialog: MutableState<Boolean>
+    openModifyGroupDialog: MutableState<Boolean>,
+    openDeleteGroupDialog: MutableState<Boolean>
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -38,15 +40,27 @@ fun GroupScreenContentHeader(
                 tint = Color.Black
             )
         }
-        IconButton(onClick = {
-            openModifyGroupDialog.value = true
-        }) {
-            Icon(
-                modifier = Modifier.padding(10.dp),
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "Edit group",
-                tint = Color.Black
-            )
+        Row() {
+            IconButton(onClick = {
+                openDeleteGroupDialog.value = true
+            }) {
+                Icon(
+                    modifier = Modifier.padding(10.dp),
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Delete group",
+                    tint = Color.Red
+                )
+            }
+            IconButton(onClick = {
+                openModifyGroupDialog.value = true
+            }) {
+                Icon(
+                    modifier = Modifier.padding(10.dp),
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Edit group",
+                    tint = Color.Black
+                )
+            }
         }
     }
     Row {

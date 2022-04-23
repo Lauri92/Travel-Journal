@@ -1,6 +1,5 @@
 package fi.lauriari.traveljournal.screens.group
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -24,11 +23,13 @@ fun GroupScreen(
     val openAddMemberDialog = remember { mutableStateOf(false) }
     val openRemoveLinkDialog = remember { mutableStateOf(false) }
     val openModifyGroupDialog = remember { mutableStateOf(false) }
+    val openDeleteGroupDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
     val searchUsersData by groupViewModel.searchUsersData.collectAsState()
-    val updateUserData by groupViewModel.updateGroupData.collectAsState()
+    val updateGroupData by groupViewModel.updateGroupData.collectAsState()
+    val deleteGroupData by groupViewModel.deleteGroupData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -69,7 +70,13 @@ fun GroupScreen(
 
         )
     }
-
+    if (openDeleteGroupDialog.value) {
+        DeleteGroupDialog(
+            openDeleteGroupDialog = openDeleteGroupDialog,
+            onDeleteGroupPressed = {
+                groupViewModel.deleteGroup(context = context)
+            })
+    }
 
     when (val data: APIRequestState<AddLinkMutation.AddInfoLink?> = addLinkData) {
         is APIRequestState.Success -> {
@@ -133,7 +140,7 @@ fun GroupScreen(
         is APIRequestState.EmptyList -> {}
         is APIRequestState.Idle -> {}
     }
-    when (val data: APIRequestState<UpdateGroupMutation.UpdateGroup?> = updateUserData) {
+    when (val data: APIRequestState<UpdateGroupMutation.UpdateGroup?> = updateGroupData) {
         is APIRequestState.Success -> {
             groupViewModel.getGroupById(context)
             groupViewModel.setUpdateGroupDataIdle()
@@ -146,6 +153,16 @@ fun GroupScreen(
 
         }
     }
+    when (val data: APIRequestState<String?> = deleteGroupData) {
+        is APIRequestState.Success -> {
+            groupViewModel.setDeleteUserDataIdle()
+            navigateToProfileScreen()
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, "Failed to delete group!", Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
+    }
 
     Scaffold(
         content = {
@@ -157,6 +174,7 @@ fun GroupScreen(
                 openAddMemberDialog = openAddMemberDialog,
                 openRemoveLinkDialog = openRemoveLinkDialog,
                 openModifyGroupDialog = openModifyGroupDialog,
+                openDeleteGroupDialog = openDeleteGroupDialog,
             )
         }
     )

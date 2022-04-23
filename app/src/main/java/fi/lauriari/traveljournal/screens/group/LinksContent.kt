@@ -14,6 +14,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -90,7 +91,7 @@ fun LinksContent(
                             }) {
                             Icon(
                                 modifier = Modifier.padding(10.dp),
-                                imageVector = Icons.Filled.Delete,
+                                imageVector = Icons.Filled.Close,
                                 contentDescription = "Admin indicator",
                                 tint = Color.Black
                             )

@@ -91,6 +91,32 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    private var _deleteGroupData = MutableStateFlow<APIRequestState<String?>>(APIRequestState.Idle)
+
+    val deleteGroupData: StateFlow<APIRequestState<String?>> = _deleteGroupData
+
+    fun setDeleteUserDataIdle() {
+        _deleteGroupData.value = APIRequestState.Idle
+    }
+
+    fun deleteGroup(context: Context) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.deleteGroup(
+                context = context,
+                groupId = groupId
+            ).collect { deleteGroupResponse ->
+                if (deleteGroupResponse?.data?.deleteGroup != null &&
+                    !deleteGroupResponse.hasErrors()
+                ) {
+                    _deleteGroupData.value =
+                        APIRequestState.Success(deleteGroupResponse.data!!.deleteGroup)
+                } else {
+                    _deleteGroupData.value =
+                        APIRequestState.BadResponse("Failed to delete group.")
+                }
+            }
+        }
+    }
 
     private var _addLinkData = MutableStateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>>(
         APIRequestState.Idle

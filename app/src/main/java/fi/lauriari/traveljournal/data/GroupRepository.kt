@@ -44,6 +44,22 @@ class GroupRepository {
         }
     }
 
+    suspend fun deleteGroup(
+        context: Context,
+        groupId: String
+    ): Flow<ApolloResponse<DeleteGroupMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    DeleteGroupMutation(groupId)
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }
+    }
+
     suspend fun addLink(
         context: Context,
         url: String,
