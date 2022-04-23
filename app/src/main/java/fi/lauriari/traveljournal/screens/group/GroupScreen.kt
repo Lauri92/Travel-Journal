@@ -21,6 +21,7 @@ fun GroupScreen(
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }
     val openRemoveLinkDialog = remember { mutableStateOf(false) }
+    val openModifyGroupDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
@@ -55,7 +56,13 @@ fun GroupScreen(
             }
         )
     }
+    if (openModifyGroupDialog.value) {
+        ModifyGroupDialog(
+            groupViewModel = groupViewModel,
+            openModifyGroupDialog = openModifyGroupDialog
+        )
 
+    }
 
 
     when (val data: APIRequestState<AddLinkMutation.AddInfoLink?> = addLinkData) {
@@ -133,7 +140,8 @@ fun GroupScreen(
                 getGroupByIdData = getGroupByIdData,
                 openAddLinkDialog = openAddLinkDialog,
                 openAddMemberDialog = openAddMemberDialog,
-                openRemoveLinkDialog = openRemoveLinkDialog
+                openRemoveLinkDialog = openRemoveLinkDialog,
+                openModifyGroupDialog = openModifyGroupDialog,
             )
         }
     )

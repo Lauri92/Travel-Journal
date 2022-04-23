@@ -19,15 +19,17 @@ import kotlinx.coroutines.launch
 
 class GroupViewModel : ViewModel() {
 
+    private val repository = GroupRepository()
 
     var userId: String = ""
     var groupId: String = ""
     var pressedLink: String = ""
     var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
-    val searchInputState: MutableState<String> = mutableStateOf("jane")
+    val searchInputState: MutableState<String> = mutableStateOf("")
+    val nameUpdateTextState: MutableState<String> = mutableStateOf("")
+    val descriptionUpdateTextState: MutableState<String> = mutableStateOf("")
 
-    private val repository = GroupRepository()
 
     private var _getGroupByIdData =
         MutableStateFlow<APIRequestState<GetGroupQuery.GetGroup?>>(
@@ -46,6 +48,9 @@ class GroupViewModel : ViewModel() {
                     !getGroupById.hasErrors()
                 ) {
                     Log.d("singletest", getGroupById.data!!.getGroup.toString())
+                    nameUpdateTextState.value = getGroupById.data!!.getGroup?.name!!
+                    descriptionUpdateTextState.value = getGroupById.data!!.getGroup?.description!!
+
                     _getGroupByIdData.value =
                         APIRequestState.Success(getGroupById.data!!.getGroup)
                     groupMembers = getGroupById.data!!.getGroup?.members

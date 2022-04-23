@@ -8,7 +8,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,14 +23,28 @@ import fi.lauriari.traveljournal.util.APIRequestState
 @Composable
 fun GroupScreenContentHeader(
     navigateToProfileScreen: () -> Unit,
-    getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>
+    getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>,
+    openModifyGroupDialog: MutableState<Boolean>
 ) {
-    Row {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         IconButton(onClick = { navigateToProfileScreen() }) {
             Icon(
                 modifier = Modifier.padding(10.dp),
                 imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Admin indicator",
+                contentDescription = "Return to profile",
+                tint = Color.Black
+            )
+        }
+        IconButton(onClick = {
+            openModifyGroupDialog.value = true
+        }) {
+            Icon(
+                modifier = Modifier.padding(10.dp),
+                imageVector = Icons.Filled.Edit,
+                contentDescription = "Edit group",
                 tint = Color.Black
             )
         }

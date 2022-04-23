@@ -25,7 +25,8 @@ fun GroupScreenContent(
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
     openAddLinkDialog: MutableState<Boolean>,
     openAddMemberDialog: MutableState<Boolean>,
-    openRemoveLinkDialog: MutableState<Boolean>
+    openRemoveLinkDialog: MutableState<Boolean>,
+    openModifyGroupDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val membersSelected = remember { mutableStateOf(false) }
@@ -55,7 +56,8 @@ fun GroupScreenContent(
             ) {
                 GroupScreenContentHeader(
                     navigateToProfileScreen = navigateToProfileScreen,
-                    getGroupByIdData = getGroupByIdData
+                    getGroupByIdData = getGroupByIdData,
+                    openModifyGroupDialog = openModifyGroupDialog
                 )
 
                 AddRow(
