@@ -34,20 +34,6 @@ fun GroupScreenContent(
     val filesSelected = remember { mutableStateOf(false) }
 
     when (getGroupByIdData) {
-        is APIRequestState.Loading -> {
-            Column(
-                modifier = Modifier
-                    .padding(top = 50.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier.padding(top = 100.dp),
-                    text = "Loading group...",
-                    fontSize = 25.sp,
-                )
-            }
-        }
         is APIRequestState.Success -> {
             Column(
                 modifier = Modifier

@@ -7,6 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.AddUserToGroupMutation
 import fi.lauriari.traveljournal.GetGroupQuery
+import fi.lauriari.traveljournal.UpdateGroupMutation
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
@@ -26,6 +27,7 @@ fun GroupScreen(
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
     val searchUsersData by groupViewModel.searchUsersData.collectAsState()
+    val updateUserData by groupViewModel.updateGroupData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -59,9 +61,12 @@ fun GroupScreen(
     if (openModifyGroupDialog.value) {
         ModifyGroupDialog(
             groupViewModel = groupViewModel,
-            openModifyGroupDialog = openModifyGroupDialog
-        )
+            openModifyGroupDialog = openModifyGroupDialog,
+            onUpdateGroupPressed = {
+                groupViewModel.updateGroup(context = context)
+            }
 
+        )
     }
 
 
@@ -130,6 +135,19 @@ fun GroupScreen(
         is APIRequestState.BadResponse -> {}
         is APIRequestState.EmptyList -> {}
         is APIRequestState.Idle -> {}
+    }
+    when (val data: APIRequestState<UpdateGroupMutation.UpdateGroup?> = updateUserData) {
+        is APIRequestState.Success -> {
+            groupViewModel.getGroupById(context)
+            groupViewModel.setUpdateGroupDataIdle()
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, "Failed to update group", Toast.LENGTH_SHORT).show()
+            groupViewModel.setUpdateGroupDataIdle()
+        }
+        else -> {
+
+        }
     }
 
     Scaffold(

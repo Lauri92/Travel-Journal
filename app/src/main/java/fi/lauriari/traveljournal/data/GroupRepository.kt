@@ -26,6 +26,24 @@ class GroupRepository {
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun updateGroup(
+        context: Context,
+        groupId: String,
+        name: String,
+        description: String
+    ): Flow<ApolloResponse<UpdateGroupMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    UpdateGroupMutation(groupId, name, description)
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }
+    }
+
     suspend fun addLink(
         context: Context,
         url: String,

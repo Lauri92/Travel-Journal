@@ -6,15 +6,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fi.lauriari.traveljournal.AddLinkMutation
-import fi.lauriari.traveljournal.AddUserToGroupMutation
-import fi.lauriari.traveljournal.GetGroupQuery
-import fi.lauriari.traveljournal.SearchUsersQuery
+import fi.lauriari.traveljournal.*
 import fi.lauriari.traveljournal.data.GroupRepository
 import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class GroupViewModel : ViewModel() {
@@ -39,10 +37,10 @@ class GroupViewModel : ViewModel() {
         _getGroupByIdData
 
     fun getGroupById(context: Context) {
-        _getGroupByIdData.value = APIRequestState.Loading
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.getGroupById(
-                context = context, groupId = groupId
+                context = context,
+                groupId = groupId
             ).collect { getGroupById ->
                 if (getGroupById?.data?.getGroup != null &&
                     !getGroupById.hasErrors()
@@ -61,6 +59,38 @@ class GroupViewModel : ViewModel() {
             }
         }
     }
+
+    private var _updateGroupData =
+        MutableStateFlow<APIRequestState<UpdateGroupMutation.UpdateGroup?>>(
+            APIRequestState.Idle
+        )
+    val updateGroupData: StateFlow<APIRequestState<UpdateGroupMutation.UpdateGroup?>> =
+        _updateGroupData
+
+    fun setUpdateGroupDataIdle() {
+        _updateGroupData.value = APIRequestState.Idle
+    }
+
+    fun updateGroup(context: Context) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.updateGroup(
+                context = context,
+                groupId = groupId,
+                name = nameUpdateTextState.value,
+                description = descriptionUpdateTextState.value
+            ).collect { updateGroupResponse ->
+                if (updateGroupResponse?.data?.updateGroup != null &&
+                    !updateGroupResponse.hasErrors()
+                ) {
+                    _updateGroupData.value =
+                        APIRequestState.Success(updateGroupResponse.data!!.updateGroup)
+                } else {
+                    _updateGroupData.value = APIRequestState.BadResponse("Failed to update group")
+                }
+            }
+        }
+    }
+
 
     private var _addLinkData = MutableStateFlow<APIRequestState<AddLinkMutation.AddInfoLink?>>(
         APIRequestState.Idle

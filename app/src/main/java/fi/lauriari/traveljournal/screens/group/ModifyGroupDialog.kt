@@ -19,7 +19,8 @@ import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 @Composable
 fun ModifyGroupDialog(
     openModifyGroupDialog: MutableState<Boolean>,
-    groupViewModel: GroupViewModel
+    groupViewModel: GroupViewModel,
+    onUpdateGroupPressed: () -> Unit
 ) {
     val context = LocalContext.current
     Dialog(
@@ -93,6 +94,7 @@ fun ModifyGroupDialog(
                             shape = CircleShape,
                             onClick = {
                                 openModifyGroupDialog.value = false
+                                onUpdateGroupPressed()
                             })
                         {
                             Text(text = "Update")

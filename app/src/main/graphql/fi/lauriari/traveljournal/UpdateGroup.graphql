@@ -1,0 +1,6 @@
+mutation UpdateGroup($groupId: ID!, $name: String!, $description: String!) {
+  updateGroup(groupId: $groupId, name: $name, description: $description) {
+    name
+    description
+  }
+}
