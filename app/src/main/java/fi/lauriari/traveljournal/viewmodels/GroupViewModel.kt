@@ -22,6 +22,7 @@ class GroupViewModel : ViewModel() {
 
     var userId: String = ""
     var groupId: String = ""
+    var pressedLink: String = ""
     var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
     val searchInputState: MutableState<String> = mutableStateOf("jane")
@@ -95,11 +96,11 @@ class GroupViewModel : ViewModel() {
         _removeLinkData.value = APIRequestState.Idle
     }
 
-    fun removeLink(context: Context, linkId: String) {
+    fun removeLink(context: Context) {
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.removeLink(
                 context = context,
-                linkId = linkId,
+                linkId = pressedLink,
                 groupId = groupId
             ).collect { removeLinkRespose ->
                 if (removeLinkRespose?.data?.removeInfoLink != null &&

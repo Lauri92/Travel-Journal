@@ -20,6 +20,7 @@ fun GroupScreen(
     val context = LocalContext.current
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }
+    val openRemoveLinkDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
@@ -44,6 +45,14 @@ fun GroupScreen(
                 groupViewModel.searchUsers(context)
             },
             searchUsersData = searchUsersData,
+        )
+    }
+    if (openRemoveLinkDialog.value) {
+        RemoveLinkDialog(
+            openRemoveLinkDialog = openRemoveLinkDialog,
+            onRemoveLinkPressed = {
+                groupViewModel.removeLink(context)
+            }
         )
     }
 
@@ -123,7 +132,8 @@ fun GroupScreen(
                 navigateToProfileScreen = navigateToProfileScreen,
                 getGroupByIdData = getGroupByIdData,
                 openAddLinkDialog = openAddLinkDialog,
-                openAddMemberDialog = openAddMemberDialog
+                openAddMemberDialog = openAddMemberDialog,
+                openRemoveLinkDialog = openRemoveLinkDialog
             )
         }
     )
