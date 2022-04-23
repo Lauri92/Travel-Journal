@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -71,13 +72,11 @@ fun GroupScreen(
 
 
     when (val data: APIRequestState<AddLinkMutation.AddInfoLink?> = addLinkData) {
-        is APIRequestState.Loading -> {
-
-        }
         is APIRequestState.Success -> {
             AlertDialog(
                 onDismissRequest = {
                     groupViewModel.setAddLinkDataIdle()
+                    groupViewModel.getGroupById(context = context)
                 },
                 title = {
                     Text(text = "Added a link: ${data.response?.url}")
@@ -86,13 +85,12 @@ fun GroupScreen(
                     Button(
                         onClick = {
                             groupViewModel.setAddLinkDataIdle()
+                            groupViewModel.getGroupById(context = context)
                         }) {
                         Text("OK")
                     }
                 },
             )
-            groupViewModel.getGroupById(context = context)
-            groupViewModel.setAddLinkDataIdle()
         }
         is APIRequestState.BadResponse -> {
             AlertDialog(
@@ -112,8 +110,7 @@ fun GroupScreen(
                 },
             )
         }
-        is APIRequestState.EmptyList -> {}
-        is APIRequestState.Idle -> {}
+        else -> {}
     }
     when (val data: APIRequestState<String?> = removeLinkData) {
         is APIRequestState.Success -> {
