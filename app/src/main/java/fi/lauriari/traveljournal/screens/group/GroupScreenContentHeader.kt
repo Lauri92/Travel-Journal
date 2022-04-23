@@ -7,9 +7,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -26,7 +24,9 @@ fun GroupScreenContentHeader(
     navigateToProfileScreen: () -> Unit,
     getGroupByIdData: APIRequestState.Success<GetGroupQuery.GetGroup?>,
     openModifyGroupDialog: MutableState<Boolean>,
-    openDeleteGroupDialog: MutableState<Boolean>
+    openDeleteGroupDialog: MutableState<Boolean>,
+    adminId: String?,
+    userId: String
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -40,23 +40,34 @@ fun GroupScreenContentHeader(
                 tint = Color.Black
             )
         }
-        Row() {
-            IconButton(onClick = {
-                openDeleteGroupDialog.value = true
-            }) {
-                Icon(
-                    modifier = Modifier.padding(10.dp),
-                    imageVector = Icons.Filled.Delete,
-                    contentDescription = "Delete group",
-                    tint = Color.Red
-                )
+        if (adminId!! == userId) {
+            Row() {
+                IconButton(onClick = {
+                    openDeleteGroupDialog.value = true
+                }) {
+                    Icon(
+                        modifier = Modifier.padding(10.dp),
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Delete group",
+                        tint = Color.Red
+                    )
+                }
+                IconButton(onClick = {
+                    openModifyGroupDialog.value = true
+                }) {
+                    Icon(
+                        modifier = Modifier.padding(10.dp),
+                        imageVector = Icons.Filled.Edit,
+                        contentDescription = "Edit group",
+                        tint = Color.Black
+                    )
+                }
             }
-            IconButton(onClick = {
-                openModifyGroupDialog.value = true
-            }) {
+        } else {
+            IconButton(onClick = { }) {
                 Icon(
                     modifier = Modifier.padding(10.dp),
-                    imageVector = Icons.Filled.Edit,
+                    imageVector = Icons.Filled.ExitToApp,
                     contentDescription = "Edit group",
                     tint = Color.Black
                 )

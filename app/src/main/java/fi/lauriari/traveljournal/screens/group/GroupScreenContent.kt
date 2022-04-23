@@ -41,7 +41,9 @@ fun GroupScreenContent(
                     navigateToProfileScreen = navigateToProfileScreen,
                     getGroupByIdData = getGroupByIdData,
                     openModifyGroupDialog = openModifyGroupDialog,
-                    openDeleteGroupDialog = openDeleteGroupDialog
+                    openDeleteGroupDialog = openDeleteGroupDialog,
+                    adminId = getGroupByIdData.response?.admin?.id,
+                    userId = groupViewModel.userId
                 )
 
                 AddRow(
