@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.widget.Toast
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -20,6 +21,7 @@ fun GroupScreen(
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addLinkData.collectAsState()
+    val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
     val searchUsersData by groupViewModel.searchUsersData.collectAsState()
 
@@ -69,6 +71,7 @@ fun GroupScreen(
                 },
             )
             groupViewModel.getGroupById(context = context)
+            groupViewModel.setAddLinkDataIdle()
         }
         is APIRequestState.BadResponse -> {
             AlertDialog(
@@ -90,6 +93,17 @@ fun GroupScreen(
         }
         is APIRequestState.EmptyList -> {}
         is APIRequestState.Idle -> {}
+    }
+    when (val data: APIRequestState<String?> = removeLinkData) {
+        is APIRequestState.Success -> {
+            Toast.makeText(context, "Removed link", Toast.LENGTH_SHORT).show()
+            groupViewModel.getGroupById(context = context)
+            groupViewModel.setRemoveLinkDataIdle()
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, data.error, Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
     }
     when (val data: APIRequestState<AddUserToGroupMutation.AddUserToGroup?> = addUserToGroupData) {
         is APIRequestState.Loading -> {}

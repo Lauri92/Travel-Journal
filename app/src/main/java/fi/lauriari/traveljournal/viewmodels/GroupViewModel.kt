@@ -86,6 +86,35 @@ class GroupViewModel : ViewModel() {
         }
     }
 
+    private var _removeLinkData = MutableStateFlow<APIRequestState<String?>>(
+        APIRequestState.Idle
+    )
+    val removeLinkData: StateFlow<APIRequestState<String?>> = _removeLinkData
+
+    fun setRemoveLinkDataIdle() {
+        _removeLinkData.value = APIRequestState.Idle
+    }
+
+    fun removeLink(context: Context, linkId: String) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.removeLink(
+                context = context,
+                linkId = linkId,
+                groupId = groupId
+            ).collect { removeLinkRespose ->
+                if (removeLinkRespose?.data?.removeInfoLink != null &&
+                    !removeLinkRespose.hasErrors()
+                ) {
+                    _removeLinkData.value =
+                        APIRequestState.Success(removeLinkRespose.data!!.removeInfoLink)
+                } else {
+                    _removeLinkData.value = APIRequestState.BadResponse("Failed to remove link")
+                }
+            }
+        }
+    }
+
+
     private var _addUserToGroupData =
         MutableStateFlow<APIRequestState<AddUserToGroupMutation.AddUserToGroup?>>(APIRequestState.Idle)
 

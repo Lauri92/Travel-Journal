@@ -17,7 +17,7 @@ class GroupRepository {
         return flow {
             val response = try {
                 apolloClient(context).query(
-                    GetGroupQuery(getGroupId = groupId)
+                    GetGroupQuery(groupId)
                 ).execute()
             } catch (e: Exception) {
                 null
@@ -35,6 +35,23 @@ class GroupRepository {
             val response = try {
                 apolloClient(context).mutation(
                     AddLinkMutation(url, groupId)
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun removeLink(
+        context: Context,
+        groupId: String,
+        linkId: String
+    ): Flow<ApolloResponse<RemoveInfoLinkMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    RemoveInfoLinkMutation(groupId, linkId)
                 ).execute()
             } catch (e: Exception) {
                 null

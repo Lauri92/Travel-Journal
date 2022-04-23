@@ -94,7 +94,7 @@ fun GroupScreenContent(
                     LinksContent(
                         context = context,
                         groupViewModel = groupViewModel,
-                        getGroupByIdData = getGroupByIdData
+                        getGroupByIdData = getGroupByIdData,
                     )
                 }
             }

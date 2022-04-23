@@ -83,7 +83,9 @@ fun LinksContent(
                     ) {
                         IconButton(
                             onClick = {
-                                
+                                groupViewModel.removeLink(
+                                    context = context, linkId = link?.id!!
+                                )
                             }) {
                             Icon(
                                 modifier = Modifier.padding(10.dp),
