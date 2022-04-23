@@ -12,6 +12,7 @@ query GetGroupsByUserId {
     }
     links {
       user {
+        id
         username
         nickname
       }

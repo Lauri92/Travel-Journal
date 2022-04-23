@@ -17,9 +17,15 @@ type Mutation {
 
   addInfoLink(url: String!, group: ID!): Link
 
+  removeInfoLink(groupId: ID!, linkId: ID!): String
+
   addGroup(members: [UserInput], links: [LinkInput], name: String!, description: String!): Group
 
   addUserToGroup(groupId: ID!, userId: ID!): Group
+
+  updateGroup(groupId: ID!, name: String!, description: String!): Group
+
+  deleteGroup(groupId: ID!): String
 }
 
 type User {

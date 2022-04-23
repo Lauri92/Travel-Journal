@@ -42,8 +42,8 @@ fun GroupScreenContent(
     openAddMemberDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
-    val membersSelected = remember { mutableStateOf(true) }
-    val linksSelected = remember { mutableStateOf(false) }
+    val membersSelected = remember { mutableStateOf(false) }
+    val linksSelected = remember { mutableStateOf(true) }
     val filesSelected = remember { mutableStateOf(false) }
 
     when (getGroupByIdData) {
@@ -93,6 +93,7 @@ fun GroupScreenContent(
                 if (linksSelected.value) {
                     LinksContent(
                         context = context,
+                        groupViewModel = groupViewModel,
                         getGroupByIdData = getGroupByIdData
                     )
                 }

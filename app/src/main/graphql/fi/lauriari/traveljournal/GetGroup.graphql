@@ -16,6 +16,7 @@ query GetGroup($getGroupId: ID!) {
     links {
       id
       user {
+        id
         nickname
         username
       }
