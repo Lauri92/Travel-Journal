@@ -1,7 +1,6 @@
-package fi.lauriari.traveljournal.screens.group
+package fi.lauriari.traveljournal.screens.group.dialogs
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +26,6 @@ import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.data.models.Member
 
 @Composable

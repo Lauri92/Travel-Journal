@@ -1,0 +1,3 @@
+mutation UserSelfLeaveGroup($groupId: ID!) {
+  userSelfLeaveGroup(groupId: $groupId)
+}

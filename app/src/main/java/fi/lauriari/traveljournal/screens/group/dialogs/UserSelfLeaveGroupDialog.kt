@@ -1,6 +1,5 @@
-package fi.lauriari.traveljournal.screens.group
+package fi.lauriari.traveljournal.screens.group.dialogs
 
-import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -11,16 +10,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RemoveLinkDialog(
-    openRemoveLinkDialog: MutableState<Boolean>,
-    onRemoveLinkPressed: () -> Unit
+fun UserSelfLeaveGroupDialog(
+    openSelfLeaveGroupDialog: MutableState<Boolean>,
+    onLeaveGroupPressed: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = {
-            openRemoveLinkDialog.value = false
+            openSelfLeaveGroupDialog.value = false
         },
         title = {
-            Text(text = "Remove link?")
+            Text(text = "Leave group?")
+        },
+        text = {
+            Text("Are you sure you want to leave the group? This cannot be undone.")
         },
         confirmButton = {
             Button(
@@ -28,10 +30,10 @@ fun RemoveLinkDialog(
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
                 onClick = {
-                    openRemoveLinkDialog.value = false
-                    onRemoveLinkPressed()
+                    openSelfLeaveGroupDialog.value = false
+                    onLeaveGroupPressed()
                 }) {
-                Text("Remove")
+                Text("Leave group")
             }
         },
         dismissButton = {
@@ -39,7 +41,7 @@ fun RemoveLinkDialog(
                 modifier = Modifier.padding(bottom = 15.dp),
                 shape = CircleShape,
                 onClick = {
-                    openRemoveLinkDialog.value = false
+                    openSelfLeaveGroupDialog.value = false
                 }) {
                 Text("Dismiss")
             }

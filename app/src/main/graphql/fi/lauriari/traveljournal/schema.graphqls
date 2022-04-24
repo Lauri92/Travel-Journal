@@ -23,6 +23,10 @@ type Mutation {
 
   addUserToGroup(groupId: ID!, userId: ID!): Group
 
+  removeUserFromGroup(groupId: ID!, userId: ID!): String
+
+  userSelfLeaveGroup(groupId: ID!): String
+
   updateGroup(groupId: ID!, name: String!, description: String!): Group
 
   deleteGroup(groupId: ID!): String

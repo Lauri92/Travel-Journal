@@ -26,7 +26,8 @@ fun GroupScreenContentHeader(
     openModifyGroupDialog: MutableState<Boolean>,
     openDeleteGroupDialog: MutableState<Boolean>,
     adminId: String?,
-    userId: String
+    userId: String,
+    openUserSelfLeaveGroupDialog: MutableState<Boolean>
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -64,7 +65,9 @@ fun GroupScreenContentHeader(
                 }
             }
         } else {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                openUserSelfLeaveGroupDialog.value = true
+            }) {
                 Icon(
                     modifier = Modifier.padding(10.dp),
                     imageVector = Icons.Filled.ExitToApp,

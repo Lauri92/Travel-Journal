@@ -187,7 +187,6 @@ class GroupViewModel : ViewModel() {
         _addUserToGroupData.value = APIRequestState.Idle
     }
 
-
     fun addUserToGroup(
         context: Context,
         userIdToBeAdded: String
@@ -198,13 +197,43 @@ class GroupViewModel : ViewModel() {
                 groupId = groupId,
                 userIdToBeAdded = userIdToBeAdded
             ).collect { addUserToGroupResponse ->
-                Log.d("adduser", addUserToGroupResponse?.data?.addUserToGroup.toString())
                 if (addUserToGroupResponse?.data?.addUserToGroup != null && !addUserToGroupResponse.hasErrors()) {
                     _addUserToGroupData.value =
                         APIRequestState.Success(addUserToGroupResponse.data!!.addUserToGroup)
                 } else {
                     _addUserToGroupData.value =
                         APIRequestState.BadResponse("Failed to add user to group.")
+                }
+            }
+        }
+    }
+
+    private var _userSelfLeaveGroupData =
+        MutableStateFlow<APIRequestState<String?>>(APIRequestState.Idle)
+
+    val userSelfLeaveGroupData: StateFlow<APIRequestState<String?>> =
+        _userSelfLeaveGroupData
+
+    fun setUserSelfLeaveGroupDataIdle() {
+        _userSelfLeaveGroupData.value = APIRequestState.Idle
+    }
+
+    fun userSelfLeaveGroup(
+        context: Context
+    ) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.userSelfLeaveGroup(
+                context = context,
+                groupId = groupId
+            ).collect { userSelfLeaveGroupResponse ->
+                if (userSelfLeaveGroupResponse?.data?.userSelfLeaveGroup != null &&
+                    !userSelfLeaveGroupResponse.hasErrors()
+                ) {
+                    _userSelfLeaveGroupData.value =
+                        APIRequestState.Success(userSelfLeaveGroupResponse.data!!.userSelfLeaveGroup)
+                } else {
+                    _userSelfLeaveGroupData.value =
+                        APIRequestState.BadResponse("Failed to leave group")
                 }
             }
         }

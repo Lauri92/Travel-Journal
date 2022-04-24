@@ -8,6 +8,7 @@ import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.AddUserToGroupMutation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.UpdateGroupMutation
+import fi.lauriari.traveljournal.screens.group.dialogs.*
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
@@ -24,12 +25,14 @@ fun GroupScreen(
     val openRemoveLinkDialog = remember { mutableStateOf(false) }
     val openModifyGroupDialog = remember { mutableStateOf(false) }
     val openDeleteGroupDialog = remember { mutableStateOf(false) }
+    val openUserSelfLeaveGroupDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
     val searchUsersData by groupViewModel.searchUsersData.collectAsState()
     val updateGroupData by groupViewModel.updateGroupData.collectAsState()
     val deleteGroupData by groupViewModel.deleteGroupData.collectAsState()
+    val userSelfLeaveGroupData by groupViewModel.userSelfLeaveGroupData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -76,6 +79,14 @@ fun GroupScreen(
             onDeleteGroupPressed = {
                 groupViewModel.deleteGroup(context = context)
             })
+    }
+    if (openUserSelfLeaveGroupDialog.value) {
+        UserSelfLeaveGroupDialog(
+            openSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog,
+            onLeaveGroupPressed = {
+                groupViewModel.userSelfLeaveGroup(context = context)
+            }
+        )
     }
 
     when (val data: APIRequestState<AddLinkMutation.AddInfoLink?> = addLinkData) {
@@ -163,6 +174,16 @@ fun GroupScreen(
         }
         else -> {}
     }
+    when (val data: APIRequestState<String?> = userSelfLeaveGroupData) {
+        is APIRequestState.Success -> {
+            groupViewModel.setUserSelfLeaveGroupDataIdle()
+            navigateToProfileScreen()
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, "Failed to leave the group!", Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
+    }
 
     Scaffold(
         content = {
@@ -175,6 +196,7 @@ fun GroupScreen(
                 openRemoveLinkDialog = openRemoveLinkDialog,
                 openModifyGroupDialog = openModifyGroupDialog,
                 openDeleteGroupDialog = openDeleteGroupDialog,
+                openUserSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog
             )
         }
     )

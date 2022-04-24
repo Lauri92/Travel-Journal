@@ -111,6 +111,22 @@ class GroupRepository {
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun userSelfLeaveGroup(
+        context: Context,
+        groupId: String
+    ): Flow<ApolloResponse<UserSelfLeaveGroupMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    UserSelfLeaveGroupMutation(groupId)
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
 
     suspend fun searchUsers(
         context: Context,

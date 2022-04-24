@@ -1,4 +1,4 @@
-package fi.lauriari.traveljournal.screens.group
+package fi.lauriari.traveljournal.screens.group.dialogs
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape

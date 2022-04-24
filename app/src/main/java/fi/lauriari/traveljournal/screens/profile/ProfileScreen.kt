@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.profile
 
+import android.util.Log
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold

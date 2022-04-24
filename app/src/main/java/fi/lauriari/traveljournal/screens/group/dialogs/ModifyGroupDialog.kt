@@ -1,4 +1,4 @@
-package fi.lauriari.traveljournal.screens.group
+package fi.lauriari.traveljournal.screens.group.dialogs
 
 import android.widget.Toast
 import androidx.compose.foundation.background

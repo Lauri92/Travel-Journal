@@ -1,4 +1,4 @@
-package fi.lauriari.traveljournal.screens.group
+package fi.lauriari.traveljournal.screens.group.dialogs
 
 import android.content.Context
 import android.util.Patterns
