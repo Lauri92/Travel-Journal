@@ -111,6 +111,23 @@ class GroupRepository {
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun removeUserFromGroup(
+        context: Context,
+        groupId: String,
+        userId: String
+    ): Flow<ApolloResponse<RemoveUserFromGroupMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    RemoveUserFromGroupMutation(groupId, userId)
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
+
     suspend fun userSelfLeaveGroup(
         context: Context,
         groupId: String

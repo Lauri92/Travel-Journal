@@ -176,7 +176,6 @@ fun UserSearchLazyColumn(
     val context = LocalContext.current
     val items = remember { mutableStateListOf<Member>() }
 
-    // FIXME Use data object as the key instead?
     LaunchedEffect(key1 = data) {
         items.removeAll(items)
         data.forEach { user ->

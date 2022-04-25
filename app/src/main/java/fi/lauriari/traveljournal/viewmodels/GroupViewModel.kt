@@ -22,6 +22,7 @@ class GroupViewModel : ViewModel() {
     var userId: String = ""
     var groupId: String = ""
     var pressedLink: String = ""
+    var pressedUser: String = ""
     var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
     val searchInputState: MutableState<String> = mutableStateOf("")
@@ -207,6 +208,39 @@ class GroupViewModel : ViewModel() {
             }
         }
     }
+
+    private var _removeUserFromGroupData =
+        MutableStateFlow<APIRequestState<String?>>(APIRequestState.Idle)
+
+    val removeUserFromGroupData: StateFlow<APIRequestState<String?>> =
+        _removeUserFromGroupData
+
+    fun setRemoveUserFromGroupDataIdle() {
+        _removeUserFromGroupData.value = APIRequestState.Idle
+    }
+
+    fun removeUserFromGroup(
+        context: Context,
+    ) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.removeUserFromGroup(
+                context = context,
+                groupId = groupId,
+                userId = pressedUser
+            ).collect { removeUserFromGroupResponse ->
+                if (removeUserFromGroupResponse?.data?.removeUserFromGroup != null &&
+                    !removeUserFromGroupResponse.hasErrors()
+                ) {
+                    _removeUserFromGroupData.value =
+                        APIRequestState.Success(removeUserFromGroupResponse.data!!.removeUserFromGroup)
+                } else {
+                    _removeUserFromGroupData.value =
+                        APIRequestState.BadResponse("Failed to remove user from group")
+                }
+            }
+        }
+    }
+
 
     private var _userSelfLeaveGroupData =
         MutableStateFlow<APIRequestState<String?>>(APIRequestState.Idle)

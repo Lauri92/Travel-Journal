@@ -26,6 +26,7 @@ fun GroupScreen(
     val openModifyGroupDialog = remember { mutableStateOf(false) }
     val openDeleteGroupDialog = remember { mutableStateOf(false) }
     val openUserSelfLeaveGroupDialog = remember { mutableStateOf(false) }
+    val openRemoveUserFromGroupDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
@@ -33,6 +34,7 @@ fun GroupScreen(
     val updateGroupData by groupViewModel.updateGroupData.collectAsState()
     val deleteGroupData by groupViewModel.deleteGroupData.collectAsState()
     val userSelfLeaveGroupData by groupViewModel.userSelfLeaveGroupData.collectAsState()
+    val removeUserFromGroupData by groupViewModel.removeUserFromGroupData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -87,6 +89,13 @@ fun GroupScreen(
                 groupViewModel.userSelfLeaveGroup(context = context)
             }
         )
+    }
+    if (openRemoveUserFromGroupDialog.value) {
+        RemoveUserFromGroupDialog(
+            openRemoveFromUserGroupDialog = openRemoveUserFromGroupDialog,
+            onRemoveUserPressed = {
+                groupViewModel.removeUserFromGroup(context = context)
+            })
     }
 
     when (val data: APIRequestState<AddLinkMutation.AddInfoLink?> = addLinkData) {
@@ -184,6 +193,16 @@ fun GroupScreen(
         }
         else -> {}
     }
+    when (val data: APIRequestState<String?> = removeUserFromGroupData) {
+        is APIRequestState.Success -> {
+            groupViewModel.getGroupById(context = context)
+            groupViewModel.setRemoveUserFromGroupDataIdle()
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, "Failed to remove user from group", Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
+    }
 
     Scaffold(
         content = {
@@ -196,7 +215,8 @@ fun GroupScreen(
                 openRemoveLinkDialog = openRemoveLinkDialog,
                 openModifyGroupDialog = openModifyGroupDialog,
                 openDeleteGroupDialog = openDeleteGroupDialog,
-                openUserSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog
+                openUserSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog,
+                openRemoveUserFromGroupDialog = openRemoveUserFromGroupDialog
             )
         }
     )

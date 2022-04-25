@@ -24,7 +24,8 @@ fun GroupScreenContent(
     openRemoveLinkDialog: MutableState<Boolean>,
     openModifyGroupDialog: MutableState<Boolean>,
     openDeleteGroupDialog: MutableState<Boolean>,
-    openUserSelfLeaveGroupDialog: MutableState<Boolean>
+    openUserSelfLeaveGroupDialog: MutableState<Boolean>,
+    openRemoveUserFromGroupDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val membersSelected = remember { mutableStateOf(true) }
@@ -64,7 +65,11 @@ fun GroupScreenContent(
                 )
 
                 if (membersSelected.value) {
-                    MembersContent(getGroupByIdData = getGroupByIdData)
+                    MembersContent(
+                        getGroupByIdData = getGroupByIdData,
+                        groupViewModel = groupViewModel,
+                        openRemoveUserFromGroupDialog = openRemoveUserFromGroupDialog
+                    )
                 }
                 if (linksSelected.value) {
                     LinksContent(
