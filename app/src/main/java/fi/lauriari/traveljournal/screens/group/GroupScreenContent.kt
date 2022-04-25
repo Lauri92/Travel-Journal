@@ -27,8 +27,8 @@ fun GroupScreenContent(
     openUserSelfLeaveGroupDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
-    val membersSelected = remember { mutableStateOf(false) }
-    val linksSelected = remember { mutableStateOf(true) }
+    val membersSelected = remember { mutableStateOf(true) }
+    val linksSelected = remember { mutableStateOf(false) }
     val filesSelected = remember { mutableStateOf(false) }
 
     when (getGroupByIdData) {

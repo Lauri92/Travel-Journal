@@ -73,7 +73,7 @@ fun ProfileScreen(
                     profileViewModel.setAddGroupDataIdle()
                 },
                 title = {
-                    Text(text = "Failed to add a group.")
+                    Text(text = "Failed to add a group. Minimum group name and description length is 3 characters")
                 },
                 confirmButton = {
                     Button(
