@@ -42,6 +42,8 @@ type User {
   nickname: String
 
   token: String
+
+  profileImageUrl: String
 }
 
 input UserInput {

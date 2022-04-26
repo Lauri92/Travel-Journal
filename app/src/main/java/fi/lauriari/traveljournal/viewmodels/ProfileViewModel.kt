@@ -12,6 +12,7 @@ import com.apollographql.apollo3.api.Upload
 import fi.lauriari.traveljournal.AddGroupMutation
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.LoginQuery
+import fi.lauriari.traveljournal.ProfilePictureUploadMutation
 import fi.lauriari.traveljournal.data.Repository
 import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
@@ -95,6 +96,18 @@ class ProfileViewModel : ViewModel() {
         }
     }
 
+    private var _profilePictureUploadData =
+        MutableStateFlow<APIRequestState<ProfilePictureUploadMutation.ProfilePictureUpload?>>(
+            APIRequestState.Idle
+        )
+    val profilePictureUploadData:
+            StateFlow<APIRequestState<ProfilePictureUploadMutation.ProfilePictureUpload?>> =
+        _profilePictureUploadData
+
+    fun setProfilePictureUploadDataIdle() {
+        _profilePictureUploadData.value = APIRequestState.Idle
+    }
+
 
     fun profilePictureUpload(
         context: Context,
@@ -105,7 +118,15 @@ class ProfileViewModel : ViewModel() {
                 context = context,
                 file = file
             ).collect { profilePictureUploadResponse ->
-                Log.d("uploadTest", profilePictureUploadResponse?.data.toString())
+                if (profilePictureUploadResponse?.data?.profilePictureUpload != null &&
+                    !profilePictureUploadResponse.hasErrors()
+                ) {
+                    _profilePictureUploadData.value =
+                        APIRequestState.Success(profilePictureUploadResponse.data?.profilePictureUpload)
+                } else {
+                    _profilePictureUploadData.value =
+                        APIRequestState.BadResponse("Failed to upload image!")
+                }
             }
         }
     }

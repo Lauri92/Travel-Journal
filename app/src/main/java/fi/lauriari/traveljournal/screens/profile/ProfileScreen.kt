@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.profile
 
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
@@ -8,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.AddGroupMutation
+import fi.lauriari.traveljournal.ProfilePictureUploadMutation
 import fi.lauriari.traveljournal.screens.profile.dialogs.AddGroupDialog
 import fi.lauriari.traveljournal.screens.profile.dialogs.ChangeProfileImageDialog
 import fi.lauriari.traveljournal.util.APIRequestState
@@ -27,6 +29,7 @@ fun ProfileScreen(
 
     val getGroupsByUserIdData by profileViewModel.getGroupsByUserIdData.collectAsState()
     val getAddGroupData by profileViewModel.addGroupData.collectAsState()
+    val profilePictureUploadData by profileViewModel.profilePictureUploadData.collectAsState()
 
     val openAddGroupDialog = remember { mutableStateOf(false) }
     val openChangeProfileImageDialog = remember { mutableStateOf(true) }
@@ -98,6 +101,18 @@ fun ProfileScreen(
         }
         is APIRequestState.Idle -> {}
         is APIRequestState.EmptyList -> {}
+    }
+    when (val data: APIRequestState<ProfilePictureUploadMutation.ProfilePictureUpload?> =
+        profilePictureUploadData) {
+        is APIRequestState.Success -> {
+
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show()
+        }
+        else -> {
+
+        }
     }
 
     Scaffold(

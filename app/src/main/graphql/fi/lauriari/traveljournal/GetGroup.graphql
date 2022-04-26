@@ -7,11 +7,13 @@ query GetGroup($getGroupId: ID!) {
       id
       username
       nickname
+      profileImageUrl
     }
     members {
       id
       username
       nickname
+      profileImageUrl
     }
     links {
       id

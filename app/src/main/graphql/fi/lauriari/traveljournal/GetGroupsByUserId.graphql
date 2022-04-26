@@ -5,10 +5,12 @@ query GetGroupsByUserId {
       id
       username
       nickname
+      profileImageUrl
     }
     members {
       username
       nickname
+      profileImageUrl
     }
     links {
       user {

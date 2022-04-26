@@ -24,6 +24,7 @@ import com.apollographql.apollo3.api.DefaultUpload
 import com.apollographql.apollo3.api.content
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 import okio.use
+import org.apache.commons.io.FileUtils
 import java.io.File
 
 
@@ -64,10 +65,6 @@ fun ChangeProfileImageDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (profileViewModel.imageUriState.value != null) {
-                        Log.d(
-                            "filevalue",
-                            "From viewmodel: ${profileViewModel.imageUriState.value}"
-                        )
                         val uri = profileViewModel.imageUriState.value
 
                         val file =
@@ -76,13 +73,6 @@ fun ChangeProfileImageDialog(
                                 uri = uri!!,
                                 fileName = "hello"
                             )
-
-
-                        Log.d(
-                            "filevalue", "is file: ${file?.isFile}"
-                        )
-
-
                         val upload = DefaultUpload.Builder()
                             .content(file!!)
                             .build()
@@ -136,7 +126,7 @@ fun createTmpFileFromUri(
     return try {
         val stream = context.contentResolver.openInputStream(uri)
         val file = File.createTempFile(fileName, "jpg", context.cacheDir)
-        org.apache.commons.io.FileUtils.copyInputStreamToFile(stream, file)
+        FileUtils.copyInputStreamToFile(stream, file)
         file
     } catch (e: Exception) {
         e.printStackTrace()
