@@ -98,6 +98,7 @@ fun ChangeProfileImageDialog(
                                     file = upload
                                 )
                                 file.delete()
+                                openChangeProfileImageDialog.value = false
                             }
                         ) {
                             Text(text = "Upload")

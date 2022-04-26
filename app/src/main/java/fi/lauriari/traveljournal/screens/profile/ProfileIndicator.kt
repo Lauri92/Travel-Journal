@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.screens.profile
 
 import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
+import fi.lauriari.traveljournal.util.Constants.CONTAINER_URL
 import fi.lauriari.traveljournal.util.User
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
@@ -28,27 +32,47 @@ fun ProfileIndicator(
             .fillMaxWidth()
             .wrapContentSize(Alignment.Center)
     ) {
-        Box(
-            modifier = Modifier
-                .size(125.dp)
-                .clip(CircleShape)
-                .background(Color.White)
-                .clickable {
-                    openChangeProfileImageDialog()
-                }
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+        if (profileViewModel.userImage == null) {
+            Box(
+                modifier = Modifier
+                    .size(125.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+                    .clickable {
+                        openChangeProfileImageDialog()
+                    }
             ) {
-                val usernameStartingLetter =
-                    profileViewModel.username.get(0).toString().uppercase()
-                Text(
-                    text = usernameStartingLetter,
-                    fontSize = 75.sp
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val usernameStartingLetter =
+                        profileViewModel.username.get(0).toString().uppercase()
+                    Text(
+                        text = usernameStartingLetter,
+                        fontSize = 75.sp
+                    )
+                }
             }
+        } else {
+            Image(
+                painter = rememberImagePainter(
+                    data = CONTAINER_URL + profileViewModel.userImage,
+                    builder = {
+                        crossfade(200)
+                        transformations(
+                            CircleCropTransformation()
+                        )
+                    }
+                ),
+                contentDescription = "User image",
+                modifier = Modifier
+                    .size(125.dp)
+                    .clickable {
+                        openChangeProfileImageDialog()
+                    }
+            )
         }
     }
 }

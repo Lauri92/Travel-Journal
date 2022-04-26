@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.profile
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.AlertDialog
@@ -105,7 +106,8 @@ fun ProfileScreen(
     when (val data: APIRequestState<ProfilePictureUploadMutation.ProfilePictureUpload?> =
         profilePictureUploadData) {
         is APIRequestState.Success -> {
-
+            profileViewModel.getActiveUser(context)
+            profileViewModel.setGetActiveUserDataIdle()
         }
         is APIRequestState.BadResponse -> {
             Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show()
@@ -115,12 +117,12 @@ fun ProfileScreen(
         }
     }
 
-    Scaffold(
-        content = {
-            when (val data: APIRequestState<GetActiveUserQuery.GetActiveUser?> =
-                getActiveUserData) {
-                is APIRequestState.Success -> {
-                    groupViewModel.userId = data.response?.id!!
+    when (val data: APIRequestState<GetActiveUserQuery.GetActiveUser?> =
+        getActiveUserData) {
+        is APIRequestState.Success -> {
+            groupViewModel.userId = data.response?.id!!
+            Scaffold(
+                content = {
                     ProfileScreenContent(
                         profileViewModel = profileViewModel,
                         navigateToLoginScreen = navigateToLoginScreen,
@@ -132,9 +134,11 @@ fun ProfileScreen(
                         getGroupsByUserIdData = getGroupsByUserIdData,
                     )
                 }
-                is APIRequestState.BadResponse -> {}
-                else -> {}
-            }
+            )
+
         }
-    )
+        is APIRequestState.BadResponse -> {}
+        else -> {}
+    }
+
 }

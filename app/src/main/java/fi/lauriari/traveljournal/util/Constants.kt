@@ -5,6 +5,9 @@ object Constants {
     // Server url
     const val SERVER_URL = "https://sssf-travel-journal.azurewebsites.net/graphql"
 
+    // Container url
+    const val CONTAINER_URL = "https://traveljournal.blob.core.windows.net/"
+
     // Shared prefs keys
     const val KEY_TOKEN = "TOKEN"
     const val KEY_USERNAME = "USERNAME"

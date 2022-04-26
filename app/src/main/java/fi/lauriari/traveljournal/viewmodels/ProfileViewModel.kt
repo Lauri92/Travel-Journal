@@ -26,6 +26,7 @@ class ProfileViewModel : ViewModel() {
     val descriptionTextState: MutableState<String> = mutableStateOf("")
     var username: String = ""
     var userId: String = ""
+    var userImage: String? = null
     var imageUriState: MutableState<Uri?> = mutableStateOf(null)
 
 
@@ -36,6 +37,10 @@ class ProfileViewModel : ViewModel() {
     val getActiveUserData: StateFlow<APIRequestState<GetActiveUserQuery.GetActiveUser?>> =
         _getActiveUserData
 
+    fun setGetActiveUserDataIdle() {
+        _getActiveUserData.value = APIRequestState.Idle
+    }
+
     fun getActiveUser(context: Context) {
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.getActiveUser(context = context).collect { getActiveUserResponse ->
@@ -45,6 +50,7 @@ class ProfileViewModel : ViewModel() {
                     Log.d("activeusertest", getActiveUserResponse.data!!.getActiveUser.toString())
                     userId = getActiveUserResponse.data!!.getActiveUser!!.id!!
                     username = getActiveUserResponse.data!!.getActiveUser?.username!!
+                    userImage = getActiveUserResponse.data!!.getActiveUser?.profileImageUrl
                     _getActiveUserData.value =
                         APIRequestState.Success(getActiveUserResponse.data!!.getActiveUser)
                 } else {
