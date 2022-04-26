@@ -47,9 +47,13 @@ fun ProfileScreenContent(
         )
         ProfileIndicator(
             context = context,
+            profileViewModel = profileViewModel,
             openChangeProfileImageDialog = { openChangeProfileImageDialog() }
         )
-        ProfileName(context = context)
+        ProfileName(
+            context = context,
+            profileViewModel = profileViewModel
+        )
 
         when (getGroupsByUserIdData) {
             is APIRequestState.Loading -> {

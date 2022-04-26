@@ -54,6 +54,20 @@ class Repository {
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun getActiveUser(
+        context: Context
+    ): Flow<ApolloResponse<GetActiveUserQuery.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).query(
+                    GetActiveUserQuery()
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
+    }
 
     suspend fun addGroup(
         context: Context,

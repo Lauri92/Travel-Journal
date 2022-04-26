@@ -12,10 +12,12 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
 fun ProfileName(
-    context: Context
+    context: Context,
+    profileViewModel: ProfileViewModel
 ) {
     Column(
         modifier = Modifier
@@ -24,7 +26,7 @@ fun ProfileName(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = User.getUsername(context) ?: "Some name",
+            text = profileViewModel.username,
             fontSize = 25.sp,
             fontStyle = FontStyle.Italic
         )

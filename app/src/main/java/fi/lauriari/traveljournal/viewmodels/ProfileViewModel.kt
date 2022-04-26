@@ -9,10 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Upload
-import fi.lauriari.traveljournal.AddGroupMutation
-import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
-import fi.lauriari.traveljournal.LoginQuery
-import fi.lauriari.traveljournal.ProfilePictureUploadMutation
+import fi.lauriari.traveljournal.*
 import fi.lauriari.traveljournal.data.Repository
 import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +27,33 @@ class ProfileViewModel : ViewModel() {
     var username: String = ""
     var userId: String = ""
     var imageUriState: MutableState<Uri?> = mutableStateOf(null)
+
+
+    private var _getActiveUserData =
+        MutableStateFlow<APIRequestState<GetActiveUserQuery.GetActiveUser?>>(
+            APIRequestState.Idle
+        )
+    val getActiveUserData: StateFlow<APIRequestState<GetActiveUserQuery.GetActiveUser?>> =
+        _getActiveUserData
+
+    fun getActiveUser(context: Context) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.getActiveUser(context = context).collect { getActiveUserResponse ->
+                if (getActiveUserResponse?.data?.getActiveUser != null &&
+                    !getActiveUserResponse.hasErrors()
+                ) {
+                    Log.d("activeusertest", getActiveUserResponse.data!!.getActiveUser.toString())
+                    userId = getActiveUserResponse.data!!.getActiveUser!!.id!!
+                    username = getActiveUserResponse.data!!.getActiveUser?.username!!
+                    _getActiveUserData.value =
+                        APIRequestState.Success(getActiveUserResponse.data!!.getActiveUser)
+                } else {
+                    _getActiveUserData.value =
+                        APIRequestState.BadResponse("Failed to fetch user data!")
+                }
+            }
+        }
+    }
 
 
     private var _addGroupData =

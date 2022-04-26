@@ -45,7 +45,6 @@ fun ProfileTopRow(
                 shape = CircleShape,
                 onClick = {
                     User.removeToken(context)
-                    User.removeUsername(context)
                     navigateToLoginScreen()
                 }
             ) {

@@ -30,7 +30,8 @@ class LoginViewModel : ViewModel() {
     private var _registerUserData =
         MutableStateFlow<APIRequestState<RegisterUserMutation.RegisterUser?>>(APIRequestState.Idle)
 
-    val registerUserData: StateFlow<APIRequestState<RegisterUserMutation.RegisterUser?>> = _registerUserData
+    val registerUserData: StateFlow<APIRequestState<RegisterUserMutation.RegisterUser?>> =
+        _registerUserData
 
     fun setRegisterDataIdle() {
         _registerUserData.value = APIRequestState.Idle
@@ -45,7 +46,8 @@ class LoginViewModel : ViewModel() {
                 password = registerPasswordTextState.value
             ).collect { registerResponse ->
                 if (registerResponse?.data?.registerUser != null && !registerResponse.hasErrors()) {
-                    _registerUserData.value = APIRequestState.Success(registerResponse.data!!.registerUser)
+                    _registerUserData.value =
+                        APIRequestState.Success(registerResponse.data!!.registerUser)
                     loginUser(
                         context,
                         username = registerUsernameTextState.value,
@@ -83,8 +85,6 @@ class LoginViewModel : ViewModel() {
             ).collect { loginResponse ->
                 if (loginResponse?.data?.login?.token != null && !loginResponse.hasErrors()) {
                     User.setToken(context, loginResponse.data!!.login!!.token!!)
-                    User.setUserId(context, loginResponse.data!!.login!!.id!!)
-                    User.setUsername(context, loginResponse.data!!.login!!.username!!)
                     _loginUserData.value = APIRequestState.Success(loginResponse.data!!.login)
                     usernameTextState.value = ""
                     passwordTextState.value = ""

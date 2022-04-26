@@ -1,0 +1,7 @@
+query GetActiveUser {
+  getActiveUser {
+    id
+    username
+    profileImageUrl  
+  }
+}

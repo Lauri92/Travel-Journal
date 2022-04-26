@@ -14,11 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
 fun ProfileIndicator(
     context: Context,
-    openChangeProfileImageDialog: () -> Unit
+    openChangeProfileImageDialog: () -> Unit,
+    profileViewModel: ProfileViewModel
 ) {
     Column(
         modifier = Modifier
@@ -41,7 +43,7 @@ fun ProfileIndicator(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val usernameStartingLetter =
-                    User.getUsername(context)?.get(0).toString().uppercase()
+                    profileViewModel.username.get(0).toString().uppercase()
                 Text(
                     text = usernameStartingLetter,
                     fontSize = 75.sp
