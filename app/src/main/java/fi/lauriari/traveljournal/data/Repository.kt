@@ -1,9 +1,11 @@
 package fi.lauriari.traveljournal.data
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.apollographql.apollo3.ApolloCall
 import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Upload
 import fi.lauriari.traveljournal.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -86,6 +88,24 @@ class Repository {
             }
             emit(response)
         }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun profilePictureUpload(
+        context: Context,
+        file: Upload
+    ): Flow<ApolloResponse<ProfilePictureUploadMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    ProfilePictureUploadMutation(
+                        file = file
+                    )
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }
     }
 
 

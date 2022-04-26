@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Upload
 import fi.lauriari.traveljournal.AddGroupMutation
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.LoginQuery
@@ -16,6 +17,7 @@ import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel() {
@@ -90,6 +92,21 @@ class ProfileViewModel : ViewModel() {
                             APIRequestState.BadResponse("Failed to load groups")
                     }
                 }
+        }
+    }
+
+
+    fun profilePictureUpload(
+        context: Context,
+        file: Upload
+    ) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.profilePictureUpload(
+                context = context,
+                file = file
+            ).collect { profilePictureUploadResponse ->
+                Log.d("uploadTest", profilePictureUploadResponse?.data.toString())
+            }
         }
     }
 }

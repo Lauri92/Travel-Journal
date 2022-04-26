@@ -1,0 +1,5 @@
+mutation ProfilePictureUpload($file: Upload!) {
+  profilePictureUpload(file: $file) {
+    mimetype
+  }
+}

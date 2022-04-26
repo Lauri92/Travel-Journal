@@ -1,5 +1,8 @@
 package fi.lauriari.traveljournal.screens.profile.dialogs
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,12 +13,19 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toFile
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
+import com.apollographql.apollo3.api.DefaultUpload
+import com.apollographql.apollo3.api.content
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
+import okio.use
+import java.io.File
+
 
 @Composable
 fun ChangeProfileImageDialog(
@@ -23,6 +33,7 @@ fun ChangeProfileImageDialog(
     profileViewModel: ProfileViewModel,
     openChangeProfileImageDialog: MutableState<Boolean>,
 ) {
+    val context = LocalContext.current
     Dialog(
         onDismissRequest = {
             openChangeProfileImageDialog.value = false
@@ -53,6 +64,29 @@ fun ChangeProfileImageDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (profileViewModel.imageUriState.value != null) {
+                        Log.d(
+                            "filevalue",
+                            "From viewmodel: ${profileViewModel.imageUriState.value}"
+                        )
+                        val uri = profileViewModel.imageUriState.value
+
+                        val file =
+                            createTmpFileFromUri(
+                                context = context,
+                                uri = uri!!,
+                                fileName = "hello"
+                            )
+
+
+                        Log.d(
+                            "filevalue", "is file: ${file?.isFile}"
+                        )
+
+
+                        val upload = DefaultUpload.Builder()
+                            .content(file!!)
+                            .build()
+
                         Image(
                             painter = rememberImagePainter(
                                 data = profileViewModel.imageUriState.value,
@@ -68,7 +102,13 @@ fun ChangeProfileImageDialog(
                         )
                         Button(
                             modifier = Modifier.padding(5.dp),
-                            onClick = { /*TODO*/ }
+                            onClick = {
+                                profileViewModel.profilePictureUpload(
+                                    context = context,
+                                    file = upload
+                                )
+                                file.delete()
+                            }
                         ) {
                             Text(text = "Upload")
                         }
@@ -86,4 +126,20 @@ fun ChangeProfileImageDialog(
             }
         }
     )
+}
+
+fun createTmpFileFromUri(
+    context: Context,
+    uri: Uri,
+    fileName: String
+): File? {
+    return try {
+        val stream = context.contentResolver.openInputStream(uri)
+        val file = File.createTempFile(fileName, "jpg", context.cacheDir)
+        org.apache.commons.io.FileUtils.copyInputStreamToFile(stream, file)
+        file
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
 }
