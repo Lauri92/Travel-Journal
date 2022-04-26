@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.navigation
 
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +22,7 @@ fun InitNavigation(
     loginViewModel: LoginViewModel,
     profileViewModel: ProfileViewModel,
     groupViewModel: GroupViewModel,
+    selectImageLauncher: ActivityResultLauncher<String>,
 ) {
     val screen = remember(navController) {
         Screens(navController = navController)
@@ -43,6 +45,7 @@ fun InitNavigation(
         )
         profileComposable(
             profileViewModel = profileViewModel,
+            selectImageLauncher = selectImageLauncher,
             groupViewModel = groupViewModel,
             navigateToLoginScreen = screen.login,
             navigateToGroupScreen = screen.group

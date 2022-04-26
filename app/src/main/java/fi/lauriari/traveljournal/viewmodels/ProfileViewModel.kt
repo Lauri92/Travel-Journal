@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.viewmodels
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +26,7 @@ class ProfileViewModel : ViewModel() {
     val descriptionTextState: MutableState<String> = mutableStateOf("")
     var username: String = ""
     var userId: String = ""
+    var imageUriState: MutableState<Uri?> = mutableStateOf(null)
 
 
     private var _addGroupData =

@@ -3,6 +3,7 @@ package fi.lauriari.traveljournal
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +20,11 @@ class MainActivity : ComponentActivity() {
     private val profileViewModel: ProfileViewModel by viewModels()
     private val groupViewModel: GroupViewModel by viewModels()
 
+    private val selectImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            profileViewModel.imageUriState.value = uri
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,9 +32,10 @@ class MainActivity : ComponentActivity() {
                 navController = rememberNavController()
                 InitNavigation(
                     navController = navController,
+                    selectImageLauncher = selectImageLauncher,
                     loginViewModel = loginViewModel,
                     profileViewModel = profileViewModel,
-                    groupViewModel = groupViewModel
+                    groupViewModel = groupViewModel,
                 )
             }
         }

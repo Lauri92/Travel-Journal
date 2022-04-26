@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.profile
 
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
@@ -20,6 +21,7 @@ fun ProfileScreen(
     groupViewModel: GroupViewModel,
     navigateToLoginScreen: () -> Unit,
     navigateToGroupScreen: (String) -> Unit,
+    selectImageLauncher: ActivityResultLauncher<String>,
 ) {
     val context = LocalContext.current
 
@@ -49,6 +51,8 @@ fun ProfileScreen(
     }
     if (openChangeProfileImageDialog.value) {
         ChangeProfileImageDialog(
+            selectImageLauncher = selectImageLauncher,
+            profileViewModel = profileViewModel,
             openChangeProfileImageDialog = openChangeProfileImageDialog
         )
     }

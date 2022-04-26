@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.navigation.destinations
 
+import androidx.activity.result.ActivityResultLauncher
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import fi.lauriari.traveljournal.screens.profile.ProfileScreen
@@ -12,11 +13,13 @@ fun NavGraphBuilder.profileComposable(
     groupViewModel: GroupViewModel,
     navigateToLoginScreen: () -> Unit,
     navigateToGroupScreen: (String) -> Unit,
+    selectImageLauncher: ActivityResultLauncher<String>,
 ) {
     composable(
         route = Constants.PROFILE_SCREEN
     ) { navBackStackEntry ->
         ProfileScreen(
+            selectImageLauncher = selectImageLauncher,
             profileViewModel = profileViewModel,
             groupViewModel = groupViewModel,
             navigateToLoginScreen = navigateToLoginScreen,
