@@ -1,7 +1,6 @@
-package fi.lauriari.traveljournal.screens.profile
+package fi.lauriari.traveljournal.screens.profile.dialogs
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,13 +18,13 @@ import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 @Composable
 fun AddGroupDialog(
     context: Context,
-    openDialog: MutableState<Boolean>,
+    openAddGroupDialog: MutableState<Boolean>,
     onAddGroupPressed: () -> Unit,
     profileViewModel: ProfileViewModel,
 ) {
     Dialog(
         onDismissRequest = {
-            openDialog.value = false
+            openAddGroupDialog.value = false
         },
         content = {
             Box(
@@ -92,13 +91,13 @@ fun AddGroupDialog(
                     ) {
                         OutlinedButton(
                             shape = CircleShape,
-                            onClick = { openDialog.value = false }) {
+                            onClick = { openAddGroupDialog.value = false }) {
                             Text(text = "Dismiss")
                         }
                         Button(
                             shape = CircleShape,
                             onClick = {
-                                openDialog.value = false
+                                openAddGroupDialog.value = false
                                 onAddGroupPressed()
                             })
                         {

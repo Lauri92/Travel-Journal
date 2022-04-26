@@ -1,7 +1,6 @@
 package fi.lauriari.traveljournal.screens.profile
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -32,8 +31,9 @@ fun ProfileScreenContent(
     profileViewModel: ProfileViewModel,
     navigateToLoginScreen: () -> Unit,
     navigateToGroupScreen: (String) -> Unit,
-    openDialog: () -> Unit,
+    openAddGroupDialog: () -> Unit,
     getGroupsByUserIdData: APIRequestState<List<GetGroupsByUserIdQuery.GetGroupsByUserId?>?>,
+    openChangeProfileImageDialog: () -> Unit,
 ) {
     val context = LocalContext.current
     Column(
@@ -43,9 +43,12 @@ fun ProfileScreenContent(
     ) {
         ProfileTopRow(
             navigateToLoginScreen = navigateToLoginScreen,
-            openDialog = { openDialog() }
+            openAddGroupDialog = { openAddGroupDialog() }
         )
-        ProfileIndicator(context = context)
+        ProfileIndicator(
+            context = context,
+            openChangeProfileImageDialog = { openChangeProfileImageDialog() }
+        )
         ProfileName(context = context)
 
         when (getGroupsByUserIdData) {

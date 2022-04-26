@@ -14,7 +14,7 @@ import fi.lauriari.traveljournal.util.User
 @Composable
 fun ProfileTopRow(
     navigateToLoginScreen: () -> Unit,
-    openDialog: () -> Unit
+    openAddGroupDialog: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -31,7 +31,7 @@ fun ProfileTopRow(
                     .padding(end = 10.dp, top = 10.dp),
                 shape = CircleShape,
                 onClick = {
-                    openDialog()
+                    openAddGroupDialog()
                 }
             ) {
                 Text(

@@ -2,6 +2,7 @@ package fi.lauriari.traveljournal.screens.profile
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
@@ -16,7 +17,8 @@ import fi.lauriari.traveljournal.util.User
 
 @Composable
 fun ProfileIndicator(
-    context: Context
+    context: Context,
+    openChangeProfileImageDialog: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -29,6 +31,9 @@ fun ProfileIndicator(
                 .size(125.dp)
                 .clip(CircleShape)
                 .background(Color.White)
+                .clickable {
+                    openChangeProfileImageDialog()
+                }
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),

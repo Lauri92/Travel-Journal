@@ -1,6 +1,5 @@
 package fi.lauriari.traveljournal.screens.profile
 
-import android.util.Log
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
@@ -8,6 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.AddGroupMutation
+import fi.lauriari.traveljournal.screens.profile.dialogs.AddGroupDialog
+import fi.lauriari.traveljournal.screens.profile.dialogs.ChangeProfileImageDialog
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.util.User
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
@@ -26,6 +27,7 @@ fun ProfileScreen(
     val getAddGroupData by profileViewModel.addGroupData.collectAsState()
 
     val openAddGroupDialog = remember { mutableStateOf(false) }
+    val openChangeProfileImageDialog = remember { mutableStateOf(true) }
 
     LaunchedEffect(key1 = User.getToken(context)) {
         profileViewModel.getGroupsByUserId(context)
@@ -39,10 +41,15 @@ fun ProfileScreen(
         AddGroupDialog(
             context = context,
             profileViewModel = profileViewModel,
-            openDialog = openAddGroupDialog,
+            openAddGroupDialog = openAddGroupDialog,
             onAddGroupPressed = {
                 profileViewModel.addGroup(context)
             }
+        )
+    }
+    if (openChangeProfileImageDialog.value) {
+        ChangeProfileImageDialog(
+            openChangeProfileImageDialog = openChangeProfileImageDialog
         )
     }
 
@@ -95,7 +102,8 @@ fun ProfileScreen(
                 profileViewModel = profileViewModel,
                 navigateToLoginScreen = navigateToLoginScreen,
                 navigateToGroupScreen = navigateToGroupScreen,
-                openDialog = { openAddGroupDialog.value = true },
+                openAddGroupDialog = { openAddGroupDialog.value = true },
+                openChangeProfileImageDialog = { openChangeProfileImageDialog.value = true },
                 getGroupsByUserIdData = getGroupsByUserIdData,
             )
         }
