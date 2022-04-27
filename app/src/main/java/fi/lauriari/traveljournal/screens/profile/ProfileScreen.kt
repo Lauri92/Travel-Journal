@@ -107,7 +107,7 @@ fun ProfileScreen(
         profilePictureUploadData) {
         is APIRequestState.Success -> {
             profileViewModel.getActiveUser(context)
-            profileViewModel.setGetActiveUserDataIdle()
+            profileViewModel.setProfilePictureUploadDataIdle()
         }
         is APIRequestState.BadResponse -> {
             Toast.makeText(context, "Failed to upload", Toast.LENGTH_SHORT).show()
@@ -116,29 +116,28 @@ fun ProfileScreen(
 
         }
     }
-
     when (val data: APIRequestState<GetActiveUserQuery.GetActiveUser?> =
         getActiveUserData) {
         is APIRequestState.Success -> {
+            profileViewModel.setGetActiveUserDataIdle()
             groupViewModel.userId = data.response?.id!!
-            Scaffold(
-                content = {
-                    ProfileScreenContent(
-                        profileViewModel = profileViewModel,
-                        navigateToLoginScreen = navigateToLoginScreen,
-                        navigateToGroupScreen = navigateToGroupScreen,
-                        openAddGroupDialog = { openAddGroupDialog.value = true },
-                        openChangeProfileImageDialog = {
-                            openChangeProfileImageDialog.value = true
-                        },
-                        getGroupsByUserIdData = getGroupsByUserIdData,
-                    )
-                }
-            )
-
         }
         is APIRequestState.BadResponse -> {}
         else -> {}
     }
 
+    Scaffold(
+        content = {
+            ProfileScreenContent(
+                profileViewModel = profileViewModel,
+                navigateToLoginScreen = navigateToLoginScreen,
+                navigateToGroupScreen = navigateToGroupScreen,
+                openAddGroupDialog = { openAddGroupDialog.value = true },
+                openChangeProfileImageDialog = {
+                    openChangeProfileImageDialog.value = true
+                },
+                getGroupsByUserIdData = getGroupsByUserIdData,
+            )
+        }
+    )
 }

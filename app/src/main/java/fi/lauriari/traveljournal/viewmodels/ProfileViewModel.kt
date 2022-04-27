@@ -24,7 +24,7 @@ class ProfileViewModel : ViewModel() {
 
     val groupNameTextState: MutableState<String> = mutableStateOf("")
     val descriptionTextState: MutableState<String> = mutableStateOf("")
-    var username: String = ""
+    var username: String = " "
     var userId: String = ""
     var userImage: String? = null
     var imageUriState: MutableState<Uri?> = mutableStateOf(null)
@@ -47,7 +47,7 @@ class ProfileViewModel : ViewModel() {
                 if (getActiveUserResponse?.data?.getActiveUser != null &&
                     !getActiveUserResponse.hasErrors()
                 ) {
-                    Log.d("activeusertest", getActiveUserResponse.data!!.getActiveUser.toString())
+                    Log.d("composetrace", getActiveUserResponse.data!!.getActiveUser.toString())
                     userId = getActiveUserResponse.data!!.getActiveUser!!.id!!
                     username = getActiveUserResponse.data!!.getActiveUser?.username!!
                     userImage = getActiveUserResponse.data!!.getActiveUser?.profileImageUrl
@@ -109,6 +109,10 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.getGroupsByUserId(context = context)
                 .collect { getGroupsByUserIdResponse ->
+                    Log.d(
+                        "composetrace",
+                        getGroupsByUserIdResponse?.data!!.getGroupsByUserId.toString()
+                    )
                     if (getGroupsByUserIdResponse?.data?.getGroupsByUserId != null &&
                         !getGroupsByUserIdResponse.hasErrors()
                     ) {
