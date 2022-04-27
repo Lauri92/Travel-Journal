@@ -107,6 +107,7 @@ fun ProfileScreen(
         profilePictureUploadData) {
         is APIRequestState.Success -> {
             profileViewModel.getActiveUser(context)
+            profileViewModel.getGroupsByUserId(context)
             profileViewModel.setProfilePictureUploadDataIdle()
         }
         is APIRequestState.BadResponse -> {
