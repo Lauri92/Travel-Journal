@@ -1,3 +1,7 @@
 package fi.lauriari.traveljournal.data.models
 
-data class Member(val id: String, val username: String)
+data class Member(
+    val id: String,
+    val username: String,
+    val profileImageUrl: String? = null
+)

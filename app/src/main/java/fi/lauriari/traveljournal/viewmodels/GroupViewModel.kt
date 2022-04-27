@@ -286,6 +286,10 @@ class GroupViewModel : ViewModel() {
                 context = context,
                 searchInput = searchInputState.value
             ).collect { searchUsersResponse ->
+                Log.d(
+                    "composetrace",
+                    "searchUsersResponse: ${searchUsersResponse?.data?.searchUsers}"
+                )
                 if (searchUsersResponse?.data?.searchUsers != null &&
                     !searchUsersResponse.hasErrors()
                 ) {

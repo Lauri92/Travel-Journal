@@ -109,10 +109,6 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.getGroupsByUserId(context = context)
                 .collect { getGroupsByUserIdResponse ->
-                    Log.d(
-                        "composetrace",
-                        getGroupsByUserIdResponse?.data!!.getGroupsByUserId.toString()
-                    )
                     if (getGroupsByUserIdResponse?.data?.getGroupsByUserId != null &&
                         !getGroupsByUserIdResponse.hasErrors()
                     ) {

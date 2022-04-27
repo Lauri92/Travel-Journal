@@ -1,7 +1,9 @@
 package fi.lauriari.traveljournal.screens.group.dialogs
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +28,10 @@ import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import fi.lauriari.traveljournal.data.models.Member
+import fi.lauriari.traveljournal.util.Constants
 
 @Composable
 fun AddMemberDialog(
@@ -139,7 +144,13 @@ fun AddMemberDialog(
                                     if (!dataIds?.contains(user?.id)!! &&
                                         groupViewModel.userId != user?.id
                                     ) {
-                                        filteredList.add(Member(user?.id!!, user.username!!))
+                                        filteredList.add(
+                                            Member(
+                                                id = user?.id!!,
+                                                username = user.username!!,
+                                                profileImageUrl = user.profileImageUrl
+                                            )
+                                        )
                                     }
                                 }
                                 if (filteredList.isNotEmpty()) {
@@ -180,7 +191,13 @@ fun UserSearchLazyColumn(
         items.removeAll(items)
         data.forEach { user ->
             if (!items.contains(user)) {
-                items.add(user)
+                items.add(
+                    Member(
+                        id = user.id,
+                        username = user.username,
+                        profileImageUrl = user.profileImageUrl
+                    )
+                )
             }
         }
     }
@@ -188,27 +205,45 @@ fun UserSearchLazyColumn(
     LazyColumn {
         items(items) { user ->
             Row {
-                Box(
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                if (user.profileImageUrl == null) {
+                    Box(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color.Gray)
                     ) {
-                        val usernameStartingLetter =
-                            user.username[0].toString()
-                                .uppercase()
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            val usernameStartingLetter =
+                                user.username[0].toString()
+                                    .uppercase()
 
-                        Text(
-                            text = usernameStartingLetter,
-                            fontSize = 12.sp
-                        )
+                            Text(
+                                text = usernameStartingLetter,
+                                fontSize = 12.sp
+                            )
+                        }
                     }
+                } else {
+                    Image(
+                        painter = rememberImagePainter(
+                            data = Constants.CONTAINER_URL + user.profileImageUrl,
+                            builder = {
+                                crossfade(200)
+                                transformations(
+                                    CircleCropTransformation()
+                                )
+                            }
+                        ),
+                        contentDescription = "User image",
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .size(40.dp)
+                    )
                 }
                 Row(
                     modifier = Modifier
