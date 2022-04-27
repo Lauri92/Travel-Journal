@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.screens.profile
 
 import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,9 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import fi.lauriari.traveljournal.GetGroupsByUserIdQuery
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.Constants
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
@@ -113,7 +117,8 @@ fun ProfileScreenContent(
 @Composable
 fun MemberlistCircle(
     username: String?,
-    startPadding: Dp
+    startPadding: Dp,
+    profileImageUrl: String?
 ) {
     Box(
         modifier = Modifier
@@ -122,21 +127,35 @@ fun MemberlistCircle(
             .clip(CircleShape)
             .background(Color.Gray)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            val usernameStartingLetter =
-                username?.get(0).toString().uppercase()
+        if (profileImageUrl == null) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val usernameStartingLetter =
+                    username?.get(0).toString().uppercase()
 
-            Text(
-                text = usernameStartingLetter,
-                fontSize = 10.sp
+                Text(
+                    text = usernameStartingLetter,
+                    fontSize = 10.sp
+                )
+            }
+        } else {
+            Image(
+                painter = rememberImagePainter(
+                    data = Constants.CONTAINER_URL + profileImageUrl,
+                    builder = {
+                        crossfade(200)
+                        transformations(
+                            CircleCropTransformation()
+                        )
+                    }
+                ),
+                contentDescription = "User image",
             )
         }
     }
-
 }
 
 @Composable
@@ -194,12 +213,14 @@ fun Grouplist(
                 Row {
                     MemberlistCircle(
                         username = group.admin!!.username,
+                        profileImageUrl = group.admin.profileImageUrl,
                         startPadding = 5.dp
                     )
                     group.members?.forEach { member ->
                         MemberlistCircle(
                             username = member?.username,
-                            startPadding = 2.dp
+                            profileImageUrl = member?.profileImageUrl,
+                            startPadding = 2.dp,
                         )
                     }
                 }
