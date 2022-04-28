@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.screens.group
 
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -16,7 +17,8 @@ import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 fun GroupScreen(
     navigateToProfileScreen: () -> Unit,
     groupViewModel: GroupViewModel,
-    getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>
+    getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
+    selectAvatarLauncher: ActivityResultLauncher<String>
 ) {
 
     val context = LocalContext.current
@@ -27,6 +29,7 @@ fun GroupScreen(
     val openDeleteGroupDialog = remember { mutableStateOf(false) }
     val openUserSelfLeaveGroupDialog = remember { mutableStateOf(false) }
     val openRemoveUserFromGroupDialog = remember { mutableStateOf(false) }
+    val openChangeAvatarDialog = remember { mutableStateOf(false) }
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
@@ -96,6 +99,13 @@ fun GroupScreen(
             onRemoveUserPressed = {
                 groupViewModel.removeUserFromGroup(context = context)
             })
+    }
+    if (openChangeAvatarDialog.value) {
+        ChangeGroupAvatarDialog(
+            selectAvatarLauncher = selectAvatarLauncher,
+            groupViewModel = groupViewModel,
+            openChangeGroupAvatar = openChangeAvatarDialog
+        )
     }
 
     when (val data: APIRequestState<AddLinkMutation.AddInfoLink?> = addLinkData) {
@@ -216,7 +226,8 @@ fun GroupScreen(
                 openModifyGroupDialog = openModifyGroupDialog,
                 openDeleteGroupDialog = openDeleteGroupDialog,
                 openUserSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog,
-                openRemoveUserFromGroupDialog = openRemoveUserFromGroupDialog
+                openRemoveUserFromGroupDialog = openRemoveUserFromGroupDialog,
+                openChangeAvatarDialog = openChangeAvatarDialog
             )
         }
     )

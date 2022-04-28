@@ -34,6 +34,8 @@ type Mutation {
   deleteGroup(groupId: ID!): String
 
   profilePictureUpload(file: Upload!): File!
+
+  groupAvatarUpload(file: Upload!, groupId: ID!): String!
 }
 
 type User {
@@ -86,6 +88,8 @@ type Group {
   name: String
 
   description: String
+
+  groupAvatarUrl: String
 }
 
 """

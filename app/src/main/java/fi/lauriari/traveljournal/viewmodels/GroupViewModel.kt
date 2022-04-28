@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.viewmodels
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +20,7 @@ class GroupViewModel : ViewModel() {
 
     private val repository = GroupRepository()
 
+    var avatarUriState: MutableState<Uri?> = mutableStateOf(null)
     var userId: String = ""
     var groupId: String = ""
     var pressedLink: String = ""

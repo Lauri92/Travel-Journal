@@ -1,0 +1,3 @@
+mutation GroupAvatarUpload($file: Upload!, $groupId: ID!) {
+  groupAvatarUpload(file: $file, groupId: $groupId)
+}

@@ -23,6 +23,7 @@ fun InitNavigation(
     profileViewModel: ProfileViewModel,
     groupViewModel: GroupViewModel,
     selectImageLauncher: ActivityResultLauncher<String>,
+    selectAvatarLauncher: ActivityResultLauncher<String>,
 ) {
     val screen = remember(navController) {
         Screens(navController = navController)
@@ -52,6 +53,7 @@ fun InitNavigation(
         )
         groupComposable(
             groupViewModel = groupViewModel,
+            selectAvatarLauncher = selectAvatarLauncher,
             navigateToProfileScreen = screen.profile
         )
     }

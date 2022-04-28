@@ -21,8 +21,13 @@ class MainActivity : ComponentActivity() {
     private val groupViewModel: GroupViewModel by viewModels()
 
     private val selectImageLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            profileViewModel.imageUriState.value = uri
+        registerForActivityResult(ActivityResultContracts.GetContent()) { profileImageUri ->
+            profileViewModel.imageUriState.value = profileImageUri
+        }
+
+    private val selectAvatarLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { groupAvatarUri ->
+            groupViewModel.avatarUriState.value = groupAvatarUri
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +38,7 @@ class MainActivity : ComponentActivity() {
                 InitNavigation(
                     navController = navController,
                     selectImageLauncher = selectImageLauncher,
+                    selectAvatarLauncher = selectAvatarLauncher,
                     loginViewModel = loginViewModel,
                     profileViewModel = profileViewModel,
                     groupViewModel = groupViewModel,

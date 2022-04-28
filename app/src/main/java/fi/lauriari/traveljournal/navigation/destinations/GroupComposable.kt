@@ -1,6 +1,6 @@
 package fi.lauriari.traveljournal.navigation.destinations
 
-import androidx.compose.material.Text
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,7 +16,8 @@ import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 fun NavGraphBuilder.groupComposable(
     navigateToProfileScreen: () -> Unit,
-    groupViewModel: GroupViewModel
+    groupViewModel: GroupViewModel,
+    selectAvatarLauncher: ActivityResultLauncher<String>
 ) {
     composable(
         route = GROUP_SCREEN,
@@ -39,6 +40,7 @@ fun NavGraphBuilder.groupComposable(
 
         GroupScreen(
             groupViewModel = groupViewModel,
+            selectAvatarLauncher = selectAvatarLauncher,
             navigateToProfileScreen = navigateToProfileScreen,
             getGroupByIdData = getGroupByIdData
         )

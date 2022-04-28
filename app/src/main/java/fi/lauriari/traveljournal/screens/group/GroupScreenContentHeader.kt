@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.screens.group
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
@@ -27,7 +28,8 @@ fun GroupScreenContentHeader(
     openDeleteGroupDialog: MutableState<Boolean>,
     adminId: String?,
     userId: String,
-    openUserSelfLeaveGroupDialog: MutableState<Boolean>
+    openUserSelfLeaveGroupDialog: MutableState<Boolean>,
+    openChangeAvatarDialog: MutableState<Boolean>
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -84,6 +86,9 @@ fun GroupScreenContentHeader(
                 .size(125.dp)
                 .clip(CircleShape)
                 .background(Color.DarkGray)
+                .clickable {
+                    openChangeAvatarDialog.value = true
+                }
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),

@@ -25,7 +25,8 @@ fun GroupScreenContent(
     openModifyGroupDialog: MutableState<Boolean>,
     openDeleteGroupDialog: MutableState<Boolean>,
     openUserSelfLeaveGroupDialog: MutableState<Boolean>,
-    openRemoveUserFromGroupDialog: MutableState<Boolean>
+    openRemoveUserFromGroupDialog: MutableState<Boolean>,
+    openChangeAvatarDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val membersSelected = remember { mutableStateOf(true) }
@@ -45,6 +46,7 @@ fun GroupScreenContent(
                     openModifyGroupDialog = openModifyGroupDialog,
                     openDeleteGroupDialog = openDeleteGroupDialog,
                     openUserSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog,
+                    openChangeAvatarDialog = openChangeAvatarDialog,
                     adminId = getGroupByIdData.response?.admin?.id,
                     userId = groupViewModel.userId
                 )
