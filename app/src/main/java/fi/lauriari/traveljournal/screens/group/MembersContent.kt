@@ -1,6 +1,5 @@
 package fi.lauriari.traveljournal.screens.group
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -67,7 +66,7 @@ fun MembersContent(
                 } else {
                     Image(
                         painter = rememberImagePainter(
-                            data = Constants.CONTAINER_URL + member.profileImageUrl,
+                            data = Constants.CONTAINER_BASE_URL + member.profileImageUrl,
                             builder = {
                                 crossfade(200)
                                 transformations(

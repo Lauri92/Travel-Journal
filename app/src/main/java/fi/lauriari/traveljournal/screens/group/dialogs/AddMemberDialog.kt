@@ -1,7 +1,6 @@
 package fi.lauriari.traveljournal.screens.group.dialogs
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -231,7 +230,7 @@ fun UserSearchLazyColumn(
                 } else {
                     Image(
                         painter = rememberImagePainter(
-                            data = Constants.CONTAINER_URL + user.profileImageUrl,
+                            data = Constants.CONTAINER_BASE_URL + user.profileImageUrl,
                             builder = {
                                 crossfade(200)
                                 transformations(

@@ -144,7 +144,7 @@ fun MemberlistCircle(
         } else {
             Image(
                 painter = rememberImagePainter(
-                    data = Constants.CONTAINER_URL + profileImageUrl,
+                    data = Constants.CONTAINER_BASE_URL + profileImageUrl,
                     builder = {
                         crossfade(200)
                         transformations(

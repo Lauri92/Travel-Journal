@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.group.dialogs
 
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -89,15 +90,12 @@ fun ChangeGroupAvatarDialog(
                         Button(
                             modifier = Modifier.padding(5.dp),
                             onClick = {
-                                /*
-                                groupViewModel.profilePictureUpload(
+                                groupViewModel.groupAvatarUpload(
                                     context = context,
                                     file = upload
                                 )
                                 file.delete()
                                 openChangeGroupAvatar.value = false
-
-                                 */
                             }
                         ) {
                             Text(text = "Upload")

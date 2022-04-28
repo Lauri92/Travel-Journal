@@ -7,6 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.Upload
 import fi.lauriari.traveljournal.*
 import fi.lauriari.traveljournal.data.GroupRepository
 import fi.lauriari.traveljournal.util.APIRequestState
@@ -299,6 +300,33 @@ class GroupViewModel : ViewModel() {
                         APIRequestState.Success(searchUsersResponse.data!!.searchUsers)
                 } else {
                     _searchUsersData.value = APIRequestState.BadResponse("Failed to fetch users.")
+                }
+            }
+        }
+    }
+
+    private var _groupAvatarUploadData =
+        MutableStateFlow<APIRequestState<String?>>(APIRequestState.Idle)
+    val groupAvatarUploadData: StateFlow<APIRequestState<String?>> =
+        _groupAvatarUploadData
+
+    fun setGroupAvatarUploadDataIdle() {
+        _groupAvatarUploadData.value = APIRequestState.Idle
+    }
+
+    fun groupAvatarUpload(context: Context, file: Upload) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.groupAvatarUpload(
+                context = context,
+                file = file,
+                groupId = groupId
+            ).collect { groupAvatarUploadResponse ->
+                if (groupAvatarUploadResponse?.data?.groupAvatarUpload != null && !groupAvatarUploadResponse.hasErrors()) {
+                    _groupAvatarUploadData.value =
+                        APIRequestState.Success(groupAvatarUploadResponse.data!!.groupAvatarUpload)
+                } else {
+                    _groupAvatarUploadData.value =
+                        APIRequestState.BadResponse("Failed to upload avatar!")
                 }
             }
         }

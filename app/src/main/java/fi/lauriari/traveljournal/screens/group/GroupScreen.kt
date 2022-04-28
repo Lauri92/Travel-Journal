@@ -38,6 +38,7 @@ fun GroupScreen(
     val deleteGroupData by groupViewModel.deleteGroupData.collectAsState()
     val userSelfLeaveGroupData by groupViewModel.userSelfLeaveGroupData.collectAsState()
     val removeUserFromGroupData by groupViewModel.removeUserFromGroupData.collectAsState()
+    val groupAvatarUploadData by groupViewModel.groupAvatarUploadData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -210,6 +211,16 @@ fun GroupScreen(
         }
         is APIRequestState.BadResponse -> {
             Toast.makeText(context, "Failed to remove user from group", Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
+    }
+    when (val data: APIRequestState<String?> = groupAvatarUploadData) {
+        is APIRequestState.Success -> {
+            groupViewModel.getGroupById(context)
+            groupViewModel.setGroupAvatarUploadDataIdle()
+        }
+        is APIRequestState.BadResponse -> {
+
         }
         else -> {}
     }

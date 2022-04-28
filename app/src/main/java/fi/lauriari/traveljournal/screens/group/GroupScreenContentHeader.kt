@@ -1,5 +1,7 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,8 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.Constants
 
 @Composable
 fun GroupScreenContentHeader(
@@ -80,6 +85,7 @@ fun GroupScreenContentHeader(
         }
     }
     Row {
+
         Box(
             modifier = Modifier
                 .padding(20.dp)
@@ -90,19 +96,36 @@ fun GroupScreenContentHeader(
                     openChangeAvatarDialog.value = true
                 }
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val groupnameStartingLetter =
-                    getGroupByIdData.response?.name?.get(0).toString().uppercase()
-                Text(
-                    text = groupnameStartingLetter,
-                    fontSize = 75.sp
+            if (getGroupByIdData.response?.groupAvatarUrl == null) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val groupnameStartingLetter =
+                        getGroupByIdData.response?.name?.get(0).toString().uppercase()
+                    Text(
+                        text = groupnameStartingLetter,
+                        fontSize = 75.sp
+                    )
+                }
+            } else {
+                Log.d("singletest", getGroupByIdData.response.groupAvatarUrl)
+                Image(
+                    painter = rememberImagePainter(
+                        data = Constants.CONTAINER_BASE_URL + getGroupByIdData.response.groupAvatarUrl,
+                        builder = {
+                            crossfade(200)
+                            transformations(
+                                CircleCropTransformation()
+                            )
+                        }
+                    ),
+                    contentDescription = "User image",
                 )
             }
         }
+
         Column(
             modifier = Modifier
                 .padding(start = 15.dp, top = 10.dp, end = 10.dp)

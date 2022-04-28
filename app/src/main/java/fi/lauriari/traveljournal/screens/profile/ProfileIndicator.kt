@@ -16,8 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
-import fi.lauriari.traveljournal.util.Constants.CONTAINER_URL
-import fi.lauriari.traveljournal.util.User
+import fi.lauriari.traveljournal.util.Constants.CONTAINER_BASE_URL
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
 @Composable
@@ -58,7 +57,7 @@ fun ProfileIndicator(
         } else {
             Image(
                 painter = rememberImagePainter(
-                    data = CONTAINER_URL + profileViewModel.userImage,
+                    data = CONTAINER_BASE_URL + profileViewModel.userImage,
                     builder = {
                         crossfade(200)
                         transformations(

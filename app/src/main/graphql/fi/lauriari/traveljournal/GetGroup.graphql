@@ -3,6 +3,7 @@ query GetGroup($getGroupId: ID!) {
     id
     name
     description
+    groupAvatarUrl
     admin {
       id
       username
