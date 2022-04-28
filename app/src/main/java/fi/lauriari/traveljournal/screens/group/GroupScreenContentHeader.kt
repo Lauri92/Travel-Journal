@@ -93,7 +93,9 @@ fun GroupScreenContentHeader(
                 .clip(CircleShape)
                 .background(Color.DarkGray)
                 .clickable {
-                    openChangeAvatarDialog.value = true
+                    if (adminId == userId) {
+                        openChangeAvatarDialog.value = true
+                    }
                 }
         ) {
             if (getGroupByIdData.response?.groupAvatarUrl == null) {
@@ -110,7 +112,6 @@ fun GroupScreenContentHeader(
                     )
                 }
             } else {
-                Log.d("singletest", getGroupByIdData.response.groupAvatarUrl)
                 Image(
                     painter = rememberImagePainter(
                         data = Constants.CONTAINER_BASE_URL + getGroupByIdData.response.groupAvatarUrl,

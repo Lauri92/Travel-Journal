@@ -220,7 +220,8 @@ fun GroupScreen(
             groupViewModel.setGroupAvatarUploadDataIdle()
         }
         is APIRequestState.BadResponse -> {
-
+            Toast.makeText(context, "Failed to upload avatar", Toast.LENGTH_SHORT).show()
+            groupViewModel.setGroupAvatarUploadDataIdle()
         }
         else -> {}
     }
