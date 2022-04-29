@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -38,7 +39,7 @@ fun UploadGroupImageDialog(
         content = {
             Column(
                 modifier = Modifier
-                    .size(300.dp, 500.dp)
+                    .size(300.dp, 400.dp)
                     .background(Color.White)
             ) {
                 Row(
@@ -61,18 +62,6 @@ fun UploadGroupImageDialog(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (groupViewModel.imageUploadUriState.value != null) {
-                        val uri = groupViewModel.imageUploadUriState.value
-
-                        val file =
-                            createTmpFileFromUri(
-                                context = context,
-                                uri = uri!!,
-                                fileName = "hello"
-                            )
-                        val upload = DefaultUpload.Builder()
-                            .content(file!!)
-                            .build()
-
                         Image(
                             painter = rememberImagePainter(
                                 data = groupViewModel.imageUploadUriState.value,
@@ -86,19 +75,15 @@ fun UploadGroupImageDialog(
                             contentDescription = "Image to be uploaded",
                             modifier = Modifier.size(125.dp)
                         )
-                        Button(
-                            modifier = Modifier.padding(5.dp),
-                            onClick = {
-                                groupViewModel.groupImageUpload(
-                                    context = context,
-                                    file = upload
-                                )
-                                file.delete()
-                                openUploadGroupImageDialog.value = false
-                            }
-                        ) {
-                            Text(text = "Upload")
-                        }
+                    }
+                    Button(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        shape = CircleShape,
+                        onClick = {
+                            selectGroupImageLauncher.launch("image/*")
+                        },
+                    ) {
+                        Text("Open Gallery")
                     }
                     OutlinedTextField(
                         modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 50.dp),
@@ -111,13 +96,33 @@ fun UploadGroupImageDialog(
                             groupViewModel.groupImageUploadTitleState.value = newtext
                         }
                     )
-                    Button(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        onClick = {
-                            selectGroupImageLauncher.launch("image/*")
-                        },
-                    ) {
-                        Text("Open Gallery")
+                    if (groupViewModel.imageUploadUriState.value != null) {
+                        val uri = groupViewModel.imageUploadUriState.value
+
+                        val file =
+                            createTmpFileFromUri(
+                                context = context,
+                                uri = uri!!,
+                                fileName = "hello"
+                            )
+                        val upload = DefaultUpload.Builder()
+                            .content(file!!)
+                            .build()
+
+                        Button(
+                            modifier = Modifier.padding(5.dp),
+                            shape = CircleShape,
+                            onClick = {
+                                groupViewModel.groupImageUpload(
+                                    context = context,
+                                    file = upload
+                                )
+                                file.delete()
+                                openUploadGroupImageDialog.value = false
+                            }
+                        ) {
+                            Text(text = "Upload")
+                        }
                     }
                 }
 
