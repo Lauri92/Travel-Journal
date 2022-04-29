@@ -18,7 +18,8 @@ fun GroupScreen(
     navigateToProfileScreen: () -> Unit,
     groupViewModel: GroupViewModel,
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
-    selectAvatarLauncher: ActivityResultLauncher<String>
+    selectAvatarLauncher: ActivityResultLauncher<String>,
+    selectGroupImageLauncher: ActivityResultLauncher<String>
 ) {
 
     val context = LocalContext.current
@@ -30,6 +31,8 @@ fun GroupScreen(
     val openUserSelfLeaveGroupDialog = remember { mutableStateOf(false) }
     val openRemoveUserFromGroupDialog = remember { mutableStateOf(false) }
     val openChangeAvatarDialog = remember { mutableStateOf(false) }
+    val openUploadGroupImageDialog = remember { mutableStateOf(false) }
+
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
     val addUserToGroupData by groupViewModel.addUserToGroupData.collectAsState()
@@ -106,6 +109,13 @@ fun GroupScreen(
             selectAvatarLauncher = selectAvatarLauncher,
             groupViewModel = groupViewModel,
             openChangeGroupAvatar = openChangeAvatarDialog
+        )
+    }
+    if (openUploadGroupImageDialog.value) {
+        UploadGroupImageDialog(
+            groupViewModel = groupViewModel,
+            openUploadGroupImageDialog = openUploadGroupImageDialog,
+            selectGroupImageLauncher = selectGroupImageLauncher
         )
     }
 
@@ -239,7 +249,8 @@ fun GroupScreen(
                 openDeleteGroupDialog = openDeleteGroupDialog,
                 openUserSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog,
                 openRemoveUserFromGroupDialog = openRemoveUserFromGroupDialog,
-                openChangeAvatarDialog = openChangeAvatarDialog
+                openChangeAvatarDialog = openChangeAvatarDialog,
+                openUploadGroupImageDialog = openUploadGroupImageDialog
             )
         }
     )

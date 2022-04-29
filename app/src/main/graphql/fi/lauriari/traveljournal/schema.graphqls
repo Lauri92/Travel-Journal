@@ -36,6 +36,8 @@ type Mutation {
   profilePictureUpload(file: Upload!): File!
 
   groupAvatarUpload(file: Upload!, groupId: ID!): String!
+
+  groupImageUpload(file: Upload!, groupId: ID!, title: String): String!
 }
 
 type User {
@@ -85,6 +87,8 @@ type Group {
 
   links: [Link]
 
+  groupImages: [GroupImage]
+
   name: String
 
   description: String
@@ -103,6 +107,18 @@ type File {
   mimetype: String!
 
   encoding: String!
+}
+
+type GroupImage {
+  id: ID
+
+  group: ID
+
+  user: User
+
+  urlStorageReference: String
+
+  title: String
 }
 
 schema {

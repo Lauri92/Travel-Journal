@@ -2,6 +2,7 @@ package fi.lauriari.traveljournal.data
 
 import android.content.Context
 import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.api.Upload
 import fi.lauriari.traveljournal.*
 import kotlinx.coroutines.Dispatchers
@@ -179,7 +180,29 @@ class GroupRepository {
                 null
             }
             emit(response)
-        }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun groupImageUpload(
+        context: Context,
+        file: Upload,
+        groupId: String,
+        title: String?
+    ): Flow<ApolloResponse<GroupImageUploadMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    GroupImageUploadMutation(
+                        file,
+                        groupId,
+                        Optional.presentIfNotNull(title)
+                    )
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }.flowOn(Dispatchers.IO)
     }
 
 }

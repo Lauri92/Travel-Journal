@@ -17,7 +17,8 @@ import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 fun NavGraphBuilder.groupComposable(
     navigateToProfileScreen: () -> Unit,
     groupViewModel: GroupViewModel,
-    selectAvatarLauncher: ActivityResultLauncher<String>
+    selectAvatarLauncher: ActivityResultLauncher<String>,
+    selectGroupImageLauncher: ActivityResultLauncher<String>
 ) {
     composable(
         route = GROUP_SCREEN,
@@ -41,6 +42,7 @@ fun NavGraphBuilder.groupComposable(
         GroupScreen(
             groupViewModel = groupViewModel,
             selectAvatarLauncher = selectAvatarLauncher,
+            selectGroupImageLauncher = selectGroupImageLauncher,
             navigateToProfileScreen = navigateToProfileScreen,
             getGroupByIdData = getGroupByIdData
         )

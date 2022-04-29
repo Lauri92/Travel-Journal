@@ -22,6 +22,7 @@ class GroupViewModel : ViewModel() {
     private val repository = GroupRepository()
 
     var avatarUriState: MutableState<Uri?> = mutableStateOf(null)
+    var imageUploadUriState: MutableState<Uri?> = mutableStateOf(null)
     var userId: String = ""
     var groupId: String = ""
     var pressedLink: String = ""
@@ -29,6 +30,7 @@ class GroupViewModel : ViewModel() {
     var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
     val searchInputState: MutableState<String> = mutableStateOf("")
+    val groupImageUploadTitleState: MutableState<String?> = mutableStateOf(null)
     val nameUpdateTextState: MutableState<String> = mutableStateOf("")
     val descriptionUpdateTextState: MutableState<String> = mutableStateOf("")
 
@@ -328,6 +330,20 @@ class GroupViewModel : ViewModel() {
                     _groupAvatarUploadData.value =
                         APIRequestState.BadResponse("Failed to upload avatar!")
                 }
+            }
+        }
+    }
+
+
+    fun groupImageUpload(context: Context, file: Upload) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.groupImageUpload(
+                context = context,
+                file = file,
+                groupId = groupId,
+                title = groupImageUploadTitleState.value
+            ).collect { groupImageUploadResponse ->
+                Log.d("groupimage", groupImageUploadResponse?.data?.groupImageUpload!!)
             }
         }
     }

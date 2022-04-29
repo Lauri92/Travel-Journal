@@ -18,7 +18,8 @@ fun AddRow(
     linksSelected: MutableState<Boolean>,
     adminId: String?,
     openAddLinkDialog: MutableState<Boolean>,
-    openAddMemberDialog: MutableState<Boolean>
+    openAddMemberDialog: MutableState<Boolean>,
+    openUploadGroupImageDialog: MutableState<Boolean>
 ) {
     Row(
         modifier = Modifier
@@ -53,7 +54,7 @@ fun AddRow(
                     modifier = Modifier
                         .size(width = 200.dp, height = 60.dp),
                     shape = CircleShape,
-                    onClick = { /* TODO: Open add files dialog */ }) {
+                    onClick = { openUploadGroupImageDialog.value = true }) {
                     Text(text = "Add a file", fontSize = 20.sp)
                 }
             }

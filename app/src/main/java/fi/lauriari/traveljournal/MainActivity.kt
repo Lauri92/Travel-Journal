@@ -30,6 +30,11 @@ class MainActivity : ComponentActivity() {
             groupViewModel.avatarUriState.value = groupAvatarUri
         }
 
+    private val selectGroupImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { imageUploadUri ->
+            groupViewModel.imageUploadUriState.value = imageUploadUri
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -39,6 +44,7 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     selectImageLauncher = selectImageLauncher,
                     selectAvatarLauncher = selectAvatarLauncher,
+                    selectGroupImageLauncher = selectGroupImageLauncher,
                     loginViewModel = loginViewModel,
                     profileViewModel = profileViewModel,
                     groupViewModel = groupViewModel,

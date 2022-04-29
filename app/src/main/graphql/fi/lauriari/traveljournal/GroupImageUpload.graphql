@@ -1,0 +1,3 @@
+mutation GroupImageUpload($file: Upload!, $groupId: ID!, $title: String) {
+  groupImageUpload(file: $file, groupId: $groupId, title: $title)
+}

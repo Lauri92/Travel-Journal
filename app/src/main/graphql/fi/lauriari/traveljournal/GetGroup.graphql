@@ -25,5 +25,14 @@ query GetGroup($getGroupId: ID!) {
       }
       url
     }
+    groupImages {
+      id
+      title
+      urlStorageReference
+      user {
+        username
+        profileImageUrl
+      }
+    }
   }
 }
