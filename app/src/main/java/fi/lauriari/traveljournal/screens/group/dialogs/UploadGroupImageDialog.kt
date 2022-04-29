@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -37,7 +38,7 @@ fun UploadGroupImageDialog(
         content = {
             Column(
                 modifier = Modifier
-                    .size(300.dp, 300.dp)
+                    .size(300.dp, 500.dp)
                     .background(Color.White)
             ) {
                 Row(
@@ -99,6 +100,17 @@ fun UploadGroupImageDialog(
                             Text(text = "Upload")
                         }
                     }
+                    OutlinedTextField(
+                        modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 50.dp),
+                        singleLine = true,
+                        label = {
+                            Text("Title")
+                        },
+                        value = groupViewModel.groupImageUploadTitleState.value ?: "",
+                        onValueChange = { newtext ->
+                            groupViewModel.groupImageUploadTitleState.value = newtext
+                        }
+                    )
                     Button(
                         modifier = Modifier.padding(vertical = 8.dp),
                         onClick = {
