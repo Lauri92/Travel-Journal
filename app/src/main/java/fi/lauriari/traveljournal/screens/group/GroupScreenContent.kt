@@ -27,7 +27,8 @@ fun GroupScreenContent(
     openUserSelfLeaveGroupDialog: MutableState<Boolean>,
     openRemoveUserFromGroupDialog: MutableState<Boolean>,
     openChangeAvatarDialog: MutableState<Boolean>,
-    openUploadGroupImageDialog: MutableState<Boolean>
+    openUploadGroupImageDialog: MutableState<Boolean>,
+    openDeleteGroupImageDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val membersSelected = remember { mutableStateOf(false) }
@@ -86,8 +87,10 @@ fun GroupScreenContent(
                 if (filesSelected.value) {
                     FilesContent(
                         groupAdmin = getGroupByIdData.response?.admin?.id,
+                        groupViewModel = groupViewModel,
                         user = groupViewModel.userId,
-                        filesData = getGroupByIdData.response?.groupImages
+                        filesData = getGroupByIdData.response?.groupImages,
+                        openDeleteGroupImageDialog = openDeleteGroupImageDialog
                     )
                 }
             }

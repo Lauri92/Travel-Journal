@@ -1,0 +1,3 @@
+mutation DeleteGroupImage($groupId: ID!, $groupImageId: ID!) {
+  deleteGroupImage(groupId: $groupId, groupImageId: $groupImageId)
+}

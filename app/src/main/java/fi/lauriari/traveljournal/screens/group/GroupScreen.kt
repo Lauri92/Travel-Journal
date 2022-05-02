@@ -32,6 +32,7 @@ fun GroupScreen(
     val openRemoveUserFromGroupDialog = remember { mutableStateOf(false) }
     val openChangeAvatarDialog = remember { mutableStateOf(false) }
     val openUploadGroupImageDialog = remember { mutableStateOf(false) }
+    val openDeleteGroupImageDialog = remember { mutableStateOf(false) }
 
     val addLinkData by groupViewModel.addLinkData.collectAsState()
     val removeLinkData by groupViewModel.removeLinkData.collectAsState()
@@ -43,6 +44,7 @@ fun GroupScreen(
     val removeUserFromGroupData by groupViewModel.removeUserFromGroupData.collectAsState()
     val groupAvatarUploadData by groupViewModel.groupAvatarUploadData.collectAsState()
     val groupImageUploadData by groupViewModel.groupImageUploadData.collectAsState()
+    val groupImageDeleteData by groupViewModel.groupImageDeleteData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -117,6 +119,14 @@ fun GroupScreen(
             groupViewModel = groupViewModel,
             openUploadGroupImageDialog = openUploadGroupImageDialog,
             selectGroupImageLauncher = selectGroupImageLauncher
+        )
+    }
+    if (openDeleteGroupImageDialog.value) {
+        DeleteGroupImageDialog(
+            openDeleteGroupImageDialog = openDeleteGroupImageDialog,
+            onDeleteImagePressed = {
+                groupViewModel.groupImageDelete(context = context)
+            }
         )
     }
 
@@ -247,6 +257,19 @@ fun GroupScreen(
         }
         else -> {}
     }
+    when (val data: APIRequestState<String?> = groupImageDeleteData) {
+        is APIRequestState.Success -> {
+            groupViewModel.getGroupById(context)
+            groupViewModel.setGroupImageDeleteDataIdle()
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, "Failed to delete image!", Toast.LENGTH_SHORT).show()
+            groupViewModel.setGroupImageDeleteDataIdle()
+        }
+        else -> {
+
+        }
+    }
 
     Scaffold(
         content = {
@@ -262,7 +285,8 @@ fun GroupScreen(
                 openUserSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog,
                 openRemoveUserFromGroupDialog = openRemoveUserFromGroupDialog,
                 openChangeAvatarDialog = openChangeAvatarDialog,
-                openUploadGroupImageDialog = openUploadGroupImageDialog
+                openUploadGroupImageDialog = openUploadGroupImageDialog,
+                openDeleteGroupImageDialog = openDeleteGroupImageDialog
             )
         }
     )

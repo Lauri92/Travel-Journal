@@ -31,6 +31,8 @@ type Mutation {
 
   updateGroup(groupId: ID!, name: String!, description: String!): Group
 
+  deleteGroupImage(groupId: ID!, groupImageId: ID!): String
+
   deleteGroup(groupId: ID!): String
 
   profilePictureUpload(file: Upload!): File!

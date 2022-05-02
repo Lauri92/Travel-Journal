@@ -27,6 +27,7 @@ class GroupViewModel : ViewModel() {
     var groupId: String = ""
     var pressedLink: String = ""
     var pressedUser: String = ""
+    var pressedImage: String = ""
     var groupMembers: List<GetGroupQuery.Member?>? = emptyList()
     var urlTextState: MutableState<String> = mutableStateOf("")
     val searchInputState: MutableState<String> = mutableStateOf("")
@@ -358,6 +359,35 @@ class GroupViewModel : ViewModel() {
                 } else {
                     _groupImageUploadData.value =
                         APIRequestState.BadResponse("Failed to upload image")
+                }
+            }
+        }
+    }
+
+    private var _groupImageDeleteData =
+        MutableStateFlow<APIRequestState<String?>>(APIRequestState.Idle)
+    val groupImageDeleteData: StateFlow<APIRequestState<String?>> =
+        _groupImageDeleteData
+
+    fun setGroupImageDeleteDataIdle() {
+        _groupImageDeleteData.value = APIRequestState.Idle
+    }
+
+    fun groupImageDelete(
+        context: Context,
+    ) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            repository.deleteGroupImage(
+                context = context,
+                groupId = groupId,
+                groupImageId = pressedImage
+            ).collect { deleteGroupImageResponse ->
+                if (deleteGroupImageResponse?.data?.deleteGroupImage != null && !deleteGroupImageResponse.hasErrors()) {
+                    _groupImageDeleteData.value =
+                        APIRequestState.Success(deleteGroupImageResponse.data?.deleteGroupImage)
+                } else {
+                    _groupImageDeleteData.value =
+                        APIRequestState.BadResponse("Couldn't delete the image")
                 }
             }
         }

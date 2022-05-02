@@ -1,5 +1,6 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -18,19 +19,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import coil.compose.rememberImagePainter
 import fi.lauriari.traveljournal.util.Constants
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FilesContent(
     filesData: List<GetGroupQuery.GroupImage?>?,
     groupAdmin: String?,
-    user: String
+    user: String,
+    groupViewModel: GroupViewModel,
+    openDeleteGroupImageDialog: MutableState<Boolean>
 ) {
+    val context = LocalContext.current
     LazyVerticalGrid(
         cells = GridCells.Adaptive(128.dp),
         contentPadding = PaddingValues(
@@ -81,6 +87,8 @@ fun FilesContent(
                         if (groupAdmin == user || user == image?.user?.id) {
                             DropdownMenuItem(
                                 onClick = {
+                                    groupViewModel.pressedImage = image?.id!!
+                                    openDeleteGroupImageDialog.value = true
                                     expanded = false
                                 }
                             ) {
@@ -94,6 +102,8 @@ fun FilesContent(
                         DropdownMenuItem(
                             onClick = {
                                 expanded = false
+                                Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         ) {
                             Text(

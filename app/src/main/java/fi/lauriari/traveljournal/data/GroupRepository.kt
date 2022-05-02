@@ -205,4 +205,24 @@ class GroupRepository {
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun deleteGroupImage(
+        context: Context,
+        groupId: String,
+        groupImageId: String
+    ): Flow<ApolloResponse<DeleteGroupImageMutation.Data>?> {
+        return flow {
+            val response = try {
+                apolloClient(context).mutation(
+                    DeleteGroupImageMutation(
+                        groupId,
+                        groupImageId
+                    )
+                ).execute()
+            } catch (e: Exception) {
+                null
+            }
+            emit(response)
+        }
+    }
+
 }
