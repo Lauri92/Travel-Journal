@@ -42,6 +42,7 @@ fun GroupScreen(
     val userSelfLeaveGroupData by groupViewModel.userSelfLeaveGroupData.collectAsState()
     val removeUserFromGroupData by groupViewModel.removeUserFromGroupData.collectAsState()
     val groupAvatarUploadData by groupViewModel.groupAvatarUploadData.collectAsState()
+    val groupImageUploadData by groupViewModel.groupImageUploadData.collectAsState()
 
     if (openAddLinkDialog.value) {
         AddLinkDialog(
@@ -232,6 +233,17 @@ fun GroupScreen(
         is APIRequestState.BadResponse -> {
             Toast.makeText(context, "Failed to upload avatar", Toast.LENGTH_SHORT).show()
             groupViewModel.setGroupAvatarUploadDataIdle()
+        }
+        else -> {}
+    }
+    when (val data: APIRequestState<String?> = groupImageUploadData) {
+        is APIRequestState.Success -> {
+            groupViewModel.getGroupById(context)
+            groupViewModel.setGroupImageUploadDataIdle()
+        }
+        is APIRequestState.BadResponse -> {
+            Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show()
+            groupViewModel.setGroupImageUploadDataIdle()
         }
         else -> {}
     }

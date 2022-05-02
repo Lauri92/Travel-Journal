@@ -335,6 +335,15 @@ class GroupViewModel : ViewModel() {
     }
 
 
+    private var _groupImageUploadData =
+        MutableStateFlow<APIRequestState<String?>>(APIRequestState.Idle)
+    val groupImageUploadData: StateFlow<APIRequestState<String?>> =
+        _groupImageUploadData
+
+    fun setGroupImageUploadDataIdle() {
+        _groupImageUploadData.value = APIRequestState.Idle
+    }
+
     fun groupImageUpload(context: Context, file: Upload) {
         viewModelScope.launch(context = Dispatchers.IO) {
             repository.groupImageUpload(
@@ -343,7 +352,13 @@ class GroupViewModel : ViewModel() {
                 groupId = groupId,
                 title = groupImageUploadTitleState.value
             ).collect { groupImageUploadResponse ->
-                Log.d("groupimage", groupImageUploadResponse?.data?.groupImageUpload!!)
+                if (groupImageUploadResponse?.data?.groupImageUpload != null && !groupImageUploadResponse.hasErrors()) {
+                    _groupImageUploadData.value =
+                        APIRequestState.Success(groupImageUploadResponse.data?.groupImageUpload)
+                } else {
+                    _groupImageUploadData.value =
+                        APIRequestState.BadResponse("Failed to upload image")
+                }
             }
         }
     }
