@@ -85,6 +85,8 @@ fun GroupScreenContent(
                 }
                 if (filesSelected.value) {
                     FilesContent(
+                        groupAdmin = getGroupByIdData.response?.admin?.id,
+                        user = groupViewModel.userId,
                         filesData = getGroupByIdData.response?.groupImages
                     )
                 }

@@ -30,6 +30,7 @@ query GetGroup($getGroupId: ID!) {
       title
       urlStorageReference
       user {
+        id
         username
         profileImageUrl
       }
