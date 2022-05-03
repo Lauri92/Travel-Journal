@@ -19,14 +19,19 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun GroupItemsRow(
+    chatSelected: MutableState<Boolean>,
     membersSelected: MutableState<Boolean>,
     linksSelected: MutableState<Boolean>,
-    filesSelected: MutableState<Boolean>
+    filesSelected: MutableState<Boolean>,
 ) {
+    var chatTextDecoration: TextDecoration = TextDecoration.None
     var membersTextDecoration: TextDecoration = TextDecoration.None
     var linksTextDecoration: TextDecoration = TextDecoration.None
     var filesTextDecoration: TextDecoration = TextDecoration.None
 
+    if (chatSelected.value) {
+        chatTextDecoration = TextDecoration.Underline
+    }
     if (membersSelected.value) {
         membersTextDecoration = TextDecoration.Underline
     }
@@ -46,6 +51,19 @@ fun GroupItemsRow(
     ) {
         Text(
             modifier = Modifier.clickable {
+                chatSelected.value = true
+                membersSelected.value = false
+                linksSelected.value = false
+                filesSelected.value = false
+            },
+            text = "Chat",
+            fontSize = 20.sp,
+            fontStyle = FontStyle.Italic,
+            style = TextStyle(textDecoration = chatTextDecoration)
+        )
+        Text(
+            modifier = Modifier.clickable {
+                chatSelected.value = false
                 membersSelected.value = true
                 linksSelected.value = false
                 filesSelected.value = false
@@ -57,6 +75,7 @@ fun GroupItemsRow(
         )
         Text(
             modifier = Modifier.clickable {
+                chatSelected.value = false
                 membersSelected.value = false
                 linksSelected.value = true
                 filesSelected.value = false
@@ -68,6 +87,7 @@ fun GroupItemsRow(
         )
         Text(
             modifier = Modifier.clickable {
+                chatSelected.value = false
                 membersSelected.value = false
                 linksSelected.value = false
                 filesSelected.value = true

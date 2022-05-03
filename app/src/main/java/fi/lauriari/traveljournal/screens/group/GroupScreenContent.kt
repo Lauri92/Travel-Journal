@@ -2,6 +2,7 @@ package fi.lauriari.traveljournal.screens.group
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,7 @@ fun GroupScreenContent(
     openDeleteGroupImageDialog: MutableState<Boolean>
 ) {
     val context = LocalContext.current
+    val chatSelected = remember { mutableStateOf(false) }
     val membersSelected = remember { mutableStateOf(false) }
     val linksSelected = remember { mutableStateOf(false) }
     val filesSelected = remember { mutableStateOf(true) }
@@ -58,12 +60,15 @@ fun GroupScreenContent(
                     groupViewModel = groupViewModel,
                     membersSelected = membersSelected,
                     linksSelected = linksSelected,
+                    filesSelected = filesSelected,
+                    chatSelected = chatSelected,
                     openAddLinkDialog = openAddLinkDialog,
                     openAddMemberDialog = openAddMemberDialog,
                     openUploadGroupImageDialog = openUploadGroupImageDialog
                 )
 
                 GroupItemsRow(
+                    chatSelected = chatSelected,
                     membersSelected = membersSelected,
                     linksSelected = linksSelected,
                     filesSelected = filesSelected
@@ -93,10 +98,15 @@ fun GroupScreenContent(
                         openDeleteGroupImageDialog = openDeleteGroupImageDialog
                     )
                 }
+                if (chatSelected.value) {
+                    Text("Show chat here!")
+                }
+
             }
         }
         is APIRequestState.BadResponse -> {}
         is APIRequestState.EmptyList -> {}
         is APIRequestState.Idle -> {}
+        else -> {}
     }
 }

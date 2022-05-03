@@ -14,12 +14,14 @@ import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 @Composable
 fun AddRow(
     groupViewModel: GroupViewModel,
+    chatSelected: MutableState<Boolean>,
     membersSelected: MutableState<Boolean>,
     linksSelected: MutableState<Boolean>,
+    filesSelected: MutableState<Boolean>,
     adminId: String?,
     openAddLinkDialog: MutableState<Boolean>,
     openAddMemberDialog: MutableState<Boolean>,
-    openUploadGroupImageDialog: MutableState<Boolean>
+    openUploadGroupImageDialog: MutableState<Boolean>,
 ) {
     Row(
         modifier = Modifier
@@ -49,13 +51,22 @@ fun AddRow(
                     Text(text = "Add a link", fontSize = 20.sp)
                 }
             }
-            else -> {
+            filesSelected.value -> {
                 OutlinedButton(
                     modifier = Modifier
                         .size(width = 200.dp, height = 60.dp),
                     shape = CircleShape,
                     onClick = { openUploadGroupImageDialog.value = true }) {
                     Text(text = "Add a file", fontSize = 20.sp)
+                }
+            }
+            chatSelected.value -> {
+                OutlinedButton(
+                    modifier = Modifier
+                        .size(width = 200.dp, height = 60.dp),
+                    shape = CircleShape,
+                    onClick = { }) {
+                    Text(text = "Send message", fontSize = 20.sp)
                 }
             }
         }
