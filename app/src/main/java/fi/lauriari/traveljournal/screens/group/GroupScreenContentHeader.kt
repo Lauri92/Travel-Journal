@@ -24,6 +24,7 @@ import coil.transform.CircleCropTransformation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.util.Constants
+import fi.lauriari.traveljournal.util.SocketHandler
 
 @Composable
 fun GroupScreenContentHeader(
@@ -40,7 +41,10 @@ fun GroupScreenContentHeader(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = { navigateToProfileScreen() }) {
+        IconButton(onClick = {
+            navigateToProfileScreen()
+            SocketHandler.closeConnection()
+        }) {
             Icon(
                 modifier = Modifier.padding(10.dp),
                 imageVector = Icons.Filled.ArrowBack,

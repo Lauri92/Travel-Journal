@@ -4,11 +4,13 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.AddUserToGroupMutation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.UpdateGroupMutation
+import fi.lauriari.traveljournal.data.models.UserMessage
 import fi.lauriari.traveljournal.screens.group.dialogs.*
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
@@ -19,7 +21,8 @@ fun GroupScreen(
     groupViewModel: GroupViewModel,
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
     selectAvatarLauncher: ActivityResultLauncher<String>,
-    selectGroupImageLauncher: ActivityResultLauncher<String>
+    selectGroupImageLauncher: ActivityResultLauncher<String>,
+    messages: MutableList<UserMessage>
 ) {
 
     val context = LocalContext.current
@@ -277,6 +280,7 @@ fun GroupScreen(
                 groupViewModel = groupViewModel,
                 navigateToProfileScreen = navigateToProfileScreen,
                 getGroupByIdData = getGroupByIdData,
+                messages = messages,
                 openAddLinkDialog = openAddLinkDialog,
                 openAddMemberDialog = openAddMemberDialog,
                 openRemoveLinkDialog = openRemoveLinkDialog,

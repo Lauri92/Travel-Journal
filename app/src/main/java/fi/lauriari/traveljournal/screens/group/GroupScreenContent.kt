@@ -7,9 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.GetGroupQuery
+import fi.lauriari.traveljournal.data.models.UserMessage
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
@@ -29,7 +31,8 @@ fun GroupScreenContent(
     openRemoveUserFromGroupDialog: MutableState<Boolean>,
     openChangeAvatarDialog: MutableState<Boolean>,
     openUploadGroupImageDialog: MutableState<Boolean>,
-    openDeleteGroupImageDialog: MutableState<Boolean>
+    openDeleteGroupImageDialog: MutableState<Boolean>,
+    messages: MutableList<UserMessage>
 ) {
     val context = LocalContext.current
     val chatSelected = remember { mutableStateOf(false) }
@@ -99,7 +102,11 @@ fun GroupScreenContent(
                     )
                 }
                 if (chatSelected.value) {
-                    Text("Show chat here!")
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        messages.forEach { userMessage ->
+                            Text("${userMessage.username} says: ${userMessage.message}")
+                        }
+                    }
                 }
 
             }

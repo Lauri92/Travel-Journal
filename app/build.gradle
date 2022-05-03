@@ -48,6 +48,10 @@ android {
 
 dependencies {
 
+    // Socket.IO
+    implementation('io.socket:socket.io-client:2.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
 
     // Apollo
     implementation("com.apollographql.apollo3:apollo-runtime:3.2.2")
