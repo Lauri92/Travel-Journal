@@ -1,7 +1,6 @@
 package fi.lauriari.traveljournal.navigation.destinations
 
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -17,7 +16,6 @@ import fi.lauriari.traveljournal.util.SocketHandler
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import org.json.JSONException
 import org.json.JSONObject
-import io.socket.client.Socket
 
 fun NavGraphBuilder.groupComposable(
     navigateToProfileScreen: () -> Unit,
@@ -31,21 +29,19 @@ fun NavGraphBuilder.groupComposable(
             type = NavType.StringType
         })
     ) { navBackStackEntry ->
-
         val context = LocalContext.current
         val groupId = navBackStackEntry.arguments!!.getString(GROUP_ARGUMENT_KEY)
         groupViewModel.groupId = groupId!!
 
         LaunchedEffect(key1 = groupId) {
+            Log.d("messagetest", "in LaunchedEffect")
+            SocketHandler.setSocket(groupId = groupId)
+            SocketHandler.establishConnection()
+
             groupViewModel.getGroupById(
                 context = context
             )
-            SocketHandler.setSocket()
-            SocketHandler.establishConnection()
-
-
         }
-
         val socket = SocketHandler.getSocket()
 
 
@@ -74,7 +70,5 @@ fun NavGraphBuilder.groupComposable(
             getGroupByIdData = getGroupByIdData,
             messages = messages
         )
-
-
     }
 }

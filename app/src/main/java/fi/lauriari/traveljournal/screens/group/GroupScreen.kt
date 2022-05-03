@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import fi.lauriari.traveljournal.AddLinkMutation
 import fi.lauriari.traveljournal.AddUserToGroupMutation
@@ -14,6 +13,7 @@ import fi.lauriari.traveljournal.data.models.UserMessage
 import fi.lauriari.traveljournal.screens.group.dialogs.*
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
+import io.socket.client.Socket
 
 @Composable
 fun GroupScreen(
