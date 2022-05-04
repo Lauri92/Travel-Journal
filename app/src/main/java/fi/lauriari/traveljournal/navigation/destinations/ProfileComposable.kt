@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import fi.lauriari.traveljournal.screens.profile.ProfileScreen
 import fi.lauriari.traveljournal.util.Constants
+import fi.lauriari.traveljournal.util.SocketHandler
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import fi.lauriari.traveljournal.viewmodels.ProfileViewModel
 
@@ -18,6 +19,8 @@ fun NavGraphBuilder.profileComposable(
     composable(
         route = Constants.PROFILE_SCREEN
     ) { navBackStackEntry ->
+
+        SocketHandler.closeConnection()
         ProfileScreen(
             selectImageLauncher = selectImageLauncher,
             profileViewModel = profileViewModel,

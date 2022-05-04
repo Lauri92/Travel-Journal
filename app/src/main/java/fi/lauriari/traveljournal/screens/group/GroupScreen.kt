@@ -294,10 +294,6 @@ fun GroupScreen(
                 openChangeAvatarDialog = openChangeAvatarDialog,
                 openUploadGroupImageDialog = openUploadGroupImageDialog,
                 openDeleteGroupImageDialog = openDeleteGroupImageDialog,
-                sendMessageTextState = sendMessageTextState,
-                onNewMessageTextStateChanged = { newText ->
-                    groupViewModel.sendMessageTextState.value = newText
-                }
             )
         }
     )

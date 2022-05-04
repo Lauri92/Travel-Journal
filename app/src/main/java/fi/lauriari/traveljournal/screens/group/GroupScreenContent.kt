@@ -1,31 +1,41 @@
 package fi.lauriari.traveljournal.screens.group
 
-import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.data.models.UserMessage
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.ui.theme.chatSendBackground
 import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.Constants
 import fi.lauriari.traveljournal.util.Constants.CHAT_MESSAGE_EVENT
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import io.socket.client.Socket
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun GroupScreenContent(
     navigateToProfileScreen: () -> Unit,
@@ -43,8 +53,6 @@ fun GroupScreenContent(
     openDeleteGroupImageDialog: MutableState<Boolean>,
     message: MutableState<UserMessage>,
     socket: Socket?,
-    onNewMessageTextStateChanged: (String) -> Unit,
-    sendMessageTextState: String
 ) {
     val context = LocalContext.current
     val chatSelected = remember { mutableStateOf(true) }
@@ -52,7 +60,6 @@ fun GroupScreenContent(
     val linksSelected = remember { mutableStateOf(false) }
     val filesSelected = remember { mutableStateOf(false) }
 
-    //val messages = remember { mutableStateListOf<UserMessage>() }
     LaunchedEffect(key1 = message.value.messageId) {
         groupViewModel.messages.add(message.value)
     }
@@ -119,6 +126,7 @@ fun GroupScreenContent(
                     )
                 }
                 if (chatSelected.value) {
+                    val keyboardController = LocalSoftwareKeyboardController.current
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.BottomCenter
@@ -130,12 +138,10 @@ fun GroupScreenContent(
                         ) {
                             items(groupViewModel.messages) { message ->
                                 if (message.username != "" || message.message != "") {
-                                    Row(Modifier.padding(4.dp)) {
-                                        Text(
-                                            text = "${message.username} says: ${message.message}",
-                                            fontSize = 17.sp
-                                        )
-                                    }
+                                    MessageRow(
+                                        message = message,
+                                        user = groupViewModel.username
+                                    )
                                 }
                             }
                         }
@@ -157,16 +163,34 @@ fun GroupScreenContent(
                                 },
                                 placeholder = {
                                     Text("Write a message..")
-                                }
+                                },
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                                keyboardActions = KeyboardActions(
+                                    onSend = {
+                                        if (text != "") {
+                                            socket?.emit(
+                                                CHAT_MESSAGE_EVENT,
+                                                groupViewModel.username,
+                                                text,
+                                                groupViewModel.userProfileImageUrl
+                                            )
+                                            text = ""
+                                            keyboardController?.hide()
+                                        }
+                                    })
+
                             )
                             IconButton(onClick = {
-                                socket?.emit(
-                                    CHAT_MESSAGE_EVENT,
-                                    groupViewModel.username,
-                                    text,
-                                    groupViewModel.userProfileImageUrl
-                                )
-                                text = ""
+                                if (text != "") {
+                                    socket?.emit(
+                                        CHAT_MESSAGE_EVENT,
+                                        groupViewModel.username,
+                                        text,
+                                        groupViewModel.userProfileImageUrl
+                                    )
+                                    text = ""
+                                    keyboardController?.hide()
+                                }
                             }) {
                                 Icon(
                                     modifier = Modifier.padding(10.dp),
@@ -188,3 +212,123 @@ fun GroupScreenContent(
         else -> {}
     }
 }
+
+@Composable
+fun MessageRow(
+    message: UserMessage,
+    user: String
+) {
+    if (user != message.username) {
+        Row(
+            modifier = Modifier.padding(4.dp)
+        ) {
+            if (message.userProfileImageUrl == "null") {
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val usernameStartingLetter =
+                            message.username[0].toString().uppercase()
+
+                        Text(
+                            text = usernameStartingLetter,
+                            fontSize = 17.sp
+                        )
+                    }
+                }
+            } else {
+                Image(
+                    painter = rememberImagePainter(
+                        data = Constants.CONTAINER_BASE_URL + message.userProfileImageUrl,
+                        builder = {
+                            crossfade(200)
+                            transformations(
+                                CircleCropTransformation()
+                            )
+                        }
+                    ),
+                    contentDescription = "User image",
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(40.dp)
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    text = message.username,
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = message.message,
+                    fontSize = 15.sp
+                )
+            }
+        }
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.width(300.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    text = message.message,
+                    fontSize = 15.sp
+                )
+            }
+            if (message.userProfileImageUrl == "null") {
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val usernameStartingLetter =
+                            message.username[0].toString().uppercase()
+
+                        Text(
+                            text = usernameStartingLetter,
+                            fontSize = 17.sp
+                        )
+                    }
+                }
+            } else {
+                Image(
+                    painter = rememberImagePainter(
+                        data = Constants.CONTAINER_BASE_URL + message.userProfileImageUrl,
+                        builder = {
+                            crossfade(200)
+                            transformations(
+                                CircleCropTransformation()
+                            )
+                        }
+                    ),
+                    contentDescription = "User image",
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(40.dp)
+                )
+            }
+        }
+    }
+}
+
