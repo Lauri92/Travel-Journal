@@ -22,10 +22,12 @@ fun GroupScreen(
     getGroupByIdData: APIRequestState<GetGroupQuery.GetGroup?>,
     selectAvatarLauncher: ActivityResultLauncher<String>,
     selectGroupImageLauncher: ActivityResultLauncher<String>,
-    messages: MutableList<UserMessage>
+    message: MutableState<UserMessage>,
+    socket: Socket?,
 ) {
-
     val context = LocalContext.current
+    val sendMessageTextState: String by groupViewModel.sendMessageTextState
+
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }
     val openRemoveLinkDialog = remember { mutableStateOf(false) }
@@ -280,7 +282,8 @@ fun GroupScreen(
                 groupViewModel = groupViewModel,
                 navigateToProfileScreen = navigateToProfileScreen,
                 getGroupByIdData = getGroupByIdData,
-                messages = messages,
+                message = message,
+                socket = socket,
                 openAddLinkDialog = openAddLinkDialog,
                 openAddMemberDialog = openAddMemberDialog,
                 openRemoveLinkDialog = openRemoveLinkDialog,
@@ -290,7 +293,11 @@ fun GroupScreen(
                 openRemoveUserFromGroupDialog = openRemoveUserFromGroupDialog,
                 openChangeAvatarDialog = openChangeAvatarDialog,
                 openUploadGroupImageDialog = openUploadGroupImageDialog,
-                openDeleteGroupImageDialog = openDeleteGroupImageDialog
+                openDeleteGroupImageDialog = openDeleteGroupImageDialog,
+                sendMessageTextState = sendMessageTextState,
+                onNewMessageTextStateChanged = { newText ->
+                    groupViewModel.sendMessageTextState.value = newText
+                }
             )
         }
     )

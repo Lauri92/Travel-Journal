@@ -3,27 +3,27 @@ package fi.lauriari.traveljournal.screens.group
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.data.models.UserMessage
 import fi.lauriari.traveljournal.ui.theme.backGroundBlue
 import fi.lauriari.traveljournal.ui.theme.chatSendBackground
 import fi.lauriari.traveljournal.util.APIRequestState
+import fi.lauriari.traveljournal.util.Constants.CHAT_MESSAGE_EVENT
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import io.socket.client.Socket
-import org.json.JSONException
-import org.json.JSONObject
 
 
 @Composable
@@ -41,13 +41,21 @@ fun GroupScreenContent(
     openChangeAvatarDialog: MutableState<Boolean>,
     openUploadGroupImageDialog: MutableState<Boolean>,
     openDeleteGroupImageDialog: MutableState<Boolean>,
-    messages: MutableList<UserMessage>
+    message: MutableState<UserMessage>,
+    socket: Socket?,
+    onNewMessageTextStateChanged: (String) -> Unit,
+    sendMessageTextState: String
 ) {
     val context = LocalContext.current
     val chatSelected = remember { mutableStateOf(true) }
     val membersSelected = remember { mutableStateOf(false) }
     val linksSelected = remember { mutableStateOf(false) }
     val filesSelected = remember { mutableStateOf(false) }
+
+    //val messages = remember { mutableStateListOf<UserMessage>() }
+    LaunchedEffect(key1 = message.value) {
+        groupViewModel.messages.add(message.value)
+    }
 
     when (getGroupByIdData) {
         is APIRequestState.Success -> {
@@ -111,38 +119,54 @@ fun GroupScreenContent(
                     )
                 }
                 if (chatSelected.value) {
-                    /*Column(modifier = Modifier.fillMaxSize()) {
-                        messages.forEach { userMessage ->
-                            Text("${userMessage.username} says: ${userMessage.message}")
-                        }
-                    }*/
-                    var text by remember { mutableStateOf("") }
-
-                    Column(
-                        Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.SpaceBetween
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.BottomCenter
                     ) {
-
-                        //All elements
-                        Column {
-
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = 75.dp)
+                        ) {
+                            items(groupViewModel.messages) { message ->
+                                if (message.username != "" || message.message != "") {
+                                    Row(Modifier.padding(4.dp)) {
+                                        Text(
+                                            text = "${message.username} says: ${message.message}",
+                                            fontSize = 17.sp
+                                        )
+                                    }
+                                }
+                            }
                         }
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(chatSendBackground)
-                                .weight(1f, false)
-                                .padding(5.dp)
+                                //.weight(1f, false)
+                                .padding(5.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
+                            var text: String by remember { mutableStateOf("") }
+
                             OutlinedTextField(
                                 modifier = Modifier.weight(8f),
                                 value = text,
-                                onValueChange = { text = it },
+                                onValueChange = {
+                                    text = it
+                                },
                                 placeholder = {
                                     Text("Write a message..")
                                 }
                             )
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = {
+                                socket?.emit(
+                                    CHAT_MESSAGE_EVENT,
+                                    groupViewModel.userId,
+                                    text
+                                )
+                                text = ""
+                            }) {
                                 Icon(
                                     modifier = Modifier.padding(10.dp),
                                     imageVector = Icons.Filled.Send,

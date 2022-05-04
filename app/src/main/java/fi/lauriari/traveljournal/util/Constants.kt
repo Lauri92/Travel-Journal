@@ -21,4 +21,7 @@ object Constants {
     // Argument keys
     const val GROUP_ARGUMENT_KEY = "groupId"
 
+    // Socket events
+    const val CHAT_MESSAGE_EVENT = "chat message"
+
 }

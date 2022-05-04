@@ -4,12 +4,14 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Upload
 import fi.lauriari.traveljournal.*
 import fi.lauriari.traveljournal.data.GroupRepository
+import fi.lauriari.traveljournal.data.models.UserMessage
 import fi.lauriari.traveljournal.util.APIRequestState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +36,8 @@ class GroupViewModel : ViewModel() {
     val groupImageUploadTitleState: MutableState<String?> = mutableStateOf(null)
     val nameUpdateTextState: MutableState<String> = mutableStateOf("")
     val descriptionUpdateTextState: MutableState<String> = mutableStateOf("")
+    val sendMessageTextState: MutableState<String> = mutableStateOf("")
+    val messages = mutableStateListOf<UserMessage>()
 
 
     private var _getGroupByIdData =

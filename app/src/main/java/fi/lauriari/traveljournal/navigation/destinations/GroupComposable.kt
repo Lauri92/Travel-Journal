@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import fi.lauriari.traveljournal.data.models.UserMessage
 import fi.lauriari.traveljournal.screens.group.GroupScreen
+import fi.lauriari.traveljournal.util.Constants.CHAT_MESSAGE_EVENT
 import fi.lauriari.traveljournal.util.Constants.GROUP_ARGUMENT_KEY
 import fi.lauriari.traveljournal.util.Constants.GROUP_SCREEN
 import fi.lauriari.traveljournal.util.SocketHandler
@@ -34,10 +35,8 @@ fun NavGraphBuilder.groupComposable(
         groupViewModel.groupId = groupId!!
 
         LaunchedEffect(key1 = groupId) {
-            Log.d("messagetest", "in LaunchedEffect")
             SocketHandler.setSocket(groupId = groupId)
             SocketHandler.establishConnection()
-
             groupViewModel.getGroupById(
                 context = context
             )
@@ -45,15 +44,14 @@ fun NavGraphBuilder.groupComposable(
         val socket = SocketHandler.getSocket()
 
 
-        val messages = remember { mutableStateListOf<UserMessage>() }
+        val message = remember { mutableStateOf(UserMessage("", "")) }
 
-        socket?.on("chat message") { args ->
+        socket?.on(CHAT_MESSAGE_EVENT) { args ->
             Log.d("messagetest", "Got a message: ${args[0]}")
             val data = args[0] as JSONObject
             try {
-                messages.add(
-                    UserMessage(data.getString("username"), data.getString("msg"))
-                )
+                message.value = UserMessage(data.getString("username"), data.getString("msg"))
+
             } catch (e: JSONException) {
                 Log.d("messagetest", "Something went wrong actually. $e")
             }
@@ -68,7 +66,8 @@ fun NavGraphBuilder.groupComposable(
             selectGroupImageLauncher = selectGroupImageLauncher,
             navigateToProfileScreen = navigateToProfileScreen,
             getGroupByIdData = getGroupByIdData,
-            messages = messages
+            message = message,
+            socket = socket
         )
     }
 }
