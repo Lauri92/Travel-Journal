@@ -8,9 +8,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 @Composable
 fun DeleteGroupDialog(
+    groupViewModel: GroupViewModel,
     openDeleteGroupDialog: MutableState<Boolean>,
     onDeleteGroupPressed: () -> Unit
 ) {
@@ -32,6 +34,7 @@ fun DeleteGroupDialog(
                 onClick = {
                     openDeleteGroupDialog.value = false
                     onDeleteGroupPressed()
+                    groupViewModel.messages.clear()
                 }) {
                 Text("Remove")
             }

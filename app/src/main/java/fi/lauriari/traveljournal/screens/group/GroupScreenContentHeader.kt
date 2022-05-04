@@ -25,6 +25,7 @@ import fi.lauriari.traveljournal.GetGroupQuery
 import fi.lauriari.traveljournal.util.APIRequestState
 import fi.lauriari.traveljournal.util.Constants
 import fi.lauriari.traveljournal.util.SocketHandler
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 @Composable
 fun GroupScreenContentHeader(
@@ -35,7 +36,8 @@ fun GroupScreenContentHeader(
     adminId: String?,
     userId: String,
     openUserSelfLeaveGroupDialog: MutableState<Boolean>,
-    openChangeAvatarDialog: MutableState<Boolean>
+    openChangeAvatarDialog: MutableState<Boolean>,
+    groupViewModel: GroupViewModel
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -44,6 +46,7 @@ fun GroupScreenContentHeader(
         IconButton(onClick = {
             navigateToProfileScreen()
             SocketHandler.closeConnection()
+            groupViewModel.messages.clear()
         }) {
             Icon(
                 modifier = Modifier.padding(10.dp),

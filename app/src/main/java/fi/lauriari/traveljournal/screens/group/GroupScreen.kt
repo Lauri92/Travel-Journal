@@ -92,6 +92,7 @@ fun GroupScreen(
     }
     if (openDeleteGroupDialog.value) {
         DeleteGroupDialog(
+            groupViewModel = groupViewModel,
             openDeleteGroupDialog = openDeleteGroupDialog,
             onDeleteGroupPressed = {
                 groupViewModel.deleteGroup(context = context)
@@ -99,6 +100,7 @@ fun GroupScreen(
     }
     if (openUserSelfLeaveGroupDialog.value) {
         UserSelfLeaveGroupDialog(
+            groupViewModel = groupViewModel,
             openSelfLeaveGroupDialog = openUserSelfLeaveGroupDialog,
             onLeaveGroupPressed = {
                 groupViewModel.userSelfLeaveGroup(context = context)

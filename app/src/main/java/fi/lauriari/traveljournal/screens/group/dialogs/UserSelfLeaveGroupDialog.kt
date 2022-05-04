@@ -8,9 +8,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 
 @Composable
 fun UserSelfLeaveGroupDialog(
+    groupViewModel: GroupViewModel,
     openSelfLeaveGroupDialog: MutableState<Boolean>,
     onLeaveGroupPressed: () -> Unit
 ) {
@@ -32,6 +34,7 @@ fun UserSelfLeaveGroupDialog(
                 onClick = {
                     openSelfLeaveGroupDialog.value = false
                     onLeaveGroupPressed()
+                    groupViewModel.messages.clear()
                 }) {
                 Text("Leave group")
             }
