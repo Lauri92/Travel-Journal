@@ -44,13 +44,18 @@ fun NavGraphBuilder.groupComposable(
         val socket = SocketHandler.getSocket()
 
 
-        val message = remember { mutableStateOf(UserMessage("", "")) }
+        val message = remember { mutableStateOf(UserMessage("", "", "", "")) }
 
         socket?.on(CHAT_MESSAGE_EVENT) { args ->
             Log.d("messagetest", "Got a message: ${args[0]}")
             val data = args[0] as JSONObject
             try {
-                message.value = UserMessage(data.getString("username"), data.getString("msg"))
+                message.value = UserMessage(
+                    data.getString("messageId"),
+                    data.getString("username"),
+                    data.getString("msg"),
+                    data.getString("userProfileImageUrl")
+                )
 
             } catch (e: JSONException) {
                 Log.d("messagetest", "Something went wrong actually. $e")

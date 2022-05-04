@@ -53,7 +53,7 @@ fun GroupScreenContent(
     val filesSelected = remember { mutableStateOf(false) }
 
     //val messages = remember { mutableStateListOf<UserMessage>() }
-    LaunchedEffect(key1 = message.value) {
+    LaunchedEffect(key1 = message.value.messageId) {
         groupViewModel.messages.add(message.value)
     }
 
@@ -162,8 +162,9 @@ fun GroupScreenContent(
                             IconButton(onClick = {
                                 socket?.emit(
                                     CHAT_MESSAGE_EVENT,
-                                    groupViewModel.userId,
-                                    text
+                                    groupViewModel.username,
+                                    text,
+                                    groupViewModel.userProfileImageUrl
                                 )
                                 text = ""
                             }) {

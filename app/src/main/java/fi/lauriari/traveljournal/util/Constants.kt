@@ -5,6 +5,9 @@ object Constants {
     // Server url
     const val SERVER_URL = "https://sssf-travel-journal.azurewebsites.net/graphql"
 
+    // Server base URL
+    const val SERVER_BASE_URL = "https://sssf-travel-journal.azurewebsites.net/"
+
     // Container url
     const val CONTAINER_BASE_URL = "https://traveljournal.blob.core.windows.net/"
 

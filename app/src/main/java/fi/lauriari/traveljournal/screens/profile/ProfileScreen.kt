@@ -122,6 +122,8 @@ fun ProfileScreen(
         is APIRequestState.Success -> {
             profileViewModel.setGetActiveUserDataIdle()
             groupViewModel.userId = data.response?.id!!
+            groupViewModel.username = data.response.username!!
+            groupViewModel.userProfileImageUrl = data.response.profileImageUrl
         }
         is APIRequestState.BadResponse -> {}
         else -> {}

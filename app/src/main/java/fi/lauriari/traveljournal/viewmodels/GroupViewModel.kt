@@ -26,6 +26,8 @@ class GroupViewModel : ViewModel() {
     var avatarUriState: MutableState<Uri?> = mutableStateOf(null)
     var imageUploadUriState: MutableState<Uri?> = mutableStateOf(null)
     var userId: String = ""
+    var username: String = ""
+    var userProfileImageUrl: String? = null
     var groupId: String = ""
     var pressedLink: String = ""
     var pressedUser: String = ""

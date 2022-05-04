@@ -1,6 +1,7 @@
 package fi.lauriari.traveljournal.util
 
 import android.util.Log
+import fi.lauriari.traveljournal.util.Constants.SERVER_BASE_URL
 import io.socket.client.IO
 import io.socket.client.Socket
 import java.net.URISyntaxException
@@ -15,7 +16,7 @@ object SocketHandler {
             Log.d("messagetest", "Connecting...")
             val connectionOptions = IO.Options()
             connectionOptions.query = "groupId=$groupId"
-            socketInstance = IO.socket("http://10.0.2.2:3000", connectionOptions)
+            socketInstance = IO.socket(SERVER_BASE_URL, connectionOptions)
             Log.d("messagetest", "Connected!")
         } catch (e: URISyntaxException) {
 
