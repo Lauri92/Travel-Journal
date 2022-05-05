@@ -46,6 +46,7 @@ fun ProfileScreenContent(
             .fillMaxSize(),
     ) {
         ProfileTopRow(
+            profileViewModel = profileViewModel,
             navigateToLoginScreen = navigateToLoginScreen,
             openAddGroupDialog = { openAddGroupDialog() }
         )

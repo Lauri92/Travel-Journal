@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
@@ -58,7 +59,6 @@ fun ChatContent(groupViewModel: GroupViewModel, socket: Socket?) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(chatSendBackground)
-                //.weight(1f, false)
                 .padding(5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -73,7 +73,10 @@ fun ChatContent(groupViewModel: GroupViewModel, socket: Socket?) {
                 placeholder = {
                     Text("Write a message..")
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Send,
+                    capitalization = KeyboardCapitalization.Sentences
+                ),
                 keyboardActions = KeyboardActions(
                     onSend = {
                         if (text != "") {
