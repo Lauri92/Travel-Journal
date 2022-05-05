@@ -8,9 +8,9 @@ here: [https://github.com/Lauri92/sssf-gql-project](https://github.com/Lauri92/s
 ### General
 
 Travel Journal is an application for planning trips with friends and family or other groups. The
-application allows to login with user credentials, customize their profile with uploadable image and
+application allows to login with user credentials, customize their profile with loadable image and
 then create groups and add other members to that group. After a group has been created the group
-members are allowed post and delete images and links. Group members can also chat with eachother.
+members are allowed post and delete images and links. Group members can also chat with each other.
 
 In addition to that, the group admin (the user who created the group) has the power to remove
 anything from the group submitted by anyone. Admin can also set a group avatar and delete the whole
@@ -37,3 +37,8 @@ group.
 Images tab|Users tab|Chat tab
 :-------------------------:|:-------------------------:|:-------------------------:
 ![map](https://users.metropolia.fi/~lauriari/sssf/photo_2022-05-05_20-28-38.jpg)  |  ![](https://users.metropolia.fi/~lauriari/sssf/photo_2022-05-05_20-28-47.jpg)  | ![](https://users.metropolia.fi/~lauriari/sssf/photo_2022-05-05_20-28-52.jpg)
+
+<p align="center">Profile</p>
+<p align="center">
+   <img src="https://users.metropolia.fi/~lauriari/sssf/photo_2022-05-05_20-44-44.jpg">
+</p>
