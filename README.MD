@@ -40,5 +40,5 @@ Images tab|Users tab|Chat tab
 
 <p align="center">Profile</p>
 <p align="center">
-   <img src="https://users.metropolia.fi/~lauriari/sssf/photo_2022-05-05_20-44-44.jpg">
+   <img src="https://users.metropolia.fi/~lauriari/sssf/photo_2022-05-05_20-44-44.jpg" width= 250px>
 </p>
