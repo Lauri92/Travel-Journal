@@ -1,10 +1,14 @@
 package fi.lauriari.traveljournal.screens.group
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,6 +17,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +26,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -32,16 +39,26 @@ import fi.lauriari.traveljournal.ui.theme.chatSendBackground
 import fi.lauriari.traveljournal.util.Constants
 import fi.lauriari.traveljournal.viewmodels.GroupViewModel
 import io.socket.client.Socket
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ChatContent(groupViewModel: GroupViewModel, socket: Socket?) {
+fun ChatContent(
+    groupViewModel: GroupViewModel,
+    socket: Socket?
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
+    val listState = rememberLazyListState()
+
+    val coroutineScope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 75.dp)
@@ -54,6 +71,9 @@ fun ChatContent(groupViewModel: GroupViewModel, socket: Socket?) {
                     )
                 }
             }
+        }
+        coroutineScope.launch {
+            listState.animateScrollToItem(groupViewModel.messages.size)
         }
         Row(
             modifier = Modifier
@@ -108,6 +128,18 @@ fun ChatContent(groupViewModel: GroupViewModel, socket: Socket?) {
                     modifier = Modifier.padding(10.dp),
                     imageVector = Icons.Filled.Send,
                     contentDescription = "Send message",
+                    tint = Color.Blue
+                )
+            }
+            IconButton(onClick = {
+                coroutineScope.launch {
+                    listState.animateScrollToItem(groupViewModel.messages.size)
+                }
+            }) {
+                Icon(
+                    modifier = Modifier.padding(10.dp),
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null,
                     tint = Color.Blue
                 )
             }

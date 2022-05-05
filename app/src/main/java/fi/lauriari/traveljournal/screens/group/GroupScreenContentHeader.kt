@@ -56,18 +56,18 @@ fun GroupScreenContentHeader(
                 tint = Color.Black
             )
         }
-        IconButton(onClick = {
-            groupViewModel.getGroupById(context = context)
-        }) {
-            Icon(
-                modifier = Modifier.padding(10.dp),
-                imageVector = Icons.Filled.Refresh,
-                contentDescription = "Refresh the page",
-                tint = Color.Black
-            )
-        }
         if (adminId!! == userId) {
             Row() {
+                IconButton(onClick = {
+                    groupViewModel.getGroupById(context = context)
+                }) {
+                    Icon(
+                        modifier = Modifier.padding(10.dp),
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = "Refresh the page",
+                        tint = Color.Black
+                    )
+                }
                 IconButton(onClick = {
                     openDeleteGroupDialog.value = true
                 }) {
@@ -90,15 +90,27 @@ fun GroupScreenContentHeader(
                 }
             }
         } else {
-            IconButton(onClick = {
-                openUserSelfLeaveGroupDialog.value = true
-            }) {
-                Icon(
-                    modifier = Modifier.padding(10.dp),
-                    imageVector = Icons.Filled.ExitToApp,
-                    contentDescription = "Edit group",
-                    tint = Color.Black
-                )
+            Row() {
+                IconButton(onClick = {
+                    groupViewModel.getGroupById(context = context)
+                }) {
+                    Icon(
+                        modifier = Modifier.padding(10.dp),
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = "Refresh the page",
+                        tint = Color.Black
+                    )
+                }
+                IconButton(onClick = {
+                    openUserSelfLeaveGroupDialog.value = true
+                }) {
+                    Icon(
+                        modifier = Modifier.padding(10.dp),
+                        imageVector = Icons.Filled.ExitToApp,
+                        contentDescription = "Edit group",
+                        tint = Color.Black
+                    )
+                }
             }
         }
     }

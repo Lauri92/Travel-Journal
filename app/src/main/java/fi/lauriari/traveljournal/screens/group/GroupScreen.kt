@@ -26,7 +26,6 @@ fun GroupScreen(
     socket: Socket?,
 ) {
     val context = LocalContext.current
-    val sendMessageTextState: String by groupViewModel.sendMessageTextState
 
     val openAddLinkDialog = remember { mutableStateOf(false) }
     val openAddMemberDialog = remember { mutableStateOf(false) }

@@ -60,15 +60,7 @@ fun AddRow(
                     Text(text = "Add a file", fontSize = 20.sp)
                 }
             }
-            chatSelected.value -> {
-                OutlinedButton(
-                    modifier = Modifier
-                        .size(width = 200.dp, height = 60.dp),
-                    shape = CircleShape,
-                    onClick = { }) {
-                    Text(text = "Send message", fontSize = 20.sp)
-                }
-            }
+            chatSelected.value -> {}
         }
     }
 }
